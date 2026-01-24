@@ -68,8 +68,3 @@ Portfolio/
 - **LinkedIn:** [linkedin.com/in/charbeltoumieh](https://linkedin.com/in/charbeltoumieh)
 - **GitHub:** [github.com/Charbelto](https://github.com/Charbelto)
 
----
-
-**Currently:** Pursuing Master's in Applied AI at University of Warwick
-
-**Open to:** AI/ML Engineering opportunities
