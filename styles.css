@@ -1409,8 +1409,8 @@ body {
     box-shadow: var(--card-shadow-hover);
 }
 
-/* Hidden extra projects */
-.projects-grid:not(.expanded) .project-extra {
+/* Hidden extra projects only when JS controls the grid */
+.js-enabled .projects-grid:not(.expanded) .project-extra {
     display: none;
 }
 
@@ -1584,7 +1584,7 @@ body {
 
 /* Show More Button */
 .show-more-btn {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 0.5rem;
     margin: 2.5rem auto 0;
@@ -1598,6 +1598,10 @@ body {
     cursor: pointer;
     transition: var(--transition-medium);
     font-family: inherit;
+}
+
+.js-enabled .show-more-btn {
+    display: flex;
 }
 
 [data-theme="light"] .show-more-btn {

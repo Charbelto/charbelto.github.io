@@ -1,3 +1,5 @@
+document.documentElement.classList.add('js-enabled');
+
 document.addEventListener('DOMContentLoaded', () => {
     initLoader();
     initThemeToggle();
@@ -181,6 +183,11 @@ function initCounterAnimation() {
         update();
     };
 
+    if (!('IntersectionObserver' in window)) {
+        counters.forEach(animate);
+        return;
+    }
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -197,6 +204,18 @@ function initCounterAnimation() {
 // Scroll Animations
 // ========================================
 function initScrollAnimations() {
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.timeline-item').forEach(item => item.classList.add('visible'));
+        document.querySelectorAll('.section-header').forEach(h => h.classList.add('visible'));
+        document.querySelectorAll(
+            '.highlight-card, .skill-category, .project-card, .contact-card, .language-item, .education-card, .extra-item'
+        ).forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
+        return;
+    }
+
     const opts = { root: null, rootMargin: '0px', threshold: 0.1 };
 
     const timelineItems = document.querySelectorAll('.timeline-item');
@@ -244,6 +263,15 @@ function initScrollAnimations() {
 // ========================================
 function initSkillBars() {
     const bars = document.querySelectorAll('.skill-progress');
+
+    if (!('IntersectionObserver' in window)) {
+        bars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            bar.style.width = `${progress}%`;
+        });
+        return;
+    }
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
