@@ -843,9 +843,15 @@ button, input, textarea {
 }
 .about-highlights {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-top: 3rem;
+}
+@media (max-width: 992px) {
+    .about-highlights {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
 }
 .highlight-card {
     background: var(--bg-card);
