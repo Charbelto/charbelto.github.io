@@ -648,8 +648,8 @@ button, input, textarea {
     perspective: 1000px;
 }
 .code-window {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     box-shadow: var(--card-shadow-hover), var(--glow-shadow);
     overflow: hidden;
@@ -663,8 +663,8 @@ button, input, textarea {
     align-items: center;
     justify-content: space-between;
     padding: 0.9rem 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .window-dots {
     display: flex;
@@ -694,18 +694,18 @@ button, input, textarea {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: #64748b;
     cursor: pointer;
     transition: all var(--trans-fast);
 }
 .window-tab:hover {
-    color: var(--text-secondary);
+    color: #94a3b8;
     background: rgba(255, 255, 255, 0.02);
 }
 .window-tab.active {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--border-color);
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.06);
 }
 .tab-icon {
     width: 13px;
@@ -716,7 +716,7 @@ button, input, textarea {
     position: relative;
     height: 330px;
     overflow-y: auto;
-    background: rgba(3, 7, 18, 0.3);
+    background: #030712;
 }
 
 .tab-content {
@@ -742,9 +742,9 @@ button, input, textarea {
     flex-direction: column;
     text-align: right;
     padding-right: 1.5rem;
-    color: var(--text-muted);
+    color: #475569;
     user-select: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
 }
 .code-content {
     padding-left: 1.5rem;
