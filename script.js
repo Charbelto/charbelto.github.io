@@ -1,90 +1,105 @@
 /**
- * CYBER OBSIDIAN INTERACTION DRIVER - SCRIPT.JS
+ * Charbel Toumieh - Portfolio Interaction Driver Script (script.js)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     initLoader();
     initThemeToggle();
     initNavigation();
-    initConsoleSimulator();
+    initSandboxTabs();
+    initAgentSimulator();
+    initTypedText();
     initCounterAnimation();
     initScrollAnimations();
-    initSkillBars();
-    initProjectFilter();
+    initProjectFilters();
     initShowMore();
     initContactForm();
     initCursorGlow();
 });
 
 // ==========================================
-// 1. Initial Loading Console
+// 1. Initial Page Loading Animation
 // ==========================================
 function initLoader() {
     const loader = document.getElementById('loader');
-    if (!loader) return;
-
-    const hideLoader = () => {
-        loader.classList.add('hidden');
-        document.body.style.overflow = '';
-    };
-
+    const progress = loader ? loader.querySelector('.loader-progress') : null;
+    const percentText = document.getElementById('loaderPercent');
+    
+    if (!loader || !progress || !percentText) return;
+    
     document.body.style.overflow = 'hidden';
     
-    // Fallback load timeout
-    setTimeout(hideLoader, 2000);
-    
-    window.addEventListener('load', () => {
-        setTimeout(hideLoader, 800);
-    });
+    let currentPercent = 0;
+    const interval = setInterval(() => {
+        currentPercent += Math.floor(Math.random() * 8) + 4;
+        if (currentPercent >= 100) {
+            currentPercent = 100;
+            clearInterval(interval);
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        progress.style.width = currentPercent + '%';
+        percentText.textContent = currentPercent + '%';
+    }, 45);
 }
 
 // ==========================================
-// 2. Local-Storage Theme Management
+// 2. Light / Dark Theme Management
 // ==========================================
 function initThemeToggle() {
     const toggle = document.getElementById('themeToggle');
     if (!toggle) return;
 
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', currentTheme);
+    // Check system preference first, fallback to dark
+    const storedTheme = localStorage.getItem('theme');
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const initialTheme = storedTheme || (systemPrefersLight ? 'light' : 'dark');
+    
+    document.documentElement.setAttribute('data-theme', initialTheme);
 
     toggle.addEventListener('click', () => {
-        const targetTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', targetTheme);
         localStorage.setItem('theme', targetTheme);
     });
 }
 
 // ==========================================
-// 3. Navigation Controls
+// 3. Header Navigation & Active Links Scrollspy
 // ==========================================
 function initNavigation() {
     const navbar = document.querySelector('.navbar');
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
     const navLinks = document.querySelectorAll('.nav-link');
+    
+    if (!navbar) return;
 
-    // Scroll styling
+    // Sticky scroll effect
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 40) {
+        if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
     });
 
-    // Mobile navigation drawer toggling
+    // Mobile hamburger menu toggle
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', () => {
-            const active = navMenu.classList.toggle('active');
-            navToggle.classList.toggle('active', active);
-            document.body.style.overflow = active ? 'hidden' : '';
+            const isActive = navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active', isActive);
+            document.body.style.overflow = isActive ? 'hidden' : '';
         });
     }
 
+    // Close mobile menu on nav link click
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navToggle && navMenu) {
+            if (navMenu && navToggle) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
                 document.body.style.overflow = '';
@@ -92,20 +107,21 @@ function initNavigation() {
         });
     });
 
-    // Scrollspy navigation highlight
-    const sections = document.querySelectorAll('section[id], header[id]');
+    // Scrollspy active tag updates
+    const sections = document.querySelectorAll('section[id]');
     window.addEventListener('scroll', () => {
-        const scrollPos = window.scrollY + 150;
-        sections.forEach(sec => {
-            const id = sec.getAttribute('id');
-            const top = sec.offsetTop;
-            const height = sec.offsetHeight;
-
+        const scrollPos = window.scrollY + 160;
+        
+        sections.forEach(section => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            const id = section.getAttribute('id');
+            
             if (scrollPos >= top && scrollPos < top + height) {
-                navLinks.forEach(lnk => {
-                    lnk.classList.remove('active');
-                    if (lnk.getAttribute('href') === `#${id}`) {
-                        lnk.classList.add('active');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
                     }
                 });
             }
@@ -114,322 +130,323 @@ function initNavigation() {
 }
 
 // ==========================================
-// 4. ML Model Training Console Simulator
+// 4. Hero Visual Workspace Tabs Toggle
 // ==========================================
-function initConsoleSimulator() {
-    const consoleBody = document.getElementById('consoleBody');
-    if (!consoleBody) return;
-
-    const dermSenseLogs = [
-        { type: 'comment', text: '# Fetching dataset files...' },
-        { type: 'keyword', text: '>>> Load dataset: ISIC_Lesions_2026' },
-        { type: 'info', text: 'Found 12,450 categorized dermatological graphics.' },
-        { type: 'keyword', text: '>>> Mapping PyTorch EfficientNet-B0 backbone...' },
-        { type: 'comment', text: '# Initiating classification training loop' },
-        { type: 'run', text: 'Epoch [1/3] [====>................] loss: 0.6542 - acc: 78.5%' },
-        { type: 'run', text: 'Epoch [2/3] [=========>............] loss: 0.3204 - acc: 89.2%' },
-        { type: 'run', text: 'Epoch [3/3] [====================>] loss: 0.0894 - acc: 97.4%' },
-        { type: 'success', text: '[SUCCESS] ConvNet converged. Saved weights/model.pt' },
-        { type: 'keyword', text: '>>> Running post-hoc Grad-CAM heatmaps...' },
-        { type: 'success', text: '[OK] Explainability matrix generated.' }
-    ];
-
-    const ouladLogs = [
-        { type: 'comment', text: '# Mapping learning analytics engine...' },
-        { type: 'keyword', text: '>>> Importing cohort: 32,593 records' },
-        { type: 'info', text: 'Executing multi-table preprocessing joins & clickstream extraction.' },
-        { type: 'run', text: 'Executing RFECV (XGBoost classifier)...' },
-        { type: 'success', text: '[OK] Pruned features list from 45 to 23 variables.' },
-        { type: 'keyword', text: '>>> Training supervised modeling pipelines...' },
-        { type: 'info', text: 'Evaluating XGBoost, Random Forest, GMM, and DBSCAN clusters.' },
-        { type: 'success', text: '[SUCCESS] Cluster scoring complete. Exported metrics plots.' }
-    ];
-
-    const cellAnalyzerLogs = [
-        { type: 'comment', text: '# Mapping client-server network reporter...' },
-        { type: 'keyword', text: '>>> Testing TelephonyManager radio interfaces' },
-        { type: 'success', text: '[OK] Capturing LTE / 5G / Wi-Fi metrics parameters.' },
-        { type: 'run', text: 'Sending telemetry logging pack to Flask API...' },
-        { type: 'info', text: 'POST request dispatched: http://localhost:5000/api/metrics' },
-        { type: 'success', text: '[SUCCESS] Server parsed payload. SQL database committed.' }
-    ];
-
-    const pipelines = [dermSenseLogs, ouladLogs, cellAnalyzerLogs];
-    let pipelineIdx = 0;
-    let logIdx = 0;
-
-    function addLogLine() {
-        const currentPipeline = pipelines[pipelineIdx];
-        
-        if (logIdx >= currentPipeline.length) {
-            // Reset console and move to next pipeline after 4 seconds
-            setTimeout(() => {
-                consoleBody.innerHTML = '<div class="log-line text-comment"># Initializing pipeline logs...</div>';
-                logIdx = 0;
-                pipelineIdx = (pipelineIdx + 1) % pipelines.length;
-                setTimeout(addLogLine, 600);
-            }, 4000);
-            return;
-        }
-
-        const log = currentPipeline[logIdx];
-        const line = document.createElement('div');
-        line.className = 'log-line';
-
-        if (log.type === 'comment') {
-            line.className += ' text-comment';
-            line.textContent = log.text;
-        } else if (log.type === 'keyword') {
-            line.innerHTML = `<span class="text-keyword">${log.text.substring(0, 3)}</span>${log.text.substring(3)}`;
-        } else if (log.type === 'info') {
-            line.textContent = log.text;
-        } else if (log.type === 'run') {
-            line.className += ' text-accent';
-            line.textContent = log.text;
-        } else if (log.type === 'success') {
-            line.className += ' text-success';
-            line.textContent = log.text;
-        }
-
-        consoleBody.appendChild(line);
-        consoleBody.scrollTop = consoleBody.scrollHeight;
-        
-        logIdx++;
-        
-        // Random typing/execution delays to feel authentic
-        const delay = log.type === 'run' ? 1200 : Math.random() * 400 + 400;
-        setTimeout(addLogLine, delay);
-    }
-
-    // Start training ticker
-    setTimeout(addLogLine, 1500);
+function initSandboxTabs() {
+    const codeBtn = document.getElementById('tabCodeBtn');
+    const terminalBtn = document.getElementById('tabTerminalBtn');
+    const codeTab = document.getElementById('tab-code');
+    const terminalTab = document.getElementById('tab-terminal');
+    
+    if (!codeBtn || !terminalBtn || !codeTab || !terminalTab) return;
+    
+    codeBtn.addEventListener('click', () => {
+        codeBtn.classList.add('active');
+        terminalBtn.classList.remove('active');
+        codeTab.classList.add('active');
+        terminalTab.classList.remove('active');
+    });
+    
+    terminalBtn.addEventListener('click', () => {
+        terminalBtn.classList.add('active');
+        codeBtn.classList.remove('active');
+        terminalTab.classList.add('active');
+        codeTab.classList.remove('active');
+    });
 }
 
 // ==========================================
-// 5. Statistics Counter Animation
+// 5. Agent Sandbox simulated ReAct LLM logs
+// ==========================================
+function initAgentSimulator() {
+    const consoleBody = document.getElementById('consoleBody');
+    if (!consoleBody) return;
+
+    // Steps mimicking a ReAct (Reasoning & Action) Agent loop
+    const logSteps = [
+        { type: 'comment', text: '# Fetching agent workspace variables...' },
+        { type: 'keyword', text: '>>> Agent initialized with GPT-4o backend' },
+        { type: 'info', text: 'Prompt query: "Analyze Charbel\'s engineering logs"' },
+        { type: 'comment', text: '# Thought: I should retrieve candidate stats from database' },
+        { type: 'accent', text: 'Executing VectorDBRetriever(query="experience schema")' },
+        { type: 'info', text: 'Observation: Found 6 technical engineering internships/roles.' },
+        { type: 'comment', text: '# Thought: Let\'s query details on the Top audited project repositories.' },
+        { type: 'accent', text: 'Executing VectorDBRetriever(query="audited codebases list")' },
+        { type: 'info', text: 'Observation: 23 projects verified. DermSense skin disease classifier PyTorch CNN weights operational. OULAD retention data models saved.' },
+        { type: 'comment', text: '# Thought: I should check code compiler output for verification.' },
+        { type: 'accent', text: 'Executing PythonREPL(code="print(\'Validating model compiling...\')")' },
+        { type: 'success', text: 'stdout: Validating model compiling... [OK]' },
+        { type: 'comment', text: '# Thought: All projects compile. I can provide the final engineering summary.' },
+        { type: 'success', text: '[SUCCESS] Task resolved in 3.8 seconds.' },
+        { type: 'info', text: 'Answer: Charbel Toumieh matches target profile for Senior AI & LLM Systems roles. 23 repositories are verified and running.' }
+    ];
+
+    let stepIdx = 0;
+
+    function renderNextLine() {
+        if (stepIdx >= logSteps.length) {
+            // Wait 5 seconds, clear screen, and restart
+            setTimeout(() => {
+                consoleBody.innerHTML = '<div class="log-line text-comment"># Initializing agent shell console...</div>';
+                stepIdx = 0;
+                setTimeout(renderNextLine, 600);
+            }, 6000);
+            return;
+        }
+
+        const step = logSteps[stepIdx];
+        const container = document.createElement('div');
+        container.className = 'log-line';
+
+        if (step.type === 'comment') {
+            container.className += ' text-comment';
+            container.textContent = step.text;
+        } else if (step.type === 'keyword') {
+            container.className += ' text-keyword';
+            container.textContent = step.text;
+        } else if (step.type === 'info') {
+            container.className += ' text-info';
+            container.textContent = step.text;
+        } else if (step.type === 'accent') {
+            container.className += ' text-accent';
+            container.textContent = step.text;
+        } else if (step.type === 'success') {
+            container.className += ' text-success';
+            container.textContent = step.text;
+        }
+
+        consoleBody.appendChild(container);
+        consoleBody.scrollTop = consoleBody.scrollHeight;
+        
+        stepIdx++;
+        
+        // Realistic dynamic delays between actions
+        const typingDelay = step.type === 'accent' ? 1400 : Math.random() * 500 + 400;
+        setTimeout(renderNextLine, typingDelay);
+    }
+
+    // Delay start of simulator logs slightly to let loader finish
+    setTimeout(renderNextLine, 2500);
+}
+
+// ==========================================
+// 6. Hero Typed Subtitle Text Rotation
+// ==========================================
+function initTypedText() {
+    const target = document.querySelector('.typed-text');
+    if (!target) return;
+
+    const phrases = [
+        "Large Language Models (LLMs)",
+        "Multi-Agent AI Workflows",
+        "Computer Vision Neural Networks",
+        "Production-Grade MLOps APIs",
+        "Custom Data & ETL Pipelines"
+    ];
+
+    let phraseIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
+    let delay = 100;
+
+    function type() {
+        const currentPhrase = phrases[phraseIdx];
+        
+        if (isDeleting) {
+            target.textContent = currentPhrase.substring(0, charIdx - 1);
+            charIdx--;
+            delay = 40;
+        } else {
+            target.textContent = currentPhrase.substring(0, charIdx + 1);
+            charIdx++;
+            delay = 90;
+        }
+
+        if (!isDeleting && charIdx === currentPhrase.length) {
+            // Hold full phrase for 2.2 seconds before deleting
+            delay = 2200;
+            isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+            isDeleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            delay = 500;
+        }
+
+        setTimeout(type, delay);
+    }
+
+    type();
+}
+
+// ==========================================
+// 7. Stat Counters Numeric Animation
 // ==========================================
 function initCounterAnimation() {
-    const counters = document.querySelectorAll('.metric-val');
-    if (counters.length === 0) return;
+    const stats = document.querySelectorAll('.stat-number');
+    if (stats.length === 0) return;
 
-    const animateCounter = (counter) => {
-        const target = parseInt(counter.getAttribute('data-count'), 10);
-        const duration = 2000;
-        const speed = target / (duration / 16);
-        let current = 0;
+    const runCounter = (el) => {
+        const max = parseInt(el.getAttribute('data-count'), 10);
+        const duration = 1800; // ms
+        const step = max / (duration / 16);
+        let val = 0;
 
-        const update = () => {
-            current += speed;
-            if (current < target) {
-                counter.textContent = Math.floor(current);
-                requestAnimationFrame(update);
+        const count = () => {
+            val += step;
+            if (val < max) {
+                el.textContent = Math.floor(val);
+                requestAnimationFrame(count);
             } else {
-                counter.textContent = target;
+                el.textContent = max;
             }
         };
-        update();
+        count();
     };
 
     if (!('IntersectionObserver' in window)) {
-        counters.forEach(animateCounter);
+        stats.forEach(runCounter);
         return;
     }
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                animateCounter(entry.target);
+                runCounter(entry.target);
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.5 });
 
-    counters.forEach(cnt => observer.observe(cnt));
+    stats.forEach(stat => observer.observe(stat));
 }
 
 // ==========================================
-// 6. Section & Item Fade In Animations
+// 8. Element Fade-In Scroll Intersection Observability
 // ==========================================
 function initScrollAnimations() {
-    const animEls = document.querySelectorAll(
-        '.node-content, .edu-card, .lecture-item, .skill-group, .project-node, .c-card, .about-info, .avatar-frame'
+    const cards = document.querySelectorAll(
+        '.highlight-card, .timeline-item, .education-card, .extra-item, .skill-category, .project-card, .contact-card, .contact-form, .about-image'
     );
+    
+    cards.forEach(card => card.classList.add('reveal-item'));
 
     if (!('IntersectionObserver' in window)) {
-        animEls.forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        });
-        return;
-    }
-
-    const opts = { root: null, rootMargin: '0px -50px -50px 0px', threshold: 0.05 };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('faded-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, opts);
-
-    animEls.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(25px)';
-        el.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-        
-        // CSS trigger helper class
-        observer.observe(el);
-    });
-
-    // Custom CSS injection to trigger visible state
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .faded-in {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// ==========================================
-// 7. Core MLOps / Systems Technical Skill Bars
-// ==========================================
-function initSkillBars() {
-    const bars = document.querySelectorAll('.skill-fill');
-    if (bars.length === 0) return;
-
-    if (!('IntersectionObserver' in window)) {
-        bars.forEach(b => {
-            b.style.width = b.style.width;
-        });
+        cards.forEach(card => card.classList.add('revealed'));
         return;
     }
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const targetWidth = entry.target.style.width;
-                entry.target.style.width = '0%';
-                requestAnimationFrame(() => {
-                    entry.target.style.width = targetWidth;
-                });
+                entry.target.classList.add('revealed');
+                // stop observing once element is shown
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { root: null, rootMargin: '0px 0px -40px 0px', threshold: 0.05 });
 
-    bars.forEach(bar => observer.observe(bar));
+    cards.forEach(card => observer.observe(card));
 }
 
 // ==========================================
-// 8. Dynamic Project Category Filtering
+// 9. Portfolio Filter Tabs Actions
 // ==========================================
-function initProjectFilter() {
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const projectCards = document.querySelectorAll('.project-node');
+function initProjectFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
     const showMoreBtn = document.getElementById('showMoreBtn');
+    
+    if (filterBtns.length === 0 || projectCards.length === 0) return;
 
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            filterTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-            const filterValue = tab.getAttribute('data-filter');
-            const isAll = filterValue === 'all';
+            const filter = btn.getAttribute('data-filter');
+            const isAll = filter === 'all';
 
-            // Show More drawer button is only relevant for "All" tab
+            // Show More drawer button is only relevant for the "All" view
             if (showMoreBtn) {
-                showMoreBtn.style.display = isAll ? 'flex' : 'none';
+                showMoreBtn.style.display = isAll ? 'inline-flex' : 'none';
             }
 
             projectCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                const isDrawerNode = card.classList.contains('drawer-node');
+                const cardCat = card.getAttribute('data-category');
+                const isExtra = card.classList.contains('project-extra');
 
                 if (isAll) {
-                    if (isDrawerNode) {
-                        card.classList.add('hidden');
+                    if (isExtra) {
                         card.classList.remove('visible');
                     } else {
                         card.style.display = 'flex';
-                        requestAnimationFrame(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        });
+                        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 10);
                     }
                 } else {
-                    if (cardCategory === filterValue) {
+                    if (cardCat === filter) {
                         card.style.display = 'flex';
-                        card.classList.remove('hidden');
-                        requestAnimationFrame(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        });
+                        card.classList.remove('project-extra'); // temp override for clean visual transition
+                        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 10);
                     } else {
                         card.style.opacity = '0';
-                        card.style.transform = 'translateY(15px)';
-                        setTimeout(() => { card.style.display = 'none'; }, 250);
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => { 
+                            card.style.display = 'none'; 
+                            // restore the extra tag class if filter reverts
+                            if (isExtra) card.classList.add('project-extra'); 
+                        }, 200);
                     }
                 }
             });
+            
+            // If expand button is active, reset button state on filtering
+            if (showMoreBtn && showMoreBtn.classList.contains('expanded')) {
+                showMoreBtn.classList.remove('expanded');
+                showMoreBtn.querySelector('span').textContent = 'Show More Projects';
+            }
         });
     });
 }
 
 // ==========================================
-// 9. Show More Drawer for Extended Repos
+// 10. Drawer Show-More/Less Extra Repos Toggle
 // ==========================================
 function initShowMore() {
     const showMoreBtn = document.getElementById('showMoreBtn');
     const grid = document.getElementById('projectsGrid');
+    
     if (!showMoreBtn || !grid) return;
 
     showMoreBtn.addEventListener('click', () => {
         const isExpanded = showMoreBtn.classList.toggle('expanded');
-        const drawerCards = grid.querySelectorAll('.drawer-node');
-        const btnLabel = showMoreBtn.querySelector('span');
+        const extraCards = grid.querySelectorAll('.project-extra');
+        const label = showMoreBtn.querySelector('span');
 
         if (isExpanded) {
-            btnLabel.textContent = 'Show Less Projects';
-            showMoreBtn.querySelector('svg').style.transform = 'rotate(180deg)';
-            
-            drawerCards.forEach((card, idx) => {
+            label.textContent = 'Show Less Projects';
+            extraCards.forEach((card, i) => {
                 card.style.display = 'flex';
-                card.classList.remove('hidden');
-                card.classList.add('visible');
-                
-                // Staggered fade in
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
                 setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, idx * 80);
+                    card.classList.add('visible');
+                }, i * 65); // Staggered entry delay
             });
         } else {
-            btnLabel.textContent = 'Show More Projects';
-            showMoreBtn.querySelector('svg').style.transform = 'rotate(0deg)';
-            
-            drawerCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
+            label.textContent = 'Show More Projects';
+            extraCards.forEach(card => {
+                card.classList.remove('visible');
                 setTimeout(() => {
-                    card.classList.add('hidden');
-                    card.classList.remove('visible');
+                    card.style.display = 'none';
                 }, 300);
             });
             
-            // Scroll back smoothly to projects tag
+            // Smoothly scroll container header back into viewport view
             document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
         }
     });
 }
 
 // ==========================================
-// 10. Contact Form MailTo Binding
+// 11. Contact Form Submit Redirection
 // ==========================================
 function initContactForm() {
     const form = document.getElementById('contactForm');
@@ -445,36 +462,43 @@ function initContactForm() {
 
         if (!name || !email || !subject || !message) return;
 
-        const bodyString = `Sender: ${name}\nContact Email: ${email}\n\nMessage:\n${message}`;
-        const mailtoLink = `mailto:charbeltoumieh1@gmail.com?subject=${encodeURIComponent('AI Portfolio: ' + subject)}&body=${encodeURIComponent(bodyString)}`;
+        const body = `Sender Name: ${name}\nSender Email: ${email}\n\nMessage Payload:\n${message}`;
+        const mailto = `mailto:charbeltoumieh1@gmail.com?subject=${encodeURIComponent('[AI Portfolio] ' + subject)}&body=${encodeURIComponent(body)}`;
 
-        window.location.href = mailtoLink;
+        window.location.href = mailto;
     });
 }
 
 // ==========================================
-// 11. Mouse Glow Coordinates Tracker
+// 12. Cursor Follow Coordinates Glow
 // ==========================================
 function initCursorGlow() {
     const glow = document.getElementById('cursorGlow');
+    
+    // Disable coordinates tracking calculations on smaller screens for performance
     if (!glow || window.matchMedia('(max-width: 1024px)').matches) return;
 
     let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
+    let currX = 0, currY = 0;
 
     window.addEventListener('mousemove', (e) => {
+        glow.classList.add('active');
         targetX = e.clientX;
         targetY = e.clientY;
     });
 
-    function animateGlow() {
-        // Easing interpolation
-        currentX += (targetX - currentX) * 0.1;
-        currentY += (targetY - currentY) * 0.1;
+    window.addEventListener('mouseleave', () => {
+        glow.classList.remove('active');
+    });
 
-        glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate3d(-50%, -50%, 0)`;
-        requestAnimationFrame(animateGlow);
+    function stepAnimation() {
+        // Easing factor calculation
+        currX += (targetX - currX) * 0.08;
+        currY += (targetY - currY) * 0.08;
+
+        glow.style.transform = `translate3d(${currX}px, ${currY}px, 0) translate3d(-50%, -50%, 0)`;
+        requestAnimationFrame(stepAnimation);
     }
     
-    animateGlow();
+    stepAnimation();
 }
