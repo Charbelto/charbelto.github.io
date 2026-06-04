@@ -3,62 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charbel Toumieh | AI & LLM Engineer</title>
-    <meta name="description" content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment. Currently pursuing Master's in Applied AI at University of Warwick.">
-    <meta property="og:title" content="Charbel Toumieh | AI & LLM Engineer">
-    <meta property="og:description" content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment.">
+    <title>Charbel Toumieh | AI & Machine Learning Engineer</title>
+    <meta name="description" content="AI & ML Engineer specializing in LLMs, Multimodal systems, Computer Vision, and production-grade deployments. MSc Applied AI at University of Warwick.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Charbel Toumieh | AI & Machine Learning Engineer">
+    <meta property="og:description" content="AI & ML Engineer specializing in LLMs, Multimodal systems, Computer Vision, and production-grade deployments.">
     <meta property="og:image" content="profile.jpg">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Charbel Toumieh | AI & LLM Engineer">
-    <meta name="twitter:description" content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236366f1'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='50' font-weight='bold' text-anchor='middle' fill='white'%3ECT%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2300f5ff'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='48' font-weight='900' text-anchor='middle' fill='%23030306'%3ECT%3C/text%3E%3C/svg%3E">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Loader -->
+
+    <!-- Loading Console -->
     <div class="loader" id="loader">
         <div class="loader-content">
-            <div class="loader-logo">
-                <span class="logo-bracket">&lt;</span>CT<span class="logo-bracket">/&gt;</span>
+            <div class="loader-terminal">
+                <div class="term-line"><span class="term-prompt">guest@ctoumieh:~$</span> init portfolio_system --release</div>
+                <div class="term-line term-loading">Loading dependencies...</div>
+                <div class="term-line term-success">[OK] Core system initialized.</div>
+                <div class="term-line term-loading">Optimizing neural layouts...</div>
+                <div class="term-line term-success">[OK] Complete. Booting UI.</div>
             </div>
-            <div class="loader-bar">
+            <div class="loader-progress-bar">
                 <div class="loader-progress"></div>
             </div>
         </div>
     </div>
 
-    <!-- Skip to content -->
-    <a href="#hero" class="skip-link">Skip to content</a>
-
-    <!-- Cursor glow -->
+    <!-- Mouse Glow Effect -->
     <div class="cursor-glow" id="cursorGlow"></div>
 
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
-        <div class="gradient-orb orb-3"></div>
+    <!-- Ambient Grid & Orbs -->
+    <div class="ambient-layer">
+        <div class="grid-overlay"></div>
+        <div class="ambient-orb orb-cyan"></div>
+        <div class="ambient-orb orb-violet"></div>
     </div>
 
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="#hero" class="nav-logo">
-                <span class="logo-bracket">&lt;</span>CT<span class="logo-bracket">/&gt;</span>
+                <span class="logo-accent">&lt;</span>charbel<span class="logo-text">.ai</span><span class="logo-accent">/&gt;</span>
             </a>
             <div class="nav-menu" id="navMenu">
                 <a href="#about" class="nav-link">About</a>
                 <a href="#experience" class="nav-link">Experience</a>
                 <a href="#skills" class="nav-link">Skills</a>
                 <a href="#projects" class="nav-link">Projects</a>
-                <a href="#contact" class="nav-link nav-cta">Contact</a>
+                <a href="#contact" class="nav-link nav-cta">Connect</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle visual theme">
                     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                         <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
                     </svg>
@@ -66,7 +74,7 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                     </svg>
                 </button>
-                <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -76,358 +84,226 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="hero-content">
-            <div class="hero-badge animate-fade-in">
-                <span class="badge-dot"></span>
-                Available for opportunities
-            </div>
-            <h1 class="hero-title animate-slide-up">
-                <span class="title-line">Hi, I'm <span class="highlight">Charbel</span></span>
-                <span class="title-line">AI & LLM Engineer</span>
-            </h1>
-            <p class="hero-description animate-slide-up delay-1">
-                Building intelligent systems that transform businesses. Specializing in
-                <span class="typed-text"></span>
-            </p>
-            <div class="hero-cta animate-slide-up delay-2">
-                <a href="#projects" class="btn btn-primary">
-                    <span>View My Work</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-                <a href="Charbel_Toumieh_Resume.pdf" download class="btn btn-secondary">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    <span>Download CV</span>
-                </a>
-                <a href="#contact" class="btn btn-ghost">Get In Touch</a>
-            </div>
-            <div class="hero-stats animate-fade-in delay-3">
-                <div class="stat">
-                    <span class="stat-number" data-count="3">0</span>
-                    <span class="stat-label">Years Experience</span>
+    <header id="hero" class="hero">
+        <div class="hero-container">
+            <div class="hero-text-block">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-label">SYSTEM ONLINE // WARWICK Applied AI</span>
                 </div>
-                <div class="stat">
-                    <span class="stat-number" data-count="22">0</span><span class="stat-plus">+</span>
-                    <span class="stat-label">Projects Completed</span>
+                <h1 class="hero-title">
+                    Hi, I'm <span class="text-gradient">Charbel</span>
+                    <span class="title-sub">AI & Machine Learning Engineer</span>
+                </h1>
+                <p class="hero-summary">
+                    Engineering intelligence at scale. I specialize in building robust large language model agents, deep learning computer vision architectures, and highly optimized server infrastructures.
+                </p>
+                <div class="hero-actions">
+                    <a href="#projects" class="btn btn-primary">
+                        <span>Deploy Projects</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </a>
+                    <a href="Charbel_Toumieh_Resume.pdf" download class="btn btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span>Download CV</span>
+                    </a>
                 </div>
-                <div class="stat">
-                    <span class="stat-number" data-count="6">0</span>
-                    <span class="stat-label">Companies</span>
-                </div>
-            </div>
-        </div>
-        <div class="hero-visual animate-float">
-            <div class="code-window">
-                <div class="window-header">
-                    <div class="window-dots">
-                        <span class="dot red"></span>
-                        <span class="dot yellow"></span>
-                        <span class="dot green"></span>
+                
+                <div class="hero-metrics">
+                    <div class="metric">
+                        <span class="metric-val" data-count="5">0</span><span class="metric-accent">+</span>
+                        <span class="metric-lbl">Deployable ML APIs</span>
                     </div>
-                    <span class="window-title">ai_engineer.py</span>
+                    <div class="metric">
+                        <span class="metric-val" data-count="97">0</span><span class="metric-percent">%</span>
+                        <span class="metric-lbl">CV Target Accuracy</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-val" data-count="100">0</span><span class="metric-accent">K+</span>
+                        <span class="metric-lbl">Production User Base</span>
+                    </div>
                 </div>
-                <pre class="code-content"><code><span class="keyword">class</span> <span class="class-name">AIEngineer</span>:
-    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="param">self</span>):
-        <span class="param">self</span>.name = <span class="string">"Charbel Toumieh"</span>
-        <span class="param">self</span>.role = <span class="string">"AI & LLM Engineer"</span>
-        <span class="param">self</span>.skills = [
-            <span class="string">"LLM Engineering"</span>,
-            <span class="string">"Multimodal AI"</span>,
-            <span class="string">"Production APIs"</span>,
-            <span class="string">"Data Strategy"</span>
-        ]
+            </div>
 
-    <span class="keyword">def</span> <span class="function">build_intelligence</span>(<span class="param">self</span>):
-        <span class="keyword">return</span> <span class="string">"Transforming ideas into AI"</span></code></pre>
+            <!-- Terminal / AI Console -->
+            <div class="hero-console">
+                <div class="console-header">
+                    <div class="console-controls">
+                        <span class="btn-dot dot-red"></span>
+                        <span class="btn-dot dot-yellow"></span>
+                        <span class="btn-dot dot-green"></span>
+                    </div>
+                    <span class="console-title">ai_trainer_node_01.py</span>
+                </div>
+                <div class="console-body" id="consoleBody">
+                    <div class="log-line text-comment"># Initializing AI training workflow...</div>
+                    <div class="log-line"><span class="text-keyword">import</span> torch</div>
+                    <div class="log-line"><span class="text-keyword">import</span> neural_net <span class="text-keyword">as</span> nn</div>
+                    <div class="log-line text-success">STATUS: GPU Device [NVIDIA RTX] mapped successfully.</div>
+                    <div class="log-line"><span class="text-keyword">model</span> = nn.TransformerModel(weights=<span class="text-string">"dDSA_DermSense"</span>)</div>
+                    <div class="log-line"><span class="text-keyword">trainer</span> = nn.Trainer(epochs=5, batch_size=32)</div>
+                    <div class="log-line text-comment"># Commencing epochs execution...</div>
+                </div>
             </div>
         </div>
-        <a href="#about" class="scroll-indicator">
-            <span>Scroll</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </a>
-    </section>
+    </header>
 
     <!-- About Section -->
-    <section id="about" class="about section">
+    <section id="about" class="about-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">About Me</span>
-                <h2 class="section-title">Turning Complex AI Challenges into Elegant Solutions</h2>
-            </div>
+            <div class="section-tag">/ PROFILE_RESOURCES</div>
+            <h2 class="section-heading">Translating Complex Models into High-Impact Solutions</h2>
             <div class="about-grid">
-                <div class="about-content">
-                    <p class="about-text">
-                        I'm an AI & LLM Engineer with a passion for building intelligent systems that deliver measurable business impact.
-                        Currently pursuing my <strong>Master's in Applied AI at the University of Warwick</strong>, I bring a unique blend of
-                        research expertise and production engineering skills.
+                <div class="about-info">
+                    <p>
+                        I am an AI & Machine Learning Engineer with a passion for designing end-to-end intelligent systems. Currently reading for my <strong>Master of Science in Applied Artificial Intelligence at the University of Warwick</strong>, I bridge academic research in advanced architectures with commercial deployment workflows.
                     </p>
-                    <p class="about-text">
-                        My journey spans from <strong>Meta-funded AI research</strong> developing multimodal ECG analysis systems, to
-                        building <strong>production LLM chatbots</strong> that achieved 25% performance improvements at Gabriel & Co.
-                        I've managed data products serving <strong>100K+ users</strong> and built ETL pipelines that reduced reporting time by 40%.
+                    <p>
+                        My experience ranges from developing <strong>multimodal cardiovascular AI models</strong> under a Meta-funded collaboration, to designing <strong>autonomous agentic workflows (n8n)</strong> and optimizing LLM performance by 25% for Gabriel & Co. I have engineered high-performance ETL data streams, optimized microservice platforms, and lectured foundational AI curriculums.
                     </p>
-                    <p class="about-text">
-                        I thrive at the intersection of cutting-edge AI research and practical business applications,
-                        always focused on delivering solutions that scale and create real value.
-                    </p>
-                    <div class="about-highlights">
-                        <div class="highlight-card">
-                            <div class="highlight-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                </svg>
-                            </div>
-                            <h3>End-to-End AI</h3>
-                            <p>From research to production deployment</p>
+                    <div class="profile-cards">
+                        <div class="p-card">
+                            <div class="p-card-icon">🧠</div>
+                            <h3>Systems Builder</h3>
+                            <p>Specialized in agentic pipelines, RAG, and microservice backends.</p>
                         </div>
-                        <div class="highlight-card">
-                            <div class="highlight-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                                </svg>
-                            </div>
-                            <h3>Business Impact</h3>
-                            <p>Measurable improvements in performance</p>
-                        </div>
-                        <div class="highlight-card">
-                            <div class="highlight-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                                </svg>
-                            </div>
-                            <h3>Global Experience</h3>
-                            <p>US, UK, France, Lebanon</p>
+                        <div class="p-card">
+                            <div class="p-card-icon">📊</div>
+                            <h3>Data Strategist</h3>
+                            <p>Managing pipelines and building analytics frameworks at scale.</p>
                         </div>
                     </div>
                 </div>
-                <div class="about-image">
-                    <div class="image-frame">
-                        <img src="profile.jpg" alt="Charbel Toumieh" class="profile-image" loading="lazy">
-                        <div class="image-decoration"></div>
+                <div class="about-image-wrapper">
+                    <div class="avatar-frame">
+                        <img src="profile.jpg" alt="Charbel Toumieh" class="avatar-img">
+                        <div class="avatar-glow"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="experience section">
+    <!-- Experience Timeline -->
+    <section id="experience" class="experience-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Career Journey</span>
-                <h2 class="section-title">Professional Experience</h2>
-            </div>
+            <div class="section-tag">/ PIPELINE_EXECUTION</div>
+            <h2 class="section-heading">Professional Timeline</h2>
             <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">AI and LLM Engineer</h3>
-                                <span class="timeline-company">Gabriel & Co</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Jun 2024 – Present</span>
-                                <span class="timeline-location">New York, US (Remote)</span>
-                            </div>
+                <!-- Gabriel & Co -->
+                <div class="timeline-node">
+                    <div class="node-line"></div>
+                    <div class="node-bullet"></div>
+                    <div class="node-content">
+                        <div class="node-meta">
+                            <h3 class="node-role">AI and LLM Engineer</h3>
+                            <span class="node-company">Gabriel & Co</span>
+                            <span class="node-date">Jun 2024 – Present // New York, US (Remote)</span>
                         </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">+25%</span>
-                                Boosted LLM chatbot performance through advanced prompt engineering and A/B testing
-                            </li>
-                            <li>
-                                <span class="achievement-metric">10+</span>
-                                Built production APIs in PHP and Node.js connecting chatbot with backend services
-                            </li>
-                            <li>
-                                <span class="achievement-metric">24+</span>
-                                Developed multimodal intelligent agent using n8n with self-verification workflows
-                            </li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">LLMs</span>
-                            <span class="tag">Prompt Engineering</span>
-                            <span class="tag">n8n</span>
-                            <span class="tag">Node.js</span>
-                            <span class="tag">PHP</span>
+                        <p class="node-desc">
+                            Design and benchmark next-generation generative AI interfaces. Integrated advanced prompt architectures and self-verifying n8n multi-agent loops to elevate diagnostic precision and backend connectivity.
+                        </p>
+                        <div class="node-achievements">
+                            <div class="ach-badge"><span class="ach-num">+25%</span> Chatbot Efficiency</div>
+                            <div class="ach-badge"><span class="ach-num">10+</span> Production APIs</div>
+                            <div class="ach-badge"><span class="ach-num">24+</span> Agent Workflows</div>
+                        </div>
+                        <div class="tech-tags">
+                            <span>LLM Agents</span><span>Prompt Engineering</span><span>n8n</span><span>Node.js</span><span>PHP</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">Data Strategy and Engineering</h3>
-                                <span class="timeline-company">CMA CGM</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Jan 2025 – Oct 2025</span>
-                                <span class="timeline-location">Marseille, FR (Remote)</span>
-                            </div>
+                <!-- CMA CGM -->
+                <div class="timeline-node">
+                    <div class="node-line"></div>
+                    <div class="node-bullet"></div>
+                    <div class="node-content">
+                        <div class="node-meta">
+                            <h3 class="node-role">Data Strategy and Engineering</h3>
+                            <span class="node-company">CMA CGM</span>
+                            <span class="node-date">Jan 2025 – Oct 2025 // Marseille, FR (Remote)</span>
                         </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">100K+</span>
-                                Managed data products including Loyalty Program with 100K+ users
-                            </li>
-                            <li>
-                                <span class="achievement-metric">+25%</span>
-                                Enhanced clustering models increasing targeting accuracy
-                            </li>
-                            <li>
-                                <span class="achievement-metric">-40%</span>
-                                Built ETL pipelines and dashboards reducing reporting time
-                            </li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">Data Strategy</span>
-                            <span class="tag">ETL</span>
-                            <span class="tag">ML Clustering</span>
-                            <span class="tag">Dashboards</span>
+                        <p class="node-desc">
+                            Oversaw the analytics architecture and clustering segmentation metrics of high-throughput client loyalty products, designing automated ingestion flows and dashboards.
+                        </p>
+                        <div class="node-achievements">
+                            <div class="ach-badge"><span class="ach-num">100K+</span> Active Users</div>
+                            <div class="ach-badge"><span class="ach-num">+25%</span> Clustering Precision</div>
+                            <div class="ach-badge"><span class="ach-num">-40%</span> ETL Latency</div>
+                        </div>
+                        <div class="tech-tags">
+                            <span>Data Strategy</span><span>ETL Pipelines</span><span>SQL Server</span><span>Clustering</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">AI and LLM Researcher</h3>
-                                <span class="timeline-company">Meta (Research Collaboration)</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Jan 2024 – Jan 2025</span>
-                                <span class="timeline-location">California, US (Remote)</span>
-                            </div>
+                <!-- Meta -->
+                <div class="timeline-node">
+                    <div class="node-line"></div>
+                    <div class="node-bullet"></div>
+                    <div class="node-content">
+                        <div class="node-meta">
+                            <h3 class="node-role">AI and LLM Researcher</h3>
+                            <span class="node-company">Meta (Research Collaboration)</span>
+                            <span class="node-date">Jan 2024 – Jan 2025 // California, US (Remote)</span>
                         </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">META</span>
-                                Key member of 7-researcher team on Meta-funded ECG analysis project
-                            </li>
-                            <li>
-                                <span class="achievement-metric">+20%</span>
-                                Improved AI ECG reading accuracy using visual context analysis
-                            </li>
-                            <li>
-                                <span class="achievement-metric">30+</span>
-                                Reviewed research papers for pediatric ECG AI solutions
-                            </li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">Multimodal AI</span>
-                            <span class="tag">Research</span>
-                            <span class="tag">Healthcare AI</span>
-                            <span class="tag">Computer Vision</span>
+                        <p class="node-desc">
+                            Cooperated in a specialized research group investigating deep multimodal models for processing medical signals. Focused on computer vision architectures to process time-series signal graphics.
+                        </p>
+                        <div class="node-achievements">
+                            <div class="ach-badge"><span class="ach-num">7-Res</span> Core Lab</div>
+                            <div class="ach-badge"><span class="ach-num">+20%</span> Diagnostic Accuracy</div>
+                            <div class="ach-badge"><span class="ach-num">30+</span> Peer Studies Reviewed</div>
+                        </div>
+                        <div class="tech-tags">
+                            <span>Multimodal AI</span><span>Computer Vision</span><span>Biomedical Signals</span><span>PyTorch</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">Software Engineering Intern</h3>
-                                <span class="timeline-company">BMB Group &times; PepsiCo</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Nov 2023 – Feb 2024</span>
-                                <span class="timeline-location">Baabda, LB</span>
-                            </div>
+                <!-- BMB & PepsiCo -->
+                <div class="timeline-node">
+                    <div class="node-line"></div>
+                    <div class="node-bullet"></div>
+                    <div class="node-content">
+                        <div class="node-meta">
+                            <h3 class="node-role">Software Engineering Intern</h3>
+                            <span class="node-company">BMB Group &times; PepsiCo</span>
+                            <span class="node-date">Nov 2023 – Feb 2024 // Baabda, LB</span>
                         </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">-30%</span>
-                                Developed .NET MAUI Blazor app reducing package size by 30%
-                            </li>
-                            <li>Implemented offline SQLite database for Android with security enhancements</li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">.NET MAUI</span>
-                            <span class="tag">Blazor</span>
-                            <span class="tag">SQLite</span>
-                            <span class="tag">Android</span>
+                        <p class="node-desc">
+                            Architected cross-platform hybrid applications deployed onto rugged corporate endpoints, optimizing storage configurations and offline synchronization protocols.
+                        </p>
+                        <div class="node-achievements">
+                            <div class="ach-badge"><span class="ach-num">-30%</span> Package Footprint</div>
+                            <div class="ach-badge"><span class="ach-num">SQLite</span> Encrypted Engine</div>
+                        </div>
+                        <div class="tech-tags">
+                            <span>.NET MAUI</span><span>Blazor Hybrid</span><span>SQLite</span><span>Android OS</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">AI Engineering Intern</h3>
-                                <span class="timeline-company">Intalio</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Jul 2023 – Oct 2023</span>
-                                <span class="timeline-location">Naqqache, LB</span>
-                            </div>
+                <!-- Intalio -->
+                <div class="timeline-node">
+                    <div class="node-line"></div>
+                    <div class="node-bullet"></div>
+                    <div class="node-content">
+                        <div class="node-meta">
+                            <h3 class="node-role">AI Engineering Intern</h3>
+                            <span class="node-company">Intalio</span>
+                            <span class="node-date">Jul 2023 – Oct 2023 // Naqqache, LB</span>
                         </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">97%</span>
-                                Achieved text extraction accuracy with YOLOv8 + OpenCV + Tesseract
-                            </li>
-                            <li>
-                                <span class="achievement-metric">100+</span>
-                                Engineered Flask API handling 100+ daily image processing requests
-                            </li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">YOLOv8</span>
-                            <span class="tag">OpenCV</span>
-                            <span class="tag">Tesseract OCR</span>
-                            <span class="tag">Flask</span>
+                        <p class="node-desc">
+                            Developed high-throughput visual text extraction modules leveraging deep object-detection models and advanced OpenCV filtration steps.
+                        </p>
+                        <div class="node-achievements">
+                            <div class="ach-badge"><span class="ach-num">97%</span> OCR Extraction Accuracy</div>
+                            <div class="ach-badge"><span class="ach-num">100+</span> API Queries/Day</div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker">
-                        <div class="marker-dot"></div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <div class="timeline-info">
-                                <h3 class="timeline-title">Software Engineering Intern</h3>
-                                <span class="timeline-company">eMcREY</span>
-                            </div>
-                            <div class="timeline-meta">
-                                <span class="timeline-date">Mar 2023 – Jun 2023</span>
-                                <span class="timeline-location">Dbayeh, LB</span>
-                            </div>
-                        </div>
-                        <ul class="timeline-achievements">
-                            <li>
-                                <span class="achievement-metric">-20%</span>
-                                Streamlined three core business processes, reducing processing time through automation
-                            </li>
-                            <li>Developed XML, Java, and MySQL applications on Oracle platforms as part of a 4-member team</li>
-                        </ul>
-                        <div class="timeline-tags">
-                            <span class="tag">Java</span>
-                            <span class="tag">MySQL</span>
-                            <span class="tag">Oracle</span>
-                            <span class="tag">XML</span>
+                        <div class="tech-tags">
+                            <span>YOLOv8</span><span>OpenCV</span><span>Tesseract OCR</span><span>Flask APIs</span>
                         </div>
                     </div>
                 </div>
@@ -435,85 +311,55 @@
         </div>
     </section>
 
-    <!-- Education Section -->
-    <section id="education" class="education section">
+    <!-- Education and Academics -->
+    <section class="education-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Education</span>
-                <h2 class="section-title">Academic Background</h2>
-            </div>
+            <div class="section-tag">/ ACADEMIC_RESOURCES</div>
+            <h2 class="section-heading">Education & Lectures</h2>
             <div class="education-grid">
-                <div class="education-card">
-                    <div class="edu-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                        </svg>
+                <div class="edu-card">
+                    <div class="edu-header">
+                        <span class="edu-status">Active Enrollment</span>
+                        <span class="edu-date">2025 – 2026</span>
                     </div>
-                    <div class="edu-badge">Currently Pursuing</div>
-                    <h3 class="edu-degree">MSc Applied Artificial Intelligence</h3>
-                    <p class="edu-school">University of Warwick</p>
-                    <div class="edu-meta">
-                        <span class="edu-date">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            Sep 2025 – Sep 2026
-                        </span>
-                        <span class="edu-location">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            Coventry, UK
-                        </span>
-                    </div>
+                    <h3 class="edu-title">MSc Applied Artificial Intelligence</h3>
+                    <p class="edu-school">University of Warwick // Coventry, UK</p>
+                    <p class="edu-detail">Rigorous focus on advanced deep learning, LLM modeling, and distributed ML operations.</p>
                 </div>
-                <div class="education-card">
-                    <div class="edu-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                        </svg>
+                <div class="edu-card">
+                    <div class="edu-header">
+                        <span class="edu-status status-completed">Completed</span>
+                        <span class="edu-date">Graduated</span>
                     </div>
-                    <h3 class="edu-degree">BE Computer & Communications Engineering</h3>
-                    <p class="edu-school">American University of Beirut</p>
-                    <div class="edu-meta">
-                        
-                        <span class="edu-location">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            Beirut, LB
-                        </span>
-                    </div>
+                    <h3 class="edu-title">BE Computer & Communications Engineering</h3>
+                    <p class="edu-school">American University of Beirut // Beirut, LB</p>
+                    <p class="edu-detail">Comprehensive foundations in computer architecture, hardware design, and networking systems.</p>
                 </div>
             </div>
-            <div class="extracurricular">
-                <h3 class="extra-title">Extracurricular Activities</h3>
-                <div class="extra-grid">
-                    <div class="extra-item">
-                        <div class="extra-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2"/>
-                            </svg>
+            
+            <div class="lectures-wrapper">
+                <h3 class="lectures-title">Community & Leadership</h3>
+                <div class="lectures-grid">
+                    <div class="lecture-item">
+                        <div class="lec-icon">🎯</div>
+                        <div class="lec-text">
+                            <h4>Lecturer @ AUB AIcademy</h4>
+                            <p>Designed the syllabus and delivered foundational artificial intelligence and machine learning modules.</p>
                         </div>
-                        <h4>AIcademy</h4>
-                        <p>Developed curriculum and lectured a foundational AI course at AUB</p>
-                        <span class="extra-date">May 2024 – Sep 2025</span>
                     </div>
-                    <div class="extra-item">
-                        <div class="extra-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            </svg>
+                    <div class="lecture-item">
+                        <div class="lec-icon">🤝</div>
+                        <div class="lec-text">
+                            <h4>Committee Officer @ IEEE</h4>
+                            <p>Organized regional hackathons and hardware workshops fostering developer communities.</p>
                         </div>
-                        <h4>IEEE</h4>
-                        <p>Guided activities and initiatives, fostering professional development</p>
-                        <span class="extra-date">Feb 2022 – May 2023</span>
                     </div>
-                    <div class="extra-item">
-                        <div class="extra-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-                            </svg>
+                    <div class="lecture-item">
+                        <div class="lec-icon">🥋</div>
+                        <div class="lec-text">
+                            <h4>Facilitator @ PythonDojo</h4>
+                            <p>Chaired daily programming meetups reviewing data structures, API designs, and clean coding practices.</p>
                         </div>
-                        <h4>PythonDojo</h4>
-                        <p>Actively facilitated daily coding meetings, contributing to Python codebase</p>
-                        <span class="extra-date">Sep 2021 – Jun 2022</span>
                     </div>
                 </div>
             </div>
@@ -521,705 +367,447 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="skills section">
+    <section id="skills" class="skills-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Technical Arsenal</span>
-                <h2 class="section-title">Skills & Expertise</h2>
-            </div>
+            <div class="section-tag">/ ARCHITECTURE_TOKENS</div>
+            <h2 class="section-heading">Technical Arsenal</h2>
             <div class="skills-grid">
-                <div class="skill-category">
-                    <div class="category-header">
-                        <div class="category-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5"/>
-                            </svg>
-                        </div>
-                        <h3 class="category-title">AI & Machine Learning</h3>
+                <!-- Skill Group 1 -->
+                <div class="skill-group">
+                    <h3 class="group-title">Deep Learning & Vision</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">Computer Vision (YOLOv8, OpenCV)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 90%"></div></div>
                     </div>
-                    <div class="skill-bars">
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">LLMs & LLM APIs</span>
-                                <span class="skill-level">Expert</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="95"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Prompt Engineering</span>
-                                <span class="skill-level">Expert</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="95"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Computer Vision</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="85"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Clustering & Segmentation</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="80"></div></div>
-                        </div>
+                    <div class="skill-item">
+                        <div class="skill-name">Deep Neural Nets (PyTorch, CNNs)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">Explainable AI (Grad-CAM, Saliency)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 80%"></div></div>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <div class="category-header">
-                        <div class="category-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-                            </svg>
-                        </div>
-                        <h3 class="category-title">Programming & Frameworks</h3>
+                <!-- Skill Group 2 -->
+                <div class="skill-group">
+                    <h3 class="group-title">Generative AI & Infrastructure</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">Agentic Workflows (n8n, LangChain)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 90%"></div></div>
                     </div>
-                    <div class="skill-bars">
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Python (Flask)</span>
-                                <span class="skill-level">Expert</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="95"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Node.js</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="85"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Java</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="80"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">PHP</span>
-                                <span class="skill-level">Proficient</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="75"></div></div>
-                        </div>
+                    <div class="skill-item">
+                        <div class="skill-name">Microservices & APIs (FastAPI, Flask)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 95%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">Containerization & MLOps (Docker, Git)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 85%"></div></div>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <div class="category-header">
-                        <div class="category-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                            </svg>
-                        </div>
-                        <h3 class="category-title">Data & Infrastructure</h3>
+                <!-- Skill Group 3 -->
+                <div class="skill-group">
+                    <h3 class="group-title">Data Systems & Engineering</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">Data Strategy & ETL Streams</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 85%"></div></div>
                     </div>
-                    <div class="skill-bars">
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">SQL/SQLite</span>
-                                <span class="skill-level">Expert</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="90"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">ETL & Dashboards</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="85"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">AWS & Azure</span>
-                                <span class="skill-level">Advanced</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="80"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">REST APIs</span>
-                                <span class="skill-level">Expert</span>
-                            </div>
-                            <div class="skill-bar"><div class="skill-progress" data-progress="90"></div></div>
-                        </div>
+                    <div class="skill-item">
+                        <div class="skill-name">Relational Engines (SQL Server, SQLite)</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 90%"></div></div>
                     </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-header">
-                        <div class="category-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-                            </svg>
-                        </div>
-                        <h3 class="category-title">Tools & Platforms</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">n8n</span>
-                        <span class="skill-tag">YOLOv8</span>
-                        <span class="skill-tag">OpenCV</span>
-                        <span class="skill-tag">Tesseract</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">.NET MAUI</span>
-                        <span class="skill-tag">Blazor</span>
+                    <div class="skill-item">
+                        <div class="skill-name">Statistical Analytics & Signal Math</div>
+                        <div class="skill-track"><div class="skill-fill" style="width: 88%"></div></div>
                     </div>
                 </div>
             </div>
 
-            <div class="languages-section">
-                <h3 class="languages-title">Languages</h3>
-                <div class="languages-grid">
-                    <div class="language-item">
-                        <span class="language-name">English</span>
-                        <div class="language-level">
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot"></span>
-                        </div>
-                        <span class="language-label">High Proficiency</span>
-                    </div>
-                    <div class="language-item">
-                        <span class="language-name">French</span>
-                        <div class="language-level">
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot"></span>
-                        </div>
-                        <span class="language-label">High Proficiency</span>
-                    </div>
-                    <div class="language-item">
-                        <span class="language-name">Arabic</span>
-                        <div class="language-level">
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                            <span class="level-dot active"></span>
-                        </div>
-                        <span class="language-label">Native</span>
-                    </div>
-                </div>
+            <!-- Languages -->
+            <div class="skills-langs">
+                <span class="lang-item"><strong>English:</strong> Native / Bilingual</span>
+                <span class="lang-item"><strong>French:</strong> Professional Working</span>
+                <span class="lang-item"><strong>Arabic:</strong> Native</span>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects section">
+    <!-- Projects Grid -->
+    <section id="projects" class="projects-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Portfolio</span>
-                <h2 class="section-title">Featured Projects</h2>
-            </div>
+            <div class="section-tag">/ PORTFOLIO_INDEX</div>
+            <h2 class="section-heading">Advanced Technical Work</h2>
+            
             <div class="projects-filter">
-                <button class="filter-btn active" data-filter="all">All (22)</button>
-                <button class="filter-btn" data-filter="ai">AI/ML</button>
-                <button class="filter-btn" data-filter="data">Data</button>
-                <button class="filter-btn" data-filter="web">Web</button>
-                <button class="filter-btn" data-filter="app">Apps</button>
-                <button class="filter-btn" data-filter="systems">Systems</button>
+                <button class="filter-tab active" data-filter="all">All Repositories</button>
+                <button class="filter-tab" data-filter="ai">AI / Deep Learning</button>
+                <button class="filter-tab" data-filter="systems">Systems & Microservices</button>
+                <button class="filter-tab" data-filter="math">Math & Telecom</button>
             </div>
-            <div class="projects-grid" id="projectsGrid">
-                <!-- Featured: Public Health Data Dashboard -->
-                <article class="project-card featured" data-category="ai">
-                    <div class="featured-layout">
-                        <div class="featured-image">
-                            <div class="project-placeholder ai">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="featured-content">
-                            <span class="project-badge">Featured Project</span>
-                            <h3 class="project-title">Public Health Data Dashboard</h3>
-                            <p class="project-description">Interactive dashboard for visualizing and analyzing public health data with dynamic charts and data-driven insights.</p>
-                            <div class="project-tech">
-                                <span>Python</span>
-                                <span>Data Viz</span>
-                                <span>Analytics</span>
-                            </div>
-                            <a href="https://github.com/Charbelto/public-health-data-dashboard" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
-                                <span>View on GitHub</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                </article>
 
-                <!-- Student Wellbeing Insights -->
-                <article class="project-card" data-category="ai">
-                    <div class="project-image">
-                        <div class="project-placeholder ai">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v10M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m6 0h10"/>
-                            </svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Student_Wellbeing_Insights" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+            <div class="projects-grid" id="projectsGrid">
+                
+                <!-- DermSense -->
+                <div class="project-node" data-category="ai">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-ai">Computer Vision</span>
+                        <a href="https://github.com/ctoumieh/DermSense-Skin-Disease-Classifier" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Student Wellbeing Insights</h3>
-                        <p class="project-description">AI-powered analysis platform for understanding and predicting student wellbeing patterns using ML models.</p>
-                        <div class="project-tech">
-                            <span>Python</span>
-                            <span>ML</span>
-                            <span>Analytics</span>
-                        </div>
+                    <h3 class="proj-title">DermSense: Skin Disease Classifier</h3>
+                    <p class="proj-desc">
+                        A medical imaging neural pipeline contrasting an SVM-HOG baseline with a PyTorch EfficientNet-B0 CNN. Integrates Grad-CAM visual heatmaps for diagnostic transparency.
+                    </p>
+                    <div class="proj-tech">
+                        <span>PyTorch</span><span>Grad-CAM</span><span>OpenCV</span><span>SVM</span>
                     </div>
-                </article>
+                </div>
+
+                <!-- OULAD -->
+                <div class="project-node" data-category="ai">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-ai">ML Engineering</span>
+                        <a href="https://github.com/ctoumieh/OULAD-Learning-Analytics" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
+                    </div>
+                    <h3 class="proj-title">OULAD: Student Analytics Pipeline</h3>
+                    <p class="proj-desc">
+                        Student retention pipeline following CRISP-DM. Modularized into feature selection (XGBoost RFECV), classifiers/regressors, and unsupervised clustering.
+                    </p>
+                    <div class="proj-tech">
+                        <span>XGBoost</span><span>DBSCAN</span><span>GMM</span><span>Python CLI</span>
+                    </div>
+                </div>
 
                 <!-- Network Cell Analyzer -->
-                <article class="project-card" data-category="app">
-                    <div class="project-image">
-                        <div class="project-placeholder app">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
-                            </svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Network-Cell-Analyzer" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <div class="project-node" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Mobile & Systems</span>
+                        <a href="https://github.com/ctoumieh/Network-Cell-Analyzer" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Network Cell Analyzer</h3>
-                        <p class="project-description">Android app for collecting and analyzing cellular network data (2G-5G) with Flask backend for statistics.</p>
-                        <div class="project-tech">
-                            <span>Java</span>
-                            <span>Android</span>
-                            <span>Flask</span>
-                        </div>
+                    <h3 class="proj-title">Network Cell Analyzer</h3>
+                    <p class="proj-desc">
+                        Telemetry app querying low-level mobile radio links (LTE/5G/Wi-Fi signal parameters) from Android's hardware APIs, streaming to a Flask web dashboard.
+                    </p>
+                    <div class="proj-tech">
+                        <span>Android Java</span><span>Flask</span><span>REST APIs</span><span>SQLite</span>
                     </div>
-                </article>
+                </div>
 
-                <!-- Cipher Web -->
-                <article class="project-card" data-category="web">
-                    <div class="project-image">
-                        <div class="project-placeholder web">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            </svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Cipher-Web" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- Ecommerce FastAPI -->
+                <div class="project-node" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Backend Cloud</span>
+                        <a href="https://github.com/ctoumieh/ecommerce_Charbel_Toumieh" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Cipher Web</h3>
-                        <p class="project-description">End-to-end cryptographic web application implementing various encryption and decryption algorithms, deployed to Azure.</p>
-                        <div class="project-tech">
-                            <span>Flask</span>
-                            <span>Cryptography</span>
-                            <span>Azure</span>
-                        </div>
+                    <h3 class="proj-title">Containerized E-commerce Platform</h3>
+                    <p class="proj-desc">
+                        FastAPI backend microservices architecture. Features segregated customer/order databases, HAProxy load balancing, and Prometheus execution scraping.
+                    </p>
+                    <div class="proj-tech">
+                        <span>FastAPI</span><span>Docker</span><span>HAProxy</span><span>Prometheus</span>
                     </div>
-                </article>
+                </div>
 
-                <!-- MAUI App -->
-                <article class="project-card" data-category="app">
-                    <div class="project-image">
-                        <div class="project-placeholder app">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                            </svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/MauiApp1" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- DSP MATLAB -->
+                <div class="project-node" data-category="math">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-math">DSP & Signal Comm</span>
+                        <a href="https://github.com/ctoumieh/Signal-Processing-Matlab" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">.NET MAUI Application</h3>
-                        <p class="project-description">Cross-platform mobile and desktop application built with .NET MAUI and Blazor hybrid architecture.</p>
-                        <div class="project-tech">
-                            <span>C#</span>
-                            <span>.NET MAUI</span>
-                            <span>Blazor</span>
-                        </div>
+                    <h3 class="proj-title">Signal Processing MATLAB Simulator</h3>
+                    <p class="proj-desc">
+                        Mathematical modeling simulations representing Discrete Fourier Transforms, Nyquist sampling limits, Uniform/Selective quantization noise, and coherent BPSK/QPSK modulation.
+                    </p>
+                    <div class="proj-tech">
+                        <span>MATLAB</span><span>DSP Mathematics</span><span>Modulation</span>
                     </div>
-                </article>
+                </div>
 
-                <!-- Interactive Chart Generator -->
-                <article class="project-card" data-category="data">
-                    <div class="project-image">
-                        <div class="project-placeholder data">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
-                            </svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Interactive-Chart-Generator" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- DSA Supermarket -->
+                <div class="project-node" data-category="math">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-math">Data Structures</span>
+                        <a href="https://github.com/ctoumieh/DSA-Supermarket-Analysis" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Interactive Chart Generator</h3>
-                        <p class="project-description">Dynamic chart generation tool for creating interactive data visualizations from various data sources.</p>
-                        <div class="project-tech">
-                            <span>Python</span>
-                            <span>Charts</span>
-                            <span>Data Viz</span>
-                        </div>
+                    <h3 class="proj-title">DSA Supermarket Pathfinder</h3>
+                    <p class="proj-desc">
+                        A path-finding logistics simulator modeling layouts as weighted graphs. Implements graph algorithms (DFS/BFS) for routing, quicksort, and transaction rule analytics.
+                    </p>
+                    <div class="proj-tech">
+                        <span>Algorithms</span><span>Graph Theory</span><span>Unit Testing</span>
                     </div>
-                </article>
+                </div>
 
-                <!-- === HIDDEN PROJECTS (shown via Show More) === -->
+                <!-- == EXTENDED DRAWER FOR REMAINING REPOSITORIES == -->
+                
+                <!-- MauiApp1 -->
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Mobile Cross-Platform</span>
+                        <a href="https://github.com/ctoumieh/MauiApp1" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
+                    </div>
+                    <h3 class="proj-title">MauiApp1 Authentication App</h3>
+                    <p class="proj-desc">
+                        Cross-platform app targeting mobile and desktop endpoints via .NET MAUI with a local SQLite database engine.
+                    </p>
+                    <div class="proj-tech"><span>.NET MAUI</span><span>C#</span><span>SQLite</span></div>
+                </div>
 
-                <!-- DSA Supermarket Analysis -->
-                <article class="project-card project-extra" data-category="data">
-                    <div class="project-image">
-                        <div class="project-placeholder data">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/DSA-Supermarket-Analysis" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- CDC -->
+                <div class="project-node drawer-node hidden" data-category="ai">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-ai">Clinical Analytics</span>
+                        <a href="https://github.com/ctoumieh/CDC-Diabetes" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">DSA Supermarket Analysis</h3>
-                        <p class="project-description">Comprehensive data analysis using advanced data structures and algorithms to extract insights from supermarket sales.</p>
-                        <div class="project-tech"><span>Python</span><span>DSA</span><span>Analysis</span></div>
+                    <h3 class="proj-title">CDC Clinical Diabetes Classifier</h3>
+                    <p class="proj-desc">
+                        Machine learning pipeline utilizing CDC telemetry statistics to classify and cluster diabetes indicators.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Scikit-Learn</span><span>Clustering</span></div>
+                </div>
+
+                <!-- public-health-data-dashboard -->
+                <div class="project-node drawer-node hidden" data-category="math">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-math">Data Science</span>
+                        <a href="https://github.com/ctoumieh/public-health-data-dashboard" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                </article>
+                    <h3 class="proj-title">Public Health Data Dashboard</h3>
+                    <p class="proj-desc">
+                        A metrics analyzer rendering relational SQL database analytics representing global COVID telemetry and transmission distributions.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Data Dashboards</span><span>SQLite</span></div>
+                </div>
 
                 <!-- Careology -->
-                <article class="project-card project-extra" data-category="web">
-                    <div class="project-image">
-                        <div class="project-placeholder web">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Careology" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Integrations</span>
+                        <a href="https://github.com/ctoumieh/Careology" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Careology</h3>
-                        <p class="project-description">Healthcare-focused web application designed to streamline patient care and medical information management.</p>
-                        <div class="project-tech"><span>HTML</span><span>Healthcare</span><span>Web App</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">Careology Automotive Marketplace</h3>
+                    <p class="proj-desc">
+                        A web system containing custom administrative tools, integrated messaging systems, and OpenAI Chatbot configurations.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Flask</span><span>OpenAI API</span></div>
+                </div>
 
-                <!-- E-commerce -->
-                <article class="project-card project-extra" data-category="web">
-                    <div class="project-image">
-                        <div class="project-placeholder web">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/ecommerce_Charbel_Toumieh" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- CareTag -->
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Web Applications</span>
+                        <a href="https://github.com/ctoumieh/CareTag" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">E-Commerce Platform</h3>
-                        <p class="project-description">Full-featured e-commerce application with product management, cart functionality, and checkout flow.</p>
-                        <div class="project-tech"><span>Python</span><span>E-commerce</span><span>Web</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">CareTag Patient Portal</h3>
+                    <p class="proj-desc">
+                        Secure medical appointments and record synchronization tool powered by local Flask databases.
+                    </p>
+                    <div class="proj-tech"><span>Flask</span><span>Security Auth</span><span>Databases</span></div>
+                </div>
 
-                <!-- Mini Library Management System -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Mini-Library-Management-System-Challenge" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- Student Wellbeing Insights -->
+                <div class="project-node drawer-node hidden" data-category="ai">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-ai">Relational Analytics</span>
+                        <a href="https://github.com/ctoumieh/Student_Wellbeing_Insights" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Mini Library Management System</h3>
-                        <p class="project-description">A library management system implementing core functionality for book and member management.</p>
-                        <div class="project-tech"><span>Python</span><span>OOP</span><span>CLI</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">Student Wellbeing Insights</h3>
+                    <p class="proj-desc">
+                        A feedback aggregation tool rendering statistical distributions and predicting wellbeing patterns via relational SQL.
+                    </p>
+                    <div class="proj-tech"><span>Flask</span><span>SQL Analytics</span><span>HTML/CSS</span></div>
+                </div>
 
-                <!-- Jenkins Project -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/jenkins_project" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- Cipher Web -->
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Security</span>
+                        <a href="https://github.com/ctoumieh/Cipher-Web" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Jenkins CI/CD Project</h3>
-                        <p class="project-description">Continuous integration and deployment pipeline implementation using Jenkins for automated builds.</p>
-                        <div class="project-tech"><span>Python</span><span>Jenkins</span><span>CI/CD</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">Cipher Web Cryptographic Tool</h3>
+                    <p class="proj-desc">
+                        A web application implementing classical cryptographic ciphers (Affine, Vigenere, Hill) with secure interactive UI layouts.
+                    </p>
+                    <div class="proj-tech"><span>Flask</span><span>Cryptography</span><span>Azure Web App</span></div>
+                </div>
 
-                <!-- Contact List -->
-                <article class="project-card project-extra" data-category="app">
-                    <div class="project-image">
-                        <div class="project-placeholder app">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/ContactList" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- Interactive Chart Generator -->
+                <div class="project-node drawer-node hidden" data-category="math">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-math">Data Viz</span>
+                        <a href="https://github.com/ctoumieh/Interactive-Chart-Generator" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Contact List Manager</h3>
-                        <p class="project-description">Contact management application with CRUD operations, search functionality, and data persistence.</p>
-                        <div class="project-tech"><span>Python</span><span>Database</span><span>CRUD</span></div>
-                    </div>
-                </article>
-
-                <!-- Signal Processing MATLAB -->
-                <article class="project-card project-extra" data-category="data">
-                    <div class="project-image">
-                        <div class="project-placeholder data">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Signal-Processing-Matlab" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Signal Processing MATLAB</h3>
-                        <p class="project-description">Digital signal processing implementations including filters, transforms, and analysis tools in MATLAB.</p>
-                        <div class="project-tech"><span>MATLAB</span><span>DSP</span><span>Signals</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">Interactive Chart Generator</h3>
+                    <p class="proj-desc">
+                        Python module utilizing Matplotlib and Seaborn for dynamic plotting of customized datastreams.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Matplotlib</span><span>Seaborn</span></div>
+                </div>
 
                 <!-- Weighted Graph Manipulation -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Weighted-Graph-Manipulation" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <div class="project-node drawer-node hidden" data-category="math">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-math">Graph Theory</span>
+                        <a href="https://github.com/ctoumieh/Weighted-Graph-Manipulation" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Weighted Graph Manipulation</h3>
-                        <p class="project-description">Graph algorithms implementation including Dijkstra's, BFS, DFS, and minimum spanning trees in C++.</p>
-                        <div class="project-tech"><span>C++</span><span>Graphs</span><span>Algorithms</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">Weighted Graph manipulation</h3>
+                    <p class="proj-desc">
+                        Low-level C++ console implementation of graph traversal algorithms (Dijkstra, MST) and weighted adjacency matrix alterations.
+                    </p>
+                    <div class="proj-tech"><span>C++</span><span>Graph Theory</span><span>Adjacency Matrix</span></div>
+                </div>
 
-                <!-- 8-bit ALU -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/8bit-ALU" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <!-- 8bit ALU -->
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Hardware Engineering</span>
+                        <a href="https://github.com/ctoumieh/8bit-ALU" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">8-bit ALU Design</h3>
-                        <p class="project-description">Hardware design of an 8-bit Arithmetic Logic Unit implementing basic operations in VHDL.</p>
-                        <div class="project-tech"><span>VHDL</span><span>Hardware</span><span>Digital Logic</span></div>
+                    <h3 class="proj-title">8-bit Arithmetic Logic Unit</h3>
+                    <p class="proj-desc">
+                        VHDL design modeling hardware arithmetic logic gates, control selectors, and execution testbenches.
+                    </p>
+                    <div class="proj-tech"><span>VHDL</span><span>Digital Logic</span><span>Hardware Simulator</span></div>
+                </div>
+
+                <!-- jenkins_project -->
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">CI/CD Ops</span>
+                        <a href="https://github.com/ctoumieh/jenkins_project" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                </article>
+                    <h3 class="proj-title">Jenkins Automation Pipeline</h3>
+                    <p class="proj-desc">
+                        Python test-coverage assertions integrated with a Jenkinsfile pipeline automating container deployment and quality validation.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Jenkins CI/CD</span><span>Pipeline Automation</span></div>
+                </div>
 
                 <!-- Server-Client -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Server-Client" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
+                <div class="project-node drawer-node hidden" data-category="systems">
+                    <div class="proj-header">
+                        <span class="proj-badge badge-sys">Networking Sockets</span>
+                        <a href="https://github.com/ctoumieh/Server-Client" target="_blank" class="proj-git">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
                     </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Server-Client Architecture</h3>
-                        <p class="project-description">Network programming implementation of server-client communication with socket programming.</p>
-                        <div class="project-tech"><span>Python</span><span>Sockets</span><span>Networking</span></div>
-                    </div>
-                </article>
-
-                <!-- Delay Multiplayer Game -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Delay-Multiplayer-Game" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Multiplayer Game with Delay</h3>
-                        <p class="project-description">Multiplayer game implementation with network delay simulation and synchronization mechanisms.</p>
-                        <div class="project-tech"><span>Python</span><span>Game Dev</span><span>Networking</span></div>
-                    </div>
-                </article>
-
-                <!-- Employee Management Software -->
-                <article class="project-card project-extra" data-category="web">
-                    <div class="project-image">
-                        <div class="project-placeholder web">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Employee-Management-Software" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Employee Management Software</h3>
-                        <p class="project-description">Comprehensive employee management system with HR features, attendance tracking, and reporting.</p>
-                        <div class="project-tech"><span>HTML</span><span>HR System</span><span>Management</span></div>
-                    </div>
-                </article>
-
-                <!-- Lab4 PyQt -->
-                <article class="project-card project-extra" data-category="app">
-                    <div class="project-image">
-                        <div class="project-placeholder app">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/Lab4-charbeltoumieh-PyQt" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">PyQt Desktop Application</h3>
-                        <p class="project-description">Desktop GUI application built with PyQt framework demonstrating modern UI/UX patterns.</p>
-                        <div class="project-tech"><span>Python</span><span>PyQt</span><span>GUI</span></div>
-                    </div>
-                </article>
-
-                <!-- Lab5 -->
-                <article class="project-card project-extra" data-category="systems">
-                    <div class="project-image">
-                        <div class="project-placeholder systems">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                        </div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/Charbelto/lab5-charbeltoumieh" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Lab 5 Project</h3>
-                        <p class="project-description">Academic lab project demonstrating software engineering principles and best practices.</p>
-                        <div class="project-tech"><span>Python</span><span>Academic</span><span>SE</span></div>
-                    </div>
-                </article>
+                    <h3 class="proj-title">TCP Proxy Server-Client</h3>
+                    <p class="proj-desc">
+                        Low-level socket programming representing a multi-client HTTP proxy server with connection routing, data parsing, and caching logic.
+                    </p>
+                    <div class="proj-tech"><span>Python</span><span>Sockets API</span><span>Proxy Routing</span></div>
+                </div>
             </div>
 
-            <button class="show-more-btn" id="showMoreBtn">
-                <span>Show More Projects</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-
-            <div class="projects-cta">
-                <a href="https://github.com/Charbelto?tab=repositories" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                    </svg>
-                    <span>View All on GitHub</span>
-                </a>
+            <div class="projects-action">
+                <button class="btn btn-secondary btn-glow" id="showMoreBtn">
+                    <span>Show More Projects</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact section">
+    <!-- Connect / Contact -->
+    <section id="contact" class="contact-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Get In Touch</span>
-                <h2 class="section-title">Let's Work Together</h2>
-                <p class="section-subtitle">
-                    Currently pursuing my Master's in Applied AI at Warwick and open to exciting AI/ML opportunities.
-                </p>
-            </div>
+            <div class="section-tag">/ INTERACTION_PORT</div>
+            <h2 class="section-heading">Connect & Message</h2>
             <div class="contact-grid">
+                
                 <div class="contact-left">
-                    <div class="contact-info">
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                    <polyline points="22,6 12,13 2,6"/>
-                                </svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Email</h3>
+                    <p class="contact-intro">
+                        Are you interested in collaborating on production-grade machine learning pipelines, agentic setups, or medical computer vision models? Feel free to reach out.
+                    </p>
+                    <div class="contact-cards">
+                        <div class="c-card">
+                            <div class="c-icon">📬</div>
+                            <div class="c-details">
+                                <span>Email Direct</span>
                                 <a href="mailto:charbeltoumieh1@gmail.com">charbeltoumieh1@gmail.com</a>
                             </div>
                         </div>
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                </svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Phone</h3>
+                        <div class="c-card">
+                            <div class="c-icon">📞</div>
+                            <div class="c-details">
+                                <span>Telephone</span>
                                 <a href="tel:+447721614510">+44 7721 614510</a>
                             </div>
                         </div>
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                    <circle cx="12" cy="10" r="3"/>
-                                </svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Location</h3>
-                                <span>Coventry, UK</span>
+                        <div class="c-card">
+                            <div class="c-icon">📍</div>
+                            <div class="c-details">
+                                <span>Location</span>
+                                <strong>Coventry, UK</strong>
                             </div>
                         </div>
                     </div>
-                    <div class="contact-social">
-                        <h3>Connect With Me</h3>
+                    
+                    <div class="social-wrapper">
+                        <h3>Follow Commits</h3>
                         <div class="social-links">
-                            <a href="https://linkedin.com/in/charbeltoumieh" target="_blank" rel="noopener noreferrer" class="social-link linkedin" aria-label="LinkedIn">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                                </svg>
-                            </a>
-                            <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer" class="social-link github" aria-label="GitHub">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                            </a>
+                            <a href="https://linkedin.com/in/charbeltoumieh" target="_blank" rel="noopener" class="soc-btn font-code">LinkedIn</a>
+                            <a href="https://github.com/ctoumieh" target="_blank" rel="noopener" class="soc-btn font-code">GitHub</a>
                         </div>
                     </div>
                 </div>
+
                 <div class="contact-right">
-                    <form class="contact-form" id="contactForm" action="mailto:charbeltoumieh1@gmail.com" method="post" enctype="text/plain">
-                        <h3 class="form-title">Send a Message</h3>
+                    <form class="contact-form" id="contactForm">
                         <div class="form-group">
-                            <label for="contactName">Your Name</label>
-                            <input type="text" id="contactName" name="name" required placeholder="John Doe" autocomplete="name">
+                            <label for="name">Identifier (Name)</label>
+                            <input type="text" id="name" required placeholder="User-01">
                         </div>
                         <div class="form-group">
-                            <label for="contactEmail">Your Email</label>
-                            <input type="email" id="contactEmail" name="email" required placeholder="john@example.com" autocomplete="email">
+                            <label for="email">Connection String (Email)</label>
+                            <input type="email" id="email" required placeholder="user@domain.com">
                         </div>
                         <div class="form-group">
-                            <label for="contactSubject">Subject</label>
-                            <input type="text" id="contactSubject" name="subject" required placeholder="Project Collaboration">
+                            <label for="subject">Request Subject</label>
+                            <input type="text" id="subject" required placeholder="Project Mapped Pipeline">
                         </div>
                         <div class="form-group">
-                            <label for="contactMessage">Message</label>
-                            <textarea id="contactMessage" name="message" rows="5" required placeholder="Tell me about your project..."></textarea>
+                            <label for="message">Telemetry Parameters (Message)</label>
+                            <textarea id="message" rows="5" required placeholder="Enter request details..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary form-submit">
-                            <span>Send Message</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <span>Execute Connection</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>
-                        <p class="form-note">Opens your email client with the message pre-filled.</p>
                     </form>
                 </div>
             </div>
@@ -1231,41 +819,23 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="#hero" class="footer-logo">
-                        <span class="logo-bracket">&lt;</span>CT<span class="logo-bracket">/&gt;</span>
-                    </a>
-                    <p>AI & LLM Engineer building intelligent systems that create real value.</p>
+                    <span class="logo-accent">&lt;</span>charbel<span class="logo-text">.ai</span><span class="logo-accent">/&gt;</span>
+                    <p>Designed and built for high-performance AI and Machine Learning engineering.</p>
                 </div>
-                <div class="footer-nav">
-                    <h4>Quick Links</h4>
-                    <a href="#about">About</a>
-                    <a href="#experience">Experience</a>
-                    <a href="#education">Education</a>
-                    <a href="#skills">Skills</a>
-                    <a href="#projects">Projects</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="footer-connect">
-                    <h4>Connect</h4>
-                    <a href="https://linkedin.com/in/charbeltoumieh" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                    <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="mailto:charbeltoumieh1@gmail.com">Email</a>
+                <div class="footer-links">
+                    <a href="#about">Profile</a>
+                    <a href="#experience">History</a>
+                    <a href="#skills">Tokens</a>
+                    <a href="#projects">Repositories</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <span class="footer-year">2026</span> Charbel Toumieh. Crafted with passion for AI.</p>
+                <p>&copy; <span class="footer-year">2026</span> Charbel Toumieh. Mapped by Antigravity Agent. All weights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Back to Top -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 15l-6-6-6 6"/>
-        </svg>
-    </button>
-
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>
-
