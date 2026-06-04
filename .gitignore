@@ -31,3 +31,11 @@ build/
 *.njsproj
 *.sln
 *.sw?
+
+# Additional polish rules
+# .NET standard gitignore
+bin/
+obj/
+*.user
+*.userosscache
+.vs/
