@@ -1,70 +1,57 @@
-# Charbel Toumieh | Portfolio
+# Charbel Toumieh — Portfolio
 
-A modern, animated portfolio website showcasing my work as an AI & LLM Engineer.
+A gallery on putty paper. My portfolio as an AI Engineer, presented as a museum exhibition —
+numbered rooms, wall labels, plate numbers and a colophon.
 
-**Live Demo:** [charbelto.github.io](https://charbelto.github.io)
-
-![Portfolio Preview](https://img.shields.io/badge/Status-Live-brightgreen) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+**Live:** [charbelto.github.io](https://charbelto.github.io)
 
 ---
 
-## Features
+## Design
 
-- **Creative Animated Design** - Floating gradient orbs, smooth scroll animations, and interactive elements
-- **Interactive Experience Timeline** - Professional journey with highlighted metrics and achievements
-- **Skills Visualization** - Animated progress bars across AI/ML, Programming, Data, and Tools categories
-- **Project Showcase** - 22+ projects with category filtering (AI/ML, Data, Web, Apps, Systems)
-- **Fully Responsive** - Optimized for desktop, tablet, and mobile devices
-- **Performance Optimized** - Vanilla JS with no external dependencies
+- **Aesthetic** — warm putty canvas (`#c4c3b6`), stark black ink rooms, hairline rules,
+  no gradients, no shadows, no stock imagery. Editorial serif (Instrument Serif) at display
+  sizes for moments; neutral grotesk (Inter) for systems.
+- **Structure** — six numbered rooms: The Engineer · Experience · Materials & Methods ·
+  Selected Works · Education · Inquiries.
+- **Signature moves** — stacked `CHARBEL / TOUMIEH` wordmark justified edge-to-edge,
+  engraved-SVG ink interlude with a notched card, scroll-drawn experience rail, reading-progress
+  hairline, fullscreen index veil, blend-aware header, magnetic pills and a custom cursor ring.
 
-## Tech Stack
+## Performance
 
-| Technology | Purpose |
-|------------|---------|
-| HTML5 | Semantic structure |
-| CSS3 | Styling, animations, responsive design |
-| JavaScript | Interactivity, scroll animations, filtering |
-| Google Fonts | Inter & Fira Code typography |
+- Vanilla HTML / CSS / JS — zero frameworks, zero build step, zero dependencies.
+- No raster imagery except one 24 KB portrait; all art is inline SVG.
+- Two font families, three weights total, loaded with `preconnect` + `display=swap`.
+- `content-visibility: auto` on below-fold rooms; all animation is transform/opacity,
+  rAF-throttled, and fully disabled under `prefers-reduced-motion`.
 
-## Sections
+## Accessibility
 
-1. **Hero** - Introduction with typing effect and key stats
-2. **About** - Professional background and value propositions
-3. **Experience** - Interactive timeline of work history
-4. **Skills** - Technical skills with animated visualizations
-5. **Projects** - Filterable grid of 22+ GitHub projects
-6. **Contact** - Contact information and social links
+Semantic landmarks, skip link, focus-visible styles, `aria-expanded`/`aria-hidden` on the menu,
+Escape-to-close, and motion-safe fallbacks. Content renders complete without JavaScript.
 
-## Local Development
+## Local development
 
 ```bash
-# Clone the repository
 git clone https://github.com/Charbelto/Charbelto.github.io.git
-
-# Navigate to directory
 cd Charbelto.github.io
-
-# Open in browser (or use a local server)
-open index.html
-
-# Optional: Use a local server for development
-npx serve .
+python -m http.server 4173   # or: npx serve .
 ```
 
-## Project Structure
+## Structure
 
 ```
-Portfolio/
-├── index.html      # Main HTML structure
-├── styles.css      # Styling and animations
-├── script.js       # Interactivity and animations
-├── profile.jpg     # Profile photo
-└── README.md       # Documentation
+├── index.html                    # Content & structure
+├── styles.css                    # Design system & layout
+├── script.js                     # Interaction layer
+├── profile.jpg                   # Portrait (Fig. 01)
+├── Charbel_Toumieh_Resume.pdf    # CV
+└── README.md
 ```
 
-## Connect With Me
+## Connect
 
 - **Email:** charbeltoumieh1@gmail.com
-- **LinkedIn:** [linkedin.com/in/charbeltoumieh](https://linkedin.com/in/charbeltoumieh)
+- **LinkedIn:** [linkedin.com/in/charbeltoumieh](https://www.linkedin.com/in/charbeltoumieh/)
 - **GitHub:** [github.com/Charbelto](https://github.com/Charbelto)
-

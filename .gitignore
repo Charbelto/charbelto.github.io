@@ -39,3 +39,6 @@ obj/
 *.user
 *.userosscache
 .vs/
+
+# Local tooling
+.claude/

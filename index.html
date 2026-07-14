@@ -1,1321 +1,668 @@
 <!DOCTYPE html>
-
-<html data-theme="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Charbel Toumieh | AI &amp; LLM Engineer</title>
-<meta content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment. Currently pursuing Master's in Applied AI at University of Warwick." name="description"/>
-<meta content="Charbel Toumieh | AI &amp; LLM Engineer" property="og:title"/>
-<meta content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment." property="og:description"/>
-<meta content="profile.jpg" property="og:image"/>
-<meta content="website" property="og:type"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Charbel Toumieh | AI &amp; LLM Engineer" name="twitter:title"/>
-<meta content="AI/ML Engineer specializing in LLMs, multimodal AI systems, and production-grade AI deployment." name="twitter:description"/>
-<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236366f1'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='50' font-weight='bold' text-anchor='middle' fill='white'%3ECT%3C/text%3E%3C/svg%3E" rel="icon" type="image/svg+xml"/>
-<link href="styles.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Charbel Toumieh — AI Engineer</title>
+<meta name="description" content="Charbel Toumieh — AI Engineer specialising in production-grade LLM applications, agentic AI systems, RAG architectures and AI product engineering. MSc Applied AI, University of Warwick."/>
+<meta name="author" content="Charbel Toumieh"/>
+<link rel="canonical" href="https://charbelto.github.io/"/>
+<meta property="og:title" content="Charbel Toumieh — AI Engineer"/>
+<meta property="og:description" content="Agentic systems, RAG architectures and AI product engineering — a curated portfolio of intelligent systems."/>
+<meta property="og:image" content="https://charbelto.github.io/profile.jpg"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://charbelto.github.io/"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Charbel Toumieh — AI Engineer"/>
+<meta name="twitter:description" content="Agentic systems, RAG architectures and AI product engineering — a curated portfolio of intelligent systems."/>
+<meta name="theme-color" content="#c4c3b6"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23c4c3b6'/%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23000' stroke-width='3'/%3E%3Ctext x='50' y='64' font-family='Georgia,serif' font-size='42' text-anchor='middle' fill='%23000'%3ECT%3C/text%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@400;500&amp;display=swap"/>
+<link rel="stylesheet" href="styles.css"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Charbel Toumieh",
+  "jobTitle": "AI Engineer",
+  "email": "mailto:charbeltoumieh1@gmail.com",
+  "url": "https://charbelto.github.io/",
+  "image": "https://charbelto.github.io/profile.jpg",
+  "sameAs": [
+    "https://github.com/Charbelto",
+    "https://www.linkedin.com/in/charbeltoumieh/"
+  ],
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "American University of Beirut" },
+    { "@type": "CollegeOrUniversity", "name": "University of Warwick" }
+  ],
+  "knowsAbout": ["Agentic AI Systems", "Large Language Models", "Retrieval-Augmented Generation", "MCP Servers", "LLM Evaluation", "Machine Learning", "Computer Vision"]
+}
+</script>
 </head>
 <body>
-<!-- Page Loader -->
-<div class="loader" id="loader">
-<div class="loader-content">
-<div class="loader-logo">
-<span class="logo-bracket">&lt;</span>CT<span class="logo-bracket">/&gt;</span>
-</div>
-<div class="loader-bar">
-<div class="loader-progress"></div>
-</div>
-<div class="loader-text">Loading agent environment... <span id="loaderPercent">0%</span></div>
-</div>
-</div>
-<!-- Skip link for accessibility -->
-<a class="skip-link" href="#hero">Skip to content</a>
-<!-- Follow cursor glow -->
-<div class="cursor-glow" id="cursorGlow"></div>
-<!-- Background Orbs -->
-<div class="bg-animation">
-<div class="gradient-orb orb-1"></div>
-<div class="gradient-orb orb-2"></div>
-<div class="gradient-orb orb-3"></div>
-</div>
-<!-- Navigation Header -->
-<nav class="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="#hero">
-<span class="logo-bracket">&lt;</span>CT<span class="logo-bracket">/&gt;</span>
-</a>
-<div class="nav-menu" id="navMenu">
-<a class="nav-link" href="#about">About</a>
-<a class="nav-link" href="#experience">Experience</a>
-<a class="nav-link" href="#skills">Skills</a>
-<a class="nav-link" href="#projects">Projects</a>
-<a class="nav-link nav-cta" href="#contact">Contact</a>
-</div>
-<div class="nav-actions">
-<button aria-label="Toggle theme" class="theme-toggle" id="themeToggle">
-<svg class="icon-sun" fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-</svg>
-<svg class="icon-moon" fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-</svg>
-</button>
-<button aria-label="Toggle menu" class="nav-toggle" id="navToggle">
-<span></span>
-<span></span>
-<span></span>
-</button>
-</div>
-</div>
-</nav>
-<!-- Hero Section -->
-<section class="hero" id="hero">
-<div class="container hero-grid">
-<div class="hero-content">
-<div class="hero-badge animate-fade-in">
-<span class="badge-dot"></span>
-                    MSc Applied AI • University of Warwick
-                </div>
-<h1 class="hero-title animate-slide-up">
-<span class="title-line">Hi, I'm <span class="highlight">Charbel</span></span>
-<span class="title-line">AI &amp; LLM Engineer</span>
-</h1>
-<p class="hero-description animate-slide-up delay-1">
-                    Building production-grade intelligent systems and agentic workflows. Specializing in 
-                    <span class="typed-text"></span>
-</p>
-<div class="hero-cta animate-slide-up delay-2">
-<a class="btn btn-primary" href="#projects">
-<span>Explore Projects</span>
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-</a>
-<a class="btn btn-secondary" download="" href="Charbel_Toumieh_Resume.pdf">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
-<span>Download CV</span>
-</a>
-</div>
-<div class="hero-stats animate-fade-in delay-3">
-<div class="stat">
-<div class="stat-num-container">
-<span class="stat-number" data-count="3">0</span><span class="stat-suffix">+</span>
-</div>
-<span class="stat-label">Years Experience</span>
-</div>
-<div class="stat">
-<div class="stat-num-container">
-<span class="stat-number" data-count="23">0</span>
-</div>
-<span class="stat-label">AI &amp; Software Projects</span>
-</div>
-<div class="stat">
-<div class="stat-num-container">
-<span class="stat-number" data-count="6">0</span>
-</div>
-<span class="stat-label">Industry Roles</span>
-</div>
-</div>
-</div>
-<!-- Agent Sandbox Console -->
-<div class="hero-visual animate-fade-in delay-2">
-<div class="code-window">
-<div class="window-header">
-<div class="window-dots">
-<span class="dot red"></span>
-<span class="dot yellow"></span>
-<span class="dot green"></span>
-</div>
-<div class="window-tabs">
-<button class="window-tab active" data-tab="code" id="tabCodeBtn">
-<svg class="tab-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6L2 12l6 6"></path></svg>
-<span>agent.py</span>
-</button>
-<button class="window-tab" data-tab="terminal" id="tabTerminalBtn">
-<svg class="tab-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
-<span>terminal.sh</span>
-</button>
-</div>
-</div>
-<div class="window-body">
-<!-- Code Tab -->
-<div class="tab-content active" id="tab-code">
-<div class="code-editor">
-<div class="line-numbers">
-<span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
-</div>
-<pre class="code-content"><code><span class="keyword">from</span> langchain <span class="keyword">import</span> OpenAI, AgentExecutor
-<span class="keyword">from</span> tools <span class="keyword">import</span> WebSearch, PythonREPL
 
-<span class="keyword">class</span> <span class="class-name">AIEngineerAgent</span>:
-    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="param">self</span>):
-        <span class="param">self</span>.name = <span class="string">"Charbel Toumieh"</span>
-        <span class="param">self</span>.role = <span class="string">"AI &amp; LLM Engineer"</span>
-        <span class="param">self</span>.tools = [WebSearch(), PythonREPL()]
+<!-- ══════════════ Curtain ══════════════ -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="curtain-inner">
+    <span class="curtain-mark">
+      <svg viewBox="0 0 64 64" width="64" height="64" fill="none" aria-hidden="true">
+        <circle cx="32" cy="32" r="30.5" stroke="currentColor" stroke-width="1.5"/>
+        <text x="32" y="41" text-anchor="middle" class="mark-text">CT</text>
+      </svg>
+    </span>
+    <span class="curtain-label">Charbel Toumieh — Portfolio 2026</span>
+  </div>
+</div>
 
-    <span class="keyword">def</span> <span class="function">solve_complex_task</span>(<span class="param">self</span>, prompt):
-        agent = <span class="param">self</span>.init_llm_chain()
-        <span class="keyword">return</span> agent.run(prompt)
+<a class="skip-link" href="#main">Skip to content</a>
 
-<span class="comment"># Instantiating professional intelligence</span>
-ct = AIEngineerAgent()
-ct.solve_complex_task(<span class="string">"Build production-grade AI"</span>)</code></pre>
-</div>
-</div>
-<!-- Terminal Tab -->
-<div class="tab-content" id="tab-terminal">
-<div class="terminal-body" id="consoleBody">
-<div class="log-line text-comment"># Initializing agent shell console...</div>
-<div class="log-line text-keyword">&gt;&gt;&gt; Initializing LangChain agent runtime</div>
-<div class="log-line text-info">Connecting to local pinecone vector database index... [OK]</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<a aria-label="Scroll to About Section" class="scroll-indicator" href="#about">
-<span>Scroll</span>
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M12 5v14M5 12l7 7 7-7"></path>
-</svg>
-</a>
-</section>
-<!-- About Section -->
-<section class="about section" id="about">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">About Me</span>
-            <h2 class="section-title">Bridging Advanced AI Research &amp; Production Systems</h2>
-        </div>
-        <div class="about-grid">
-            <div class="about-content">
-                <p class="about-text">
-                    I am an AI &amp; LLM Engineer specializing in building production-grade intelligent systems and agentic workflows. 
-                    Currently pursuing my <strong>MSc in Applied Artificial Intelligence at the University of Warwick</strong>, I bridge research methodologies with production deployment. 
-                    My background includes **Meta-funded AI collaboration** on multi-modal neural systems and deploying **production LLM chatbots** that achieved 25% efficiency gains at Gabriel &amp; Co. 
-                    I focus on RAG pipelines, multi-agent frameworks, and scalable backend microservices.
-                </p>
-            </div>
-            <div class="about-image">
-                <div class="image-frame">
-                    <img alt="Charbel Toumieh Profile" class="profile-image" loading="lazy" src="profile.jpg"/>
-                    <div class="image-decoration"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="about-highlights">
-            <div class="highlight-card">
-                <div class="highlight-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3>Agentic Systems</h3>
-                    <p>Designing multi-agent tool loops &amp; self-correction</p>
-                </div>
-            </div>
-            <div class="highlight-card">
-                <div class="highlight-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3>Scalable MLOps</h3>
-                    <p>Deploying robust, low-latency container APIs</p>
-                </div>
-            </div>
-            <div class="highlight-card">
-                <div class="highlight-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3>Global Footprint</h3>
-                    <p>Hands-on engineering across US, UK, and Europe</p>
-                </div>
-            </div>
-        </div>
+<!-- Custom cursor (desktop only) -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<!-- Reading progress -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ══════════════ Header ══════════════ -->
+<header class="site-head" id="siteHead">
+  <a class="head-brand" href="#top" aria-label="Charbel Toumieh — home">
+    <svg class="head-mark" viewBox="0 0 64 64" width="34" height="34" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="30.5" stroke="currentColor" stroke-width="2"/>
+      <text x="32" y="41" text-anchor="middle" class="mark-text">CT</text>
+    </svg>
+    <span class="head-name">Charbel&nbsp;Toumieh</span>
+  </a>
+  <div class="head-right">
+    <span class="head-clock" id="headClock" aria-hidden="true"></span>
+    <a class="head-link" href="mailto:charbeltoumieh1@gmail.com">Contact</a>
+    <button class="head-menu-btn" id="menuBtn" aria-expanded="false" aria-controls="veil" aria-label="Site index">
+      <span class="menu-word" data-open="Index" data-close="Close"></span>
+      <span class="menu-lines" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════ Index veil (fullscreen menu) ══════════════ -->
+<nav class="veil" id="veil" aria-label="Site index" aria-hidden="true">
+  <div class="veil-inner">
+    <p class="veil-label">Index of Rooms</p>
+    <ol class="veil-list">
+      <li><a class="veil-link" href="#engineer"><sup>01</sup><span>The Engineer</span></a></li>
+      <li><a class="veil-link" href="#provenance"><sup>02</sup><span>Experience</span></a></li>
+      <li><a class="veil-link" href="#materials"><sup>03</sup><span>Materials &amp; Methods</span></a></li>
+      <li><a class="veil-link" href="#works"><sup>04</sup><span>Selected Works</span></a></li>
+      <li><a class="veil-link" href="#formation"><sup>05</sup><span>Education</span></a></li>
+      <li><a class="veil-link" href="#inquiries"><sup>06</sup><span>Inquiries</span></a></li>
+    </ol>
+    <div class="veil-foot">
+      <a href="mailto:charbeltoumieh1@gmail.com">Email ↗</a>
+      <a href="Charbel_Toumieh_Resume.pdf" download>Curriculum Vitae ↓</a>
+      <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
     </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ══════════════ Hero ══════════════ -->
+<section class="hero room" id="top" data-shade="light">
+  <div class="hero-top">
+    <p class="wall-label" data-reveal>Portfolio of an AI Engineer — 2026</p>
+    <h1 class="hero-line" data-reveal>
+      <span class="hl-word">Agentic</span>
+      <span class="hl-word">systems,</span>
+      <em class="hl-word hl-em">in</em>
+      <span class="hl-word">production</span>
+    </h1>
+    <div class="hero-stats" data-reveal>
+      <span class="stat"><b class="stat-num" data-count="3" data-suffix="+">3+</b><i>yrs experience</i></span>
+      <span class="stat-sep" aria-hidden="true"></span>
+      <span class="stat"><b class="stat-num" data-count="24">24</b><i>catalogued works</i></span>
+      <span class="stat-sep" aria-hidden="true"></span>
+      <span class="stat"><b class="stat-num" data-count="90" data-prefix="−" data-suffix="%">−90%</b><i>QA effort, automated</i></span>
+    </div>
+    <div class="hero-cta" data-reveal>
+      <a class="pill magnetic" href="#works">View selected works</a>
+      <a class="ghost-link" href="Charbel_Toumieh_Resume.pdf" download>Download CV <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+
+  <div class="wordmark-wrap" aria-hidden="true">
+    <div class="wordmark" id="wordmark">
+      <span class="wm-line"><span class="wm-l">C</span><span class="wm-l">H</span><span class="wm-l">A</span><span class="wm-l">R</span><span class="wm-l">B</span><span class="wm-l">E</span><span class="wm-l">L</span></span>
+      <span class="wm-line"><span class="wm-l">T</span><span class="wm-l">O</span><span class="wm-l">U</span><span class="wm-l">M</span><span class="wm-l">I</span><span class="wm-l">E</span><span class="wm-l">H</span></span>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <a class="hero-scroll" href="#engineer">Scroll<svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true"><path d="M5 0v10M1 7l4 4 4-4" stroke="currentColor"/></svg></a>
+    <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+    <span class="hero-est">Since 2023 — Beirut · Coventry · New York</span>
+  </div>
 </section>
-<!-- Experience Section -->
-<section class="experience section" id="experience">
-<div class="container">
-<div class="section-header">
-<span class="section-tag">Journey</span>
-<h2 class="section-title">Professional Experience</h2>
+
+<!-- ══════════════ Marquee ══════════════ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Agentic Systems</span><i>·</i><span>RAG Architecture</span><i>·</i><span>LLM Evaluation</span><i>·</i><span>MCP Servers</span><i>·</i><span>Prompt Architecture</span><i>·</i><span>Multi-Agent Orchestration</span><i>·</i><span>Workflow Automation</span><i>·</i><span>Vector Search</span><i>·</i><span>AI Product Engineering</span><i>·</i>
+    <span>Agentic Systems</span><i>·</i><span>RAG Architecture</span><i>·</i><span>LLM Evaluation</span><i>·</i><span>MCP Servers</span><i>·</i><span>Prompt Architecture</span><i>·</i><span>Multi-Agent Orchestration</span><i>·</i><span>Workflow Automation</span><i>·</i><span>Vector Search</span><i>·</i><span>AI Product Engineering</span><i>·</i>
+  </div>
 </div>
-<div class="timeline">
-<!-- Gabriel & Co -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">AI and LLM Engineer</h3>
-<span class="timeline-company">Gabriel &amp; Co</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Jun 2024 – Present</span>
-<span class="timeline-location">New York, US (Remote)</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">+25%</span>
-                                Boosted LLM chatbot performance through advanced prompt engineering and A/B testing
-                            </li>
-<li>
-<span class="achievement-metric">10+</span>
-                                Built production APIs in PHP and Node.js connecting chatbot with backend services
-                            </li>
-<li>
-<span class="achievement-metric">24+</span>
-                                Developed multimodal intelligent agent using n8n with self-verification workflows
-                            </li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">LLMs</span>
-<span class="tag">Prompt Engineering</span>
-<span class="tag">n8n</span>
-<span class="tag">Node.js</span>
-<span class="tag">PHP</span>
-</div>
-</div>
-</div>
-<!-- CMA CGM -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">Data Strategy and Engineering</h3>
-<span class="timeline-company">CMA CGM</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Jan 2025 – Oct 2025</span>
-<span class="timeline-location">Marseille, FR (Remote)</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">100K+</span>
-                                Managed data products including Loyalty Program with 100K+ users
-                            </li>
-<li>
-<span class="achievement-metric">+25%</span>
-                                Enhanced clustering models increasing targeting accuracy
-                            </li>
-<li>
-<span class="achievement-metric">-40%</span>
-                                Built ETL pipelines and dashboards reducing reporting time
-                            </li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">Data Strategy</span>
-<span class="tag">ETL</span>
-<span class="tag">ML Clustering</span>
-<span class="tag">Dashboards</span>
-</div>
-</div>
-</div>
-<!-- Meta -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">AI and LLM Researcher</h3>
-<span class="timeline-company">Meta (Research Collaboration)</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Jan 2024 – Jan 2025</span>
-<span class="timeline-location">California, US (Remote)</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">META</span>
-                                Key member of 7-researcher team on Meta-funded ECG analysis project
-                            </li>
-<li>
-<span class="achievement-metric">+20%</span>
-                                Improved AI ECG reading accuracy using visual context analysis
-                            </li>
-<li>
-<span class="achievement-metric">30+</span>
-                                Reviewed research papers for pediatric ECG AI solutions
-                            </li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">Multimodal AI</span>
-<span class="tag">Research</span>
-<span class="tag">Healthcare AI</span>
-<span class="tag">Computer Vision</span>
-</div>
-</div>
-</div>
-<!-- BMB Group & PepsiCo -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">Software Engineering Intern</h3>
-<span class="timeline-company">BMB Group × PepsiCo</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Nov 2023 – Feb 2024</span>
-<span class="timeline-location">Baabda, LB</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">-30%</span>
-                                Developed .NET MAUI Blazor app reducing package size by 30%
-                            </li>
-<li>Implemented offline SQLite database for Android with security enhancements</li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">.NET MAUI</span>
-<span class="tag">Blazor</span>
-<span class="tag">SQLite</span>
-<span class="tag">Android</span>
-</div>
-</div>
-</div>
-<!-- Intalio -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">AI Engineering Intern</h3>
-<span class="timeline-company">Intalio</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Jul 2023 – Oct 2023</span>
-<span class="timeline-location">Naqqache, LB</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">97%</span>
-                                Achieved text extraction accuracy with YOLOv8 + OpenCV + Tesseract
-                            </li>
-<li>
-<span class="achievement-metric">100+</span>
-                                Engineered Flask API handling 100+ daily image processing requests
-                            </li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">YOLOv8</span>
-<span class="tag">OpenCV</span>
-<span class="tag">Tesseract OCR</span>
-<span class="tag">Flask</span>
-</div>
-</div>
-</div>
-<!-- eMcREY -->
-<div class="timeline-item">
-<div class="timeline-marker">
-<div class="marker-dot"></div>
-</div>
-<div class="timeline-content">
-<div class="timeline-header">
-<div class="timeline-info">
-<h3 class="timeline-title">Software Engineering Intern</h3>
-<span class="timeline-company">eMcREY</span>
-</div>
-<div class="timeline-meta">
-<span class="timeline-date">Mar 2023 – Jun 2023</span>
-<span class="timeline-location">Dbayeh, LB</span>
-</div>
-</div>
-<ul class="timeline-achievements">
-<li>
-<span class="achievement-metric">-20%</span>
-                                Streamlined three core business processes, reducing processing time through automation
-                            </li>
-<li>Developed XML, Java, and MySQL applications on Oracle platforms as part of a 4-member team</li>
-</ul>
-<div class="timeline-tags">
-<span class="tag">Java</span>
-<span class="tag">MySQL</span>
-<span class="tag">Oracle</span>
-<span class="tag">XML</span>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<!-- ══════════════ Room I — The Engineer ══════════════ -->
+<section class="room room--light engineer" id="engineer" data-shade="light">
+  <header class="room-head">
+    <span class="room-no" data-reveal>Room 01</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>The Engineer</span></span></h2>
+    <span class="room-hint" data-reveal>About</span>
+  </header>
+
+  <div class="engineer-grid">
+    <div class="engineer-copy" data-reveal>
+      <p class="lede">
+        I build <em>production-grade</em> LLM applications — AI agents, RAG pipelines and evaluation
+        frameworks that leave the notebook and survive contact with real users.
+      </p>
+      <p class="body-copy">
+        Currently reading for an MSc in Applied Artificial Intelligence at the University of Warwick while
+        leading AI engineering at Gabriel &amp; Co. in New York, where I designed <strong>GREAT</strong> — an
+        AI-powered quality-assurance and analytics platform that replaced manual call review across 34+ agents
+        and three channels, cutting QA effort by roughly 90%.
+      </p>
+      <p class="body-copy">
+        My work spans the full arc of an AI product: discovery, prompt and agent architecture, MCP servers and
+        tool integration, evaluation and A/B testing, and the dashboards that make it all legible to the business.
+        Before that — data products at CMA CGM serving 100K+ users, and Meta-funded multimodal research on
+        paediatric ECG models.
+      </p>
+      <ul class="engineer-facts">
+        <li data-reveal><span class="fact-k">Practice</span><span class="fact-v">Agents · RAG · Evaluation · Automation</span></li>
+        <li data-reveal><span class="fact-k">Currently</span><span class="fact-v">AI &amp; LLM Engineer, Gabriel &amp; Co.</span></li>
+        <li data-reveal><span class="fact-k">Studying</span><span class="fact-v">MSc Applied AI, University of Warwick</span></li>
+        <li data-reveal><span class="fact-k">Based</span><span class="fact-v">Coventry, UK — across US &amp; EU time zones</span></li>
+      </ul>
+    </div>
+
+    <figure class="engineer-portrait" data-reveal>
+      <div class="portrait-arch">
+        <img src="profile.jpg" alt="Portrait of Charbel Toumieh" width="360" height="380" loading="lazy" decoding="async"/>
+      </div>
+      <figcaption class="portrait-caption">
+        <span class="fig-no">Fig. 01</span>
+        <span>The Engineer, 2026. Prompt &amp; pipeline on silicon.</span>
+      </figcaption>
+    </figure>
+  </div>
 </section>
-<!-- Education Section -->
-<section class="education section" id="education">
-<div class="container">
-<div class="section-header">
-<span class="section-tag">Education</span>
-<h2 class="section-title">Academic Background</h2>
-</div>
-<div class="education-grid">
-<div class="education-card">
-<div class="edu-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-</svg>
-</div>
-<div class="edu-badge">Currently Pursuing</div>
-<h3 class="edu-degree">MSc Applied Artificial Intelligence</h3>
-<p class="edu-school">University of Warwick</p>
-<div class="edu-meta">
-<span class="edu-date">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
-                            Sep 2025 – Sep 2026
-                        </span>
-<span class="edu-location">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            Coventry, UK
-                        </span>
-</div>
-</div>
-<div class="education-card">
-<div class="edu-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-</svg>
-</div>
-<h3 class="edu-degree">BE Computer &amp; Communications Engineering</h3>
-<p class="edu-school">American University of Beirut</p>
-<div class="edu-meta">
-<span class="edu-location">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            Beirut, LB
-                        </span>
-</div>
-</div>
-</div>
-<div class="extracurricular">
-<h3 class="extra-title">Extracurricular Leadership</h3>
-<div class="extra-grid">
-<div class="extra-item">
-<div class="extra-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2"></path>
-</svg>
-</div>
-<h4>AIcademy</h4>
-<p>Developed curriculum and lectured a foundational AI course at AUB</p>
-<span class="extra-date">May 2024 – Sep 2025</span>
-</div>
-<div class="extra-item">
-<div class="extra-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-</svg>
-</div>
-<h4>IEEE</h4>
-<p>Guided activities and initiatives, fostering professional development</p>
-<span class="extra-date">Feb 2022 – May 2023</span>
-</div>
-<div class="extra-item">
-<div class="extra-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>
-</svg>
-</div>
-<h4>PythonDojo</h4>
-<p>Actively facilitated daily coding meetings, contributing to Python codebase</p>
-<span class="extra-date">Sep 2021 – Jun 2022</span>
-</div>
-</div>
-</div>
-</div>
+
+<!-- ══════════════ Interlude — ink room with engraving ══════════════ -->
+<section class="interlude room room--dark" data-shade="dark" aria-label="Currently">
+  <svg class="engraving" id="engraving" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+    <g class="engraving-rays" stroke="currentColor" stroke-width="0.6">
+      <circle cx="400" cy="400" r="90"/>
+      <circle cx="400" cy="400" r="150" stroke-dasharray="1 7"/>
+      <circle cx="400" cy="400" r="230"/>
+      <circle cx="400" cy="400" r="310" stroke-dasharray="1 10"/>
+      <circle cx="400" cy="400" r="392"/>
+      <g class="rays">
+        <path d="M400 90V10M400 790v-80M90 400H10m780 0h-80M180 180l-56-56m552 552-56-56M180 620l-56 56m552-552-56 56"/>
+        <path d="M400 250V180M400 620v-70M250 400h-70m440 0h-70" stroke-dasharray="2 6"/>
+      </g>
+    </g>
+  </svg>
+  <div class="notch-card" data-reveal>
+    <span class="notch-label">Currently</span>
+    <p class="notch-line">Leading <em>GREAT</em> — an AI quality-assurance &amp; analytics platform — at Gabriel&nbsp;&amp;&nbsp;Co.</p>
+    <p class="notch-line notch-line--sub">MSc Applied Artificial Intelligence · University of Warwick · expected Sept&nbsp;2026</p>
+    <span class="notch-micro" aria-hidden="true">Scroll</span>
+    <span class="notch-micro notch-micro--r" aria-hidden="true">2026</span>
+  </div>
 </section>
-<!-- Skills Section -->
-<section class="skills section" id="skills">
-<div class="container">
-<div class="section-header">
-<span class="section-tag">Technical Arsenal</span>
-<h2 class="section-title">Skills &amp; Expertise</h2>
-</div>
-<div class="skills-grid">
-<!-- Category 1 -->
-<div class="skill-category">
-<div class="category-header">
-<div class="category-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2"></path>
-</svg>
-</div>
-<h3 class="category-title">AI &amp; Generative Systems</h3>
-</div>
-<div class="skill-chips">
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">LLMs &amp; APIs</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">Prompt Engineering</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">RAG (VectorDBs)</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Multi-Agent Loops</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">n8n Workflows</span>
-</div>
-</div>
-</div>
-<!-- Category 2 -->
-<div class="skill-category">
-<div class="category-header">
-<div class="category-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>
-</svg>
-</div>
-<h3 class="category-title">Programming &amp; Backends</h3>
-</div>
-<div class="skill-chips">
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">Python (Flask)</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Node.js</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Java</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot proficient"></span>
-<span class="skill-name">PHP</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot proficient"></span>
-<span class="skill-name">C# / C++</span>
-</div>
-</div>
-</div>
-<!-- Category 3 -->
-<div class="skill-category">
-<div class="category-header">
-<div class="category-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-<path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-<path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-</svg>
-</div>
-<h3 class="category-title">Data &amp; MLOps Infrastructure</h3>
-</div>
-<div class="skill-chips">
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">RESTful APIs</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">SQL / SQLite</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">ETL Pipelines</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">AWS / Azure</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Docker Containers</span>
-</div>
-</div>
-</div>
-<!-- Category 4 -->
-<div class="skill-category">
-<div class="category-header">
-<div class="category-icon">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-</svg>
-</div>
-<h3 class="category-title">Deep Learning &amp; CV</h3>
-</div>
-<div class="skill-chips">
-<div class="skill-chip">
-<span class="skill-dot expert"></span>
-<span class="skill-name">PyTorch</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Computer Vision</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">YOLOv8 &amp; OpenCV</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot advanced"></span>
-<span class="skill-name">Tesseract OCR</span>
-</div>
-<div class="skill-chip">
-<span class="skill-dot proficient"></span>
-<span class="skill-name">ML Clustering</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Languages -->
-<div class="languages-section">
-<h3 class="languages-title">Languages</h3>
-<div class="languages-grid">
-<div class="language-item">
-<span class="language-name">English</span>
-<div class="language-level">
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot"></span>
-</div>
-<span class="language-label">Professional</span>
-</div>
-<div class="language-item">
-<span class="language-name">French</span>
-<div class="language-level">
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot"></span>
-</div>
-<span class="language-label">Professional</span>
-</div>
-<div class="language-item">
-<span class="language-name">Arabic</span>
-<div class="language-level">
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-<span class="level-dot active"></span>
-</div>
-<span class="language-label">Native</span>
-</div>
-</div>
-</div>
-</div>
+
+<!-- ══════════════ Room 02 — Experience ══════════════ -->
+<section class="room room--light provenance" id="provenance" data-shade="light">
+  <header class="room-head">
+    <span class="room-no" data-reveal>Room 02</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>Experience</span></span></h2>
+    <span class="room-hint" data-reveal>2023 — Present</span>
+  </header>
+
+  <div class="prov-list" id="provList">
+    <div class="prov-rail" aria-hidden="true"><i id="provProgress"></i></div>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">01</span>
+        <span class="prov-dates">Jun 2024 — Present</span>
+        <span class="prov-loc">New York, US · Remote</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">AI &amp; LLM Engineer</h3>
+        <p class="prov-house">Gabriel &amp; Co.</p>
+        <ul class="prov-notes">
+          <li><b>−90% QA effort.</b> Led the development and evolution of GREAT, an AI-powered quality-assurance and analytics platform — replacing manual call review with automated scoring across 34+ agents and three channels, lifting rep quality scores from the 80s into the 90s.</li>
+          <li><b>+65% evaluation quality.</b> Designed AI evaluation frameworks, scoring methodologies and prompt architectures used to assess customer interactions at scale, through experimentation and structured outputs.</li>
+          <li><b>24+ tools integrated.</b> Architected and deployed AI agents, MCP servers, RAG pipelines and workflow automation across internal tools, AWS data sources and dashboards.</li>
+          <li>Shipped AI solutions spanning recommendations, retailer-brand monitoring, content generation and operational analytics across departments.</li>
+        </ul>
+        <p class="prov-tags">LLM Evaluation · Prompt Architecture · MCP · RAG · Node.js · PHP · n8n</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">02</span>
+        <span class="prov-dates">Jan 2026 — Jun 2026</span>
+        <span class="prov-loc">Remote</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">Artificial Intelligence Researcher</h3>
+        <p class="prov-house">Chehab Lab</p>
+        <ul class="prov-notes">
+          <li><b>6+ encoders benchmarked.</b> Researched Semantic Slice Selection for 3D medical imaging, evaluating pretrained vision and medical-image encoders — BioMedCLIP, DINOv3, DenseNet, ResNet, MedVAE, RAD-DINO — for representation quality.</li>
+          <li>Designed experiments using cosine similarity, L2 distance, semantic-preservation and compression metrics to quantify fine-grained representation collapse in medical AI models.</li>
+        </ul>
+        <p class="prov-tags">Medical Imaging · Vision Encoders · Representation Learning</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">03</span>
+        <span class="prov-dates">Jan 2025 — Oct 2025</span>
+        <span class="prov-loc">Marseille, FR · Remote</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">Data Strategy &amp; Engineering</h3>
+        <p class="prov-house">CMA CGM</p>
+        <ul class="prov-notes">
+          <li><b>+33% targeting accuracy.</b> Enhanced clustering models for customer segmentation and route analysis via experimentation and feature refinement.</li>
+          <li><b>100K+ users served.</b> Owned the roadmap and delivery of two core data products supporting competitive intelligence across 100+ shipping routes and financial datasets.</li>
+          <li><b>−40% reporting time.</b> Engineered ETL pipelines and automated dashboards covering 50+ KPIs, giving stakeholders real-time performance visibility.</li>
+        </ul>
+        <p class="prov-tags">Data Products · Clustering · ETL · KPI Dashboards</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">04</span>
+        <span class="prov-dates">Jan 2024 — Jan 2025</span>
+        <span class="prov-loc">California, US · Remote</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">AI &amp; LLM Researcher</h3>
+        <p class="prov-house">Meta-Funded Research Collaboration</p>
+        <ul class="prov-notes">
+          <li>Advanced a multimodal ECG model within a 7-researcher Meta-funded project — high-accuracy reconstruction and atrial-fibrillation prediction for paediatric care.</li>
+          <li><b>+20% reading accuracy.</b> Improved AI-assisted ECG interpretation via model evaluation, behavioural analysis, multimodal prompt and context experimentation, benchmarking and validation.</li>
+        </ul>
+        <p class="prov-tags">Multimodal AI · Healthcare · Benchmarking</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">05</span>
+        <span class="prov-dates">Nov 2023 — Feb 2024</span>
+        <span class="prov-loc">Baabda, LB</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">Software Engineering Intern</h3>
+        <p class="prov-house">BMB Group × PepsiCo</p>
+        <ul class="prov-notes">
+          <li><b>−30% package size.</b> Developed a .NET MAUI Blazor app with PepsiCo, adding offline Android SQLite support for stronger reliability and security.</li>
+        </ul>
+        <p class="prov-tags">.NET MAUI · Blazor · SQLite · Android</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">06</span>
+        <span class="prov-dates">Jul 2023 — Oct 2023</span>
+        <span class="prov-loc">Naqqache, LB</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">AI Engineering Intern</h3>
+        <p class="prov-house">Intalio</p>
+        <ul class="prov-notes">
+          <li><b>97% extraction accuracy.</b> Engineered a Flask OCR API handling 100+ daily requests with YOLOv8, OpenCV and Tesseract — boosting efficiency ~35% via ML pipeline optimisation.</li>
+        </ul>
+        <p class="prov-tags">YOLOv8 · OpenCV · Tesseract · Flask</p>
+      </div>
+    </article>
+
+    <article class="prov-item" data-reveal>
+      <div class="prov-meta">
+        <span class="prov-ord">07</span>
+        <span class="prov-dates">Mar 2023 — Jun 2023</span>
+        <span class="prov-loc">Dbayeh, LB</span>
+      </div>
+      <div class="prov-body">
+        <h3 class="prov-role">Software Engineering Intern</h3>
+        <p class="prov-house">eMcREY</p>
+        <ul class="prov-notes">
+          <li><b>−40% processing time.</b> Created XML, Java and MySQL applications on Oracle platforms within a 4-person team, automating three core business processes.</li>
+        </ul>
+        <p class="prov-tags">Java · MySQL · Oracle · XML</p>
+      </div>
+    </article>
+  </div>
 </section>
-<!-- Projects Section -->
-<section class="projects section" id="projects">
-<div class="container">
-<div class="section-header">
-<span class="section-tag">Portfolio</span>
-<h2 class="section-title">Projects Grid</h2>
-</div>
-<div class="projects-filter">
-<button class="filter-btn active" data-filter="all">All (23)</button>
-<button class="filter-btn" data-filter="ai">AI/ML</button>
-<button class="filter-btn" data-filter="data">Data Science</button>
-<button class="filter-btn" data-filter="systems">Systems/MLOps</button>
-<button class="filter-btn" data-filter="app">Applications</button>
-<button class="filter-btn" data-filter="web">Web Sites</button>
-</div>
-<div class="projects-grid" id="projectsGrid">
-<!-- 1. DermSense Classifier -->
-<article class="project-card" data-category="ai">
-<div class="project-image"><img alt="DermSense Classifier Mockup" class="project-img-display" loading="lazy" src="screenshots/dermsense_mockup.png"/>
 
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/DermSense-Skin-Disease-Classifier" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-ai">AI &amp; Deep Learning</span>
-<h3 class="project-title">DermSense Classifier</h3>
-<p class="project-description">A medical imaging neural pipeline contrasting an SVM-HOG baseline with a PyTorch EfficientNet-B0 CNN. Integrates Grad-CAM visual heatmaps for diagnostic transparency.</p>
-<div class="project-tech">
-<span>PyTorch</span>
-<span>Grad-CAM</span>
-<span>OpenCV</span>
-<span>SVM</span>
-</div>
-</div>
-</article>
-<!-- 2. OULAD Analytics Pipeline -->
-<article class="project-card" data-category="ai">
-<div class="project-image"><img alt="OULAD Analytics Pipeline Mockup" class="project-img-display" loading="lazy" src="screenshots/oulad_mockup.png"/>
+<!-- ══════════════ Room III — Materials & Methods (ink) ══════════════ -->
+<section class="room room--dark materials" id="materials" data-shade="dark">
+  <header class="room-head room-head--dark">
+    <span class="room-no" data-reveal>Room 03</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>Materials &amp; Methods</span></span></h2>
+    <span class="room-hint" data-reveal>Technical skills</span>
+  </header>
 
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/OULAD-Learning-Analytics" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-ai">ML Engineering</span>
-<h3 class="project-title">OULAD Analytics Pipeline</h3>
-<p class="project-description">Student retention pipeline following CRISP-DM. Modularized into feature selection (XGBoost RFECV), classifiers/regressors, and unsupervised clustering.</p>
-<div class="project-tech">
-<span>XGBoost</span>
-<span>DBSCAN</span>
-<span>GMM</span>
-<span>Python CLI</span>
-</div>
-</div>
-</article>
-<!-- 3. Network Cell Analyzer (mockup screenshot) -->
-<article class="project-card" data-category="app">
-<div class="project-image">
-<img alt="Network Cell Analyzer Dashboard" class="project-img-display" loading="lazy" src="screenshots/dashboard_mockup.png"/>
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Network-Cell-Analyzer" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-app">Full Stack App</span>
-<h3 class="project-title">Network Cell Analyzer</h3>
-<p class="project-description">A network metrics reporter capturing LTE/5G/Wi-Fi telephony parameters. Transmits telemetry data via Flask APIs to a local database system.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Flask API</span>
-<span>Android SDK</span>
-<span>SQLite</span>
-</div>
-</div>
-</article>
-<!-- 4. .NET MAUI Application (mockup screenshot) -->
-<article class="project-card" data-category="app">
-<div class="project-image">
-<img alt="Maui App Interface Mockup" class="project-img-display" loading="lazy" src="screenshots/maui_app_mockup.png"/>
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/MauiApp1" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-app">Mobile / Desktop</span>
-<h3 class="project-title">.NET MAUI Application</h3>
-<p class="project-description">Cross-platform mobile and desktop application targeting multiple OS configurations, powered by .NET MAUI Blazor and offline SQLite storage.</p>
-<div class="project-tech">
-<span>C#</span>
-<span>.NET MAUI</span>
-<span>Blazor Hybrid</span>
-<span>SQLite</span>
-</div>
-</div>
-</article>
-<!-- 5. E-commerce Microservices -->
-<article class="project-card" data-category="systems">
-<div class="project-image"><img alt="E-commerce Microservices Mockup" class="project-img-display" loading="lazy" src="screenshots/ecommerce_mockup.png"/>
+  <div class="vignettes">
+    <figure class="vignette" data-reveal>
+      <figcaption class="vig-caption">Agentic<br/>Systems</figcaption>
+      <div class="vig-circle">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+          <circle cx="100" cy="100" r="14"/>
+          <circle cx="100" cy="30" r="9"/><circle cx="160" cy="65" r="9"/><circle cx="160" cy="135" r="9"/>
+          <circle cx="100" cy="170" r="9"/><circle cx="40" cy="135" r="9"/><circle cx="40" cy="65" r="9"/>
+          <path d="M100 44v42M147 72l-33 20M147 128l-33-20M100 156v-42M53 128l33-20M53 72l33 20"/>
+          <circle cx="100" cy="100" r="86" stroke-dasharray="1 6"/>
+        </svg>
+      </div>
+      <svg class="hex hex--paper" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+    </figure>
+    <figure class="vignette" data-reveal>
+      <figcaption class="vig-caption">Retrieval &amp;<br/>Context</figcaption>
+      <div class="vig-circle">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+          <path d="M60 50h80M60 70h80M60 90h55"/>
+          <circle cx="118" cy="118" r="34"/>
+          <path d="M142 142l28 28"/>
+          <circle cx="100" cy="100" r="86" stroke-dasharray="1 6"/>
+        </svg>
+      </div>
+      <svg class="hex hex--paper" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+    </figure>
+    <figure class="vignette" data-reveal>
+      <figcaption class="vig-caption">Evaluation<br/>&amp; Reliability</figcaption>
+      <div class="vig-circle">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+          <path d="M100 42v96M78 42h44"/>
+          <path d="M62 52l-20 44h40l-20-44zM42 96c0 12 9 20 20 20s20-8 20-20"/>
+          <path d="M138 52l-20 44h40l-20-44zM118 96c0 12 9 20 20 20s20-8 20-20"/>
+          <path d="M74 150h52" stroke-dasharray="2 5"/>
+          <circle cx="100" cy="100" r="86" stroke-dasharray="1 6"/>
+        </svg>
+      </div>
+      <svg class="hex hex--paper" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+    </figure>
+  </div>
 
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/ecommerce_Charbel_Toumieh" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">MLOps &amp; Architecture</span>
-<h3 class="project-title">E-commerce Microservices</h3>
-<p class="project-description">FastAPI backend microservices architecture. Features segregated customer/order databases, HAProxy load balancing, and Prometheus execution scraping.</p>
-<div class="project-tech">
-<span>FastAPI</span>
-<span>Docker</span>
-<span>HAProxy</span>
-<span>Prometheus</span>
-</div>
-</div>
-</article>
-<!-- 6. Signal Processing MATLAB -->
-<article class="project-card" data-category="data">
-<div class="project-image"><img alt="Signal Processing MATLAB Mockup" class="project-img-display" loading="lazy" src="screenshots/signal_processing_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Signal-Processing-Matlab" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-data">Data &amp; Modeling</span>
-<h3 class="project-title">Signal Processing MATLAB</h3>
-<p class="project-description">Mathematical modeling simulations representing Discrete Fourier Transforms, Nyquist sampling limits, Uniform/Selective quantization noise, and coherent BPSK/QPSK modulation.</p>
-<div class="project-tech">
-<span>MATLAB</span>
-<span>DSP Math</span>
-<span>Modulation</span>
-</div>
-</div>
-</article>
-<!-- 7. DSA Supermarket Analysis -->
-<article class="project-card" data-category="data">
-<div class="project-image"><img alt="DSA Supermarket Analysis Mockup" class="project-img-display" loading="lazy" src="screenshots/dsa_supermarket_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/DSA-Supermarket-Analysis" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-data">Data Structures</span>
-<h3 class="project-title">DSA Supermarket Analysis</h3>
-<p class="project-description">A path-finding logistics simulator modeling layouts as weighted graphs. Implements graph algorithms (DFS/BFS) for routing, quicksort, and transaction rule analytics.</p>
-<div class="project-tech">
-<span>Algorithms</span>
-<span>Graph Theory</span>
-<span>Unit Testing</span>
-</div>
-</div>
-</article>
-<!-- 8. Public Health Dashboard -->
-<article class="project-card" data-category="data">
-<div class="project-image"><img alt="Public Health Dashboard Mockup" class="project-img-display" loading="lazy" src="screenshots/public_health_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/public-health-data-dashboard" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-data">Data Engineering</span>
-<h3 class="project-title">Public Health Dashboard</h3>
-<p class="project-description">Interactive dashboard for visualizing and analyzing public health data with dynamic charts and data-driven insights representing global COVID telemetry.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Pandas</span>
-<span>Data Viz</span>
-<span>Dashboards</span>
-</div>
-</div>
-</article>
-<!-- 9. Student Wellbeing Insights (EXTRA) -->
-<article class="project-card project-extra" data-category="ai">
-<div class="project-image"><img alt="Student Wellbeing Insights Mockup" class="project-img-display" loading="lazy" src="screenshots/ai_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Student_Wellbeing_Insights" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-ai">AI &amp; Analytics</span>
-<h3 class="project-title">Student Wellbeing Insights</h3>
-<p class="project-description">A feedback aggregation tool rendering statistical distributions and predicting wellbeing patterns via relational SQL.</p>
-<div class="project-tech">
-<span>Flask</span>
-<span>SQL Analytics</span>
-<span>HTML/CSS</span>
-</div>
-</div>
-</article>
-<!-- 10. CDC Clinical Classifier (EXTRA) -->
-<article class="project-card project-extra" data-category="ai">
-<div class="project-image"><img alt="CDC Clinical Classifier Mockup" class="project-img-display" loading="lazy" src="screenshots/ai_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/CDC-Diabetes" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-ai">ML Pipeline</span>
-<h3 class="project-title">CDC Clinical Classifier</h3>
-<p class="project-description">Machine learning pipeline utilizing CDC telemetry statistics to classify and cluster diabetes indicators.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Scikit-Learn</span>
-<span>Clustering</span>
-</div>
-</div>
-</article>
-<!-- 11. Cipher Web Application (EXTRA) -->
-<article class="project-card project-extra" data-category="web">
-<div class="project-image"><img alt="Cipher Web Application Mockup" class="project-img-display" loading="lazy" src="screenshots/web_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Cipher-Web" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-web">Cryptography Site</span>
-<h3 class="project-title">Cipher Web Application</h3>
-<p class="project-description">End-to-end cryptographic web application implementing classical ciphers (Affine, Vigenere, Hill) deployed on Azure.</p>
-<div class="project-tech">
-<span>Flask</span>
-<span>Cryptography</span>
-<span>Azure</span>
-</div>
-</div>
-</article>
-<!-- 12. Interactive Chart Generator (EXTRA) -->
-<article class="project-card project-extra" data-category="data">
-<div class="project-image"><img alt="Interactive Chart Generator Mockup" class="project-img-display" loading="lazy" src="screenshots/data_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Interactive-Chart-Generator" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-data">Data Visuals</span>
-<h3 class="project-title">Interactive Chart Generator</h3>
-<p class="project-description">Python module utilizing Matplotlib and Seaborn for dynamic plotting of customized datastreams.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Matplotlib</span>
-<span>Seaborn</span>
-</div>
-</div>
-</article>
-<!-- 13. Careology Marketplace (EXTRA) -->
-<article class="project-card project-extra" data-category="web">
-<div class="project-image"><img alt="Careology Marketplace Mockup" class="project-img-display" loading="lazy" src="screenshots/web_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Careology" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-web">Web Portal</span>
-<h3 class="project-title">Careology Marketplace</h3>
-<p class="project-description">A web system containing custom administrative tools, integrated messaging systems, and OpenAI Chatbot configurations.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Flask</span>
-<span>OpenAI API</span>
-</div>
-</div>
-</article>
-<!-- 14. Mini Library System (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="Mini Library System Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Mini-Library-Management-System-Challenge" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">OOP Design</span>
-<h3 class="project-title">Mini Library System</h3>
-<p class="project-description">A library management system implementing core functionality for book and member management via OOP.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>OOP</span>
-<span>CLI</span>
-</div>
-</div>
-</article>
-<!-- 15. Jenkins Automation Pipeline (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="Jenkins Automation Pipeline Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/jenkins_project" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">DevOps &amp; CI/CD</span>
-<h3 class="project-title">Jenkins Automation Pipeline</h3>
-<p class="project-description">Python test-coverage assertions integrated with a Jenkinsfile pipeline automating container deployment and quality validation.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Jenkins CI/CD</span>
-<span>Automation</span>
-</div>
-</div>
-</article>
-<!-- 16. Contact List Manager (EXTRA) -->
-<article class="project-card project-extra" data-category="app">
-<div class="project-image"><img alt="Contact List Manager Mockup" class="project-img-display" loading="lazy" src="screenshots/app_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/ContactList" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-app">CRUD App</span>
-<h3 class="project-title">Contact List Manager</h3>
-<p class="project-description">Contact management application with CRUD operations, search functionality, and data persistence.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Django</span>
-<span>CRUD</span>
-</div>
-</div>
-</article>
-<!-- 17. Weighted Graph manipulation (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="Weighted Graph manipulation Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Weighted-Graph-Manipulation" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">C++ Backend</span>
-<h3 class="project-title">Weighted Graph manipulation</h3>
-<p class="project-description">Low-level C++ console implementation of graph traversal algorithms (Dijkstra, MST) and weighted adjacency matrix alterations.</p>
-<div class="project-tech">
-<span>C++</span>
-<span>Graph Theory</span>
-<span>Algorithms</span>
-</div>
-</div>
-</article>
-<!-- 18. 8-bit Arithmetic Logic Unit (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="8-bit Arithmetic Logic Unit Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/8bit-ALU" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">Hardware &amp; VHDL</span>
-<h3 class="project-title">8-bit Arithmetic Logic Unit</h3>
-<p class="project-description">VHDL design modeling hardware arithmetic logic gates, control selectors, and execution testbenches.</p>
-<div class="project-tech">
-<span>VHDL</span>
-<span>Digital Logic</span>
-<span>Hardware Simulator</span>
-</div>
-</div>
-</article>
-<!-- 19. TCP Proxy Server-Client (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="TCP Proxy Server-Client Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Server-Client" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">Network Sockets</span>
-<h3 class="project-title">TCP Proxy Server-Client</h3>
-<p class="project-description">Low-level socket programming representing a multi-client HTTP proxy server with connection routing, data parsing, and caching logic.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Sockets API</span>
-<span>Proxy Routing</span>
-</div>
-</div>
-</article>
-<!-- 20. Multiplayer Game with Delay (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="Multiplayer Game with Delay Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Delay-Multiplayer-Game" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">Distributed Systems</span>
-<h3 class="project-title">Multiplayer Game with Delay</h3>
-<p class="project-description">Multiplayer game implementation with network delay simulation and synchronization mechanisms.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>Sockets</span>
-<span>Game Logic</span>
-</div>
-</div>
-</article>
-<!-- 21. Employee Registry System (EXTRA) -->
-<article class="project-card project-extra" data-category="web">
-<div class="project-image"><img alt="Employee Registry System Mockup" class="project-img-display" loading="lazy" src="screenshots/web_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Employee-Management-Software" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-web">Web Registry</span>
-<h3 class="project-title">Employee Registry System</h3>
-<p class="project-description">Flask-based enterprise employee registry and task scheduler backed by local SQLite storage.</p>
-<div class="project-tech">
-<span>HTML</span>
-<span>Flask</span>
-<span>SQLite</span>
-</div>
-</div>
-</article>
-<!-- 22. PyQt Desktop Application (EXTRA) -->
-<article class="project-card project-extra" data-category="app">
-<div class="project-image"><img alt="PyQt Desktop Application Mockup" class="project-img-display" loading="lazy" src="screenshots/app_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/Lab4-charbeltoumieh-PyQt" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-app">Desktop GUI</span>
-<h3 class="project-title">PyQt Desktop Application</h3>
-<p class="project-description">Desktop GUI application built with PyQt framework demonstrating modern UI/UX patterns.</p>
-<div class="project-tech">
-<span>Python</span>
-<span>PyQt</span>
-<span>GUI</span>
-</div>
-</div>
-</article>
-<!-- 23. Flask User Registry API (EXTRA) -->
-<article class="project-card project-extra" data-category="systems">
-<div class="project-image"><img alt="Flask User Registry API Mockup" class="project-img-display" loading="lazy" src="screenshots/systems_category_mockup.png"/>
-
-<div class="project-overlay">
-<a class="project-link" href="https://github.com/Charbelto/lab5-charbeltoumieh" rel="noopener noreferrer" target="_blank">View Repository</a>
-</div>
-</div>
-<div class="project-content">
-<span class="project-badge tag-systems">Secure Micro API</span>
-<h3 class="project-title">Flask User Registry API</h3>
-<p class="project-description">RESTful user registry API served via Flask with cross-origin resource sharing (CORS) security.</p>
-<div class="project-tech">
-<span>Flask</span>
-<span>CORS</span>
-<span>API</span>
-</div>
-</div>
-</article>
-</div>
-<div class="projects-cta">
-<button class="btn btn-secondary" id="showMoreBtn">
-<span>Show More Projects</span>
-<svg class="arrow-icon" fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18">
-<path d="M6 9l6 6 6-6"></path>
-</svg>
-</button>
-</div>
-</div>
+  <dl class="materials-list">
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">AI / LLM</dt>
+      <dd class="mat-v">AI Agents<i>·</i>Multi-Agent Systems<i>·</i>Agent Orchestration<i>·</i>RAG<i>·</i>Vector Databases<i>·</i>Semantic Search<i>·</i>Prompt Engineering<i>·</i>Structured Outputs<i>·</i>LLM Evaluation<i>·</i>A/B Prompt Testing<i>·</i>Hallucination Reduction<i>·</i>Tool &amp; Function Calling<i>·</i>Self-Verification<i>·</i>MCP<i>·</i>LangChain<i>·</i>LangGraph<i>·</i>LlamaIndex</dd>
+    </div>
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">ML &amp; Data</dt>
+      <dd class="mat-v">Clustering &amp; Segmentation<i>·</i>Model Evaluation<i>·</i>Benchmarking<i>·</i>Experimental Validation<i>·</i>SQL / SQLite<i>·</i>ETL Pipelines</dd>
+    </div>
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">Backend &amp; APIs</dt>
+      <dd class="mat-v">Python<i>·</i>Flask<i>·</i>Node.js<i>·</i>PHP<i>·</i>Java<i>·</i>REST APIs<i>·</i>API Integration<i>·</i>n8n</dd>
+    </div>
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">Cloud &amp; Vision</dt>
+      <dd class="mat-v">AWS<i>·</i>Azure<i>·</i>PyTorch<i>·</i>YOLOv8<i>·</i>OpenCV<i>·</i>Tesseract OCR<i>·</i>EfficientNet<i>·</i>Grad-CAM<i>·</i>Object Detection</dd>
+    </div>
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">Product</dt>
+      <dd class="mat-v">Product Discovery<i>·</i>Stakeholder Management<i>·</i>KPI Definition<i>·</i>Experimentation<i>·</i>Roadmap Prioritisation</dd>
+    </div>
+    <div class="mat-row" data-reveal>
+      <dt class="mat-k">Languages</dt>
+      <dd class="mat-v">English <em>(full professional)</em><i>·</i>French <em>(full professional)</em><i>·</i>Arabic <em>(native)</em></dd>
+    </div>
+  </dl>
 </section>
-<!-- Contact Section -->
-<section class="contact section" id="contact">
-<div class="container">
-<div class="section-header">
-<span class="section-tag">Let's Connect</span>
-<h2 class="section-title">Get In Touch</h2>
-</div>
-<div class="contact-grid">
-<div class="contact-card">
-<div class="contact-intro">
-<h3>Connect With Me</h3>
-<p>I am available for AI development opportunities, consulting on LLM agents/pipelines, or technical collaborations. Let's discuss your next breakthrough project.</p>
-</div>
-<div class="contact-methods">
-<div class="method-item">
-<div class="method-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>
-</svg>
-</div>
-<div>
-<span class="method-label">Direct Email</span>
-<a class="method-value" href="mailto:charbeltoumieh1@gmail.com">charbeltoumieh1@gmail.com</a>
-</div>
-</div>
-<div class="method-item">
-<div class="method-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
-</svg>
-</div>
-<div>
-<span class="method-label">Primary Locations</span>
-<span class="method-value">Coventry, UK • Beirut, LB</span>
-</div>
-</div>
-</div>
-<div class="contact-social">
-<h3>Follow My Work</h3>
-<div class="social-links">
-<a aria-label="GitHub Profile" class="social-btn" href="https://github.com/Charbelto" rel="noopener noreferrer" target="_blank">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-</svg>
-<span>GitHub</span>
-</a>
-<a aria-label="LinkedIn Profile" class="social-btn" href="https://www.linkedin.com/in/charbel-toumieh/" rel="noopener noreferrer" target="_blank">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
-<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect height="12" width="4" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle>
-</svg>
-<span>LinkedIn</span>
-</a>
-</div>
-</div>
-</div>
-<form class="contact-form" id="contactForm">
-<h3 class="form-title">Send a Message</h3>
-<div class="form-group">
-<label for="name">Your Name</label>
-<input id="name" placeholder="John Doe" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="email">Your Email</label>
-<input id="email" placeholder="john@example.com" required="" type="email"/>
-</div>
-<div class="form-group">
-<label for="subject">Subject</label>
-<input id="subject" placeholder="AI Project Collaboration" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="message">Message</label>
-<textarea id="message" placeholder="Tell me about your project..." required="" rows="5"></textarea>
-</div>
-<button class="btn btn-primary btn-submit" type="submit">
-<span>Send Message</span>
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18">
-<line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-</svg>
-</button>
-</form>
-</div>
-</div>
+
+<!-- ══════════════ Room IV — Selected Works ══════════════ -->
+<section class="room room--light works" id="works" data-shade="light">
+  <header class="room-head">
+    <span class="room-no" data-reveal>Room 04</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>Selected Works</span></span></h2>
+    <span class="room-hint" data-reveal>24 Projects</span>
+  </header>
+
+  <div class="plates">
+    <a class="plate plate--wide" href="https://github.com/Charbelto/loopguard" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">01</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 01 — Flagship</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">LoopGuard</h3>
+      <p class="plate-sub">AI / LLM agent reliability framework</p>
+      <p class="plate-desc">A framework-agnostic, zero-dependency Python library that detects and mitigates infinite-loop and tool-calling failures in AI agents — semantic similarity, cycle detection and declarative guardrails for LangChain, LangGraph, CrewAI, Autogen and RAG pipelines.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — Python · semantic similarity · cycle detection · guardrails</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+
+    <a class="plate" href="https://github.com/Charbelto/DermSense-Skin-Disease-Classifier" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">02</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 02</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">DermSense</h3>
+      <p class="plate-sub">Explainable skin-disease classifier</p>
+      <p class="plate-desc">Medical vision pipeline contrasting an SVM/HOG baseline with a PyTorch EfficientNet-B0 transfer-learning model, with Grad-CAM heatmaps for diagnostic transparency, served through a responsive web interface.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — PyTorch · EfficientNet-B0 · Grad-CAM</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+
+    <a class="plate" href="https://github.com/Charbelto/OULAD-Learning-Analytics" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">03</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 03</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">OULAD Analytics</h3>
+      <p class="plate-sub">Student-retention pipeline, CRISP-DM</p>
+      <p class="plate-desc">Retention analysis and success forecasting — XGBoost with RFECV feature selection, classifiers, regressors and unsupervised clustering (DBSCAN, GMM), modularised behind a Python CLI.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — XGBoost · DBSCAN · GMM</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+
+    <a class="plate" href="https://github.com/Charbelto/ecommerce_Charbel_Toumieh" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">04</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 04</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">Commerce Microservices</h3>
+      <p class="plate-sub">Containerised FastAPI platform</p>
+      <p class="plate-desc">E-commerce backend split into segregated customer and order services with HAProxy load-balancing, Prometheus scraping and Docker orchestration.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — FastAPI · Docker · HAProxy · Prometheus</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+
+    <a class="plate" href="https://github.com/Charbelto/Network-Cell-Analyzer" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">05</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 05</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">Network Cell Analyzer</h3>
+      <p class="plate-sub">Android telemetry, Flask dashboard</p>
+      <p class="plate-desc">Native Android diagnostics client capturing LTE/5G/Wi-Fi parameters, streaming telemetry through Flask APIs into a live server-side statistics dashboard.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — Android SDK · Flask · SQLite</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+
+    <a class="plate plate--wide" href="https://github.com/Charbelto/DSA-Supermarket-Analysis" target="_blank" rel="noopener noreferrer" data-reveal>
+      <span class="plate-ghost" aria-hidden="true">06</span>
+      <div class="plate-top">
+        <span class="plate-no">Plate No. 06</span>
+        <svg class="hex" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      </div>
+      <h3 class="plate-title">Supermarket Graph Analysis</h3>
+      <p class="plate-sub">Market-basket &amp; path-finding engine</p>
+      <p class="plate-desc">Logistics simulator modelling store layouts as weighted graphs — custom quicksort, DFS/BFS routing and association-rule analytics producing product recommendations.</p>
+      <div class="plate-foot">
+        <span class="plate-medium">Medium — graph theory · algorithms · unit testing</span>
+        <span class="plate-link">View repository <b aria-hidden="true">↗</b></span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Complete catalogue -->
+  <div class="catalogue">
+    <div class="cat-head" data-reveal>
+      <h3 class="cat-title">Complete Catalogue</h3>
+      <div class="cat-filters" role="group" aria-label="Filter catalogue">
+        <button class="chip is-on" data-filter="all">All</button>
+        <button class="chip" data-filter="ai">AI · ML</button>
+        <button class="chip" data-filter="data">Data</button>
+        <button class="chip" data-filter="systems">Systems</button>
+        <button class="chip" data-filter="apps">Apps</button>
+        <button class="chip" data-filter="web">Web</button>
+      </div>
+    </div>
+    <ol class="cat-list" id="catList">
+      <li class="cat-row" data-cat="data"><a href="https://github.com/Charbelto/Signal-Processing-Matlab" target="_blank" rel="noopener noreferrer"><span class="cat-no">07</span><span class="cat-name">Signal Processing Studies</span><span class="cat-medium">MATLAB · DFT · BPSK/QPSK</span><span class="cat-tag">Data</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="data"><a href="https://github.com/Charbelto/public-health-data-dashboard" target="_blank" rel="noopener noreferrer"><span class="cat-no">08</span><span class="cat-name">Public Health Dashboard</span><span class="cat-medium">Python · Pandas · data viz</span><span class="cat-tag">Data</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="ai"><a href="https://github.com/Charbelto/CDC-Diabetes" target="_blank" rel="noopener noreferrer"><span class="cat-no">09</span><span class="cat-name">CDC Clinical Classifier</span><span class="cat-medium">scikit-learn · clustering</span><span class="cat-tag">AI · ML</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="ai"><a href="https://github.com/Charbelto/Student_Wellbeing_Insights" target="_blank" rel="noopener noreferrer"><span class="cat-no">10</span><span class="cat-name">Student Wellbeing Insights</span><span class="cat-medium">Flask · SQL analytics</span><span class="cat-tag">AI · ML</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="apps"><a href="https://github.com/Charbelto/MauiApp1" target="_blank" rel="noopener noreferrer"><span class="cat-no">11</span><span class="cat-name">Cross-Platform MAUI App</span><span class="cat-medium">C# · .NET MAUI · SQLite</span><span class="cat-tag">Apps</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="web"><a href="https://github.com/Charbelto/Cipher-Web" target="_blank" rel="noopener noreferrer"><span class="cat-no">12</span><span class="cat-name">Cipher Web</span><span class="cat-medium">Flask · classical cryptography · Azure</span><span class="cat-tag">Web</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="web"><a href="https://github.com/Charbelto/Careology" target="_blank" rel="noopener noreferrer"><span class="cat-no">13</span><span class="cat-name">Careology Marketplace</span><span class="cat-medium">Flask · OpenAI chatbot</span><span class="cat-tag">Web</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="data"><a href="https://github.com/Charbelto/Interactive-Chart-Generator" target="_blank" rel="noopener noreferrer"><span class="cat-no">14</span><span class="cat-name">Interactive Chart Generator</span><span class="cat-medium">Matplotlib · Seaborn</span><span class="cat-tag">Data</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/jenkins_project" target="_blank" rel="noopener noreferrer"><span class="cat-no">15</span><span class="cat-name">Jenkins Automation Pipeline</span><span class="cat-medium">CI/CD · coverage assertions</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/Server-Client" target="_blank" rel="noopener noreferrer"><span class="cat-no">16</span><span class="cat-name">TCP Proxy Server–Client</span><span class="cat-medium">sockets · forwarding · caching</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/Delay-Multiplayer-Game" target="_blank" rel="noopener noreferrer"><span class="cat-no">17</span><span class="cat-name">Delay Multiplayer Game</span><span class="cat-medium">TCP sockets · real-time scoring</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/Weighted-Graph-Manipulation" target="_blank" rel="noopener noreferrer"><span class="cat-no">18</span><span class="cat-name">Weighted Graph Manipulation</span><span class="cat-medium">C++ · Dijkstra · MST</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/8bit-ALU" target="_blank" rel="noopener noreferrer"><span class="cat-no">19</span><span class="cat-name">8-bit Arithmetic Logic Unit</span><span class="cat-medium">VHDL · digital logic · testbench</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="apps"><a href="https://github.com/Charbelto/Mini-Library-Management-System-Challenge" target="_blank" rel="noopener noreferrer"><span class="cat-no">20</span><span class="cat-name">Mini Library System</span><span class="cat-medium">Flask · cataloguing · search indices</span><span class="cat-tag">Apps</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="web"><a href="https://github.com/Charbelto/Employee-Management-Software" target="_blank" rel="noopener noreferrer"><span class="cat-no">21</span><span class="cat-name">Employee Registry</span><span class="cat-medium">Flask · SQLite · scheduling</span><span class="cat-tag">Web</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="apps"><a href="https://github.com/Charbelto/ContactList" target="_blank" rel="noopener noreferrer"><span class="cat-no">22</span><span class="cat-name">Contact List Manager</span><span class="cat-medium">Django · CRUD · search</span><span class="cat-tag">Apps</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="apps"><a href="https://github.com/Charbelto/Lab4-charbeltoumieh-PyQt" target="_blank" rel="noopener noreferrer"><span class="cat-no">23</span><span class="cat-name">PyQt Desktop Client</span><span class="cat-medium">Python · PyQt · desktop forms</span><span class="cat-tag">Apps</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+      <li class="cat-row" data-cat="systems"><a href="https://github.com/Charbelto/lab5-charbeltoumieh" target="_blank" rel="noopener noreferrer"><span class="cat-no">24</span><span class="cat-name">Flask User Registry API</span><span class="cat-medium">Flask · CORS · REST</span><span class="cat-tag">Systems</span><span class="cat-arrow" aria-hidden="true">↗</span></a></li>
+    </ol>
+    <p class="cat-empty" id="catEmpty" hidden>No works under this heading — try another wing.</p>
+  </div>
 </section>
-<!-- Footer -->
-<footer class="footer">
-<div class="container footer-grid">
-<div class="footer-brand">
-<span class="footer-logo">&lt;CT/&gt;</span>
-<p class="footer-desc">Designing, training, and building the future of autonomous systems and web platforms.</p>
-</div>
-<div class="footer-links">
-<h4>Navigation</h4>
-<div class="footer-nav">
-<a href="#about">About</a>
-<a href="#experience">Experience</a>
-<a href="#skills">Skills</a>
-<a href="#projects">Projects</a>
-</div>
-</div>
-<div class="footer-links">
-<h4>Legal / Docs</h4>
-<div class="footer-nav">
-<a download="" href="Charbel_Toumieh_Resume.pdf">Curriculum Vitae</a>
-<a href="https://github.com/Charbelto" rel="noopener noreferrer" target="_blank">Repositories</a>
-</div>
-</div>
-</div>
-<div class="container footer-bottom">
-<p>© 2026 Charbel Toumieh. All Rights Reserved.</p>
-<p>Designed for AI &amp; LLM Systems.</p>
-</div>
+
+<!-- ══════════════ Room 05 — Education ══════════════ -->
+<section class="room room--light formation" id="formation" data-shade="light">
+  <header class="room-head">
+    <span class="room-no" data-reveal>Room 05</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>Education</span></span></h2>
+    <span class="room-hint" data-reveal>Degrees &amp; leadership</span>
+  </header>
+
+  <div class="edu-grid">
+    <article class="edu-card" data-reveal>
+      <span class="edu-badge">In progress — expected Sept 2026</span>
+      <h3 class="edu-degree">MSc Applied Artificial Intelligence</h3>
+      <p class="edu-school">University of Warwick</p>
+      <p class="edu-meta">Coventry, United Kingdom</p>
+    </article>
+    <article class="edu-card" data-reveal>
+      <span class="edu-badge edu-badge--muted">Conferred</span>
+      <h3 class="edu-degree">B.E. Computer &amp; Communications Engineering</h3>
+      <p class="edu-school">American University of Beirut</p>
+      <p class="edu-meta">Beirut, Lebanon</p>
+    </article>
+  </div>
+
+  <div class="leadership">
+    <p class="wall-label" data-reveal>Leadership &amp; Extracurricular</p>
+    <ul class="lead-list">
+      <li class="lead-row" data-reveal><span class="lead-name">AIcademy</span><span class="lead-desc">AI lecturer &amp; curriculum developer, AUB</span><span class="lead-date">2024 — 2025</span></li>
+      <li class="lead-row" data-reveal><span class="lead-name">IEEE</span><span class="lead-desc">Volunteer — activities &amp; professional development</span><span class="lead-date">2022 — 2023</span></li>
+      <li class="lead-row" data-reveal><span class="lead-name">PythonDojo</span><span class="lead-desc">Lead — daily coding sessions &amp; codebase contributions</span><span class="lead-date">2021 — 2022</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ Room VI — Inquiries (ink) ══════════════ -->
+<section class="room room--dark inquiries" id="inquiries" data-shade="dark">
+  <header class="room-head room-head--dark">
+    <span class="room-no" data-reveal>Room 06</span>
+    <h2 class="room-title" data-reveal><span class="rt-mask"><span>Inquiries</span></span></h2>
+    <span class="room-hint" data-reveal>Contact</span>
+  </header>
+
+  <div class="inq-body">
+    <p class="inq-lede" data-reveal>For roles, collaborations and conversations<br/>about <em>intelligent systems</em> —</p>
+    <a class="inq-mail" href="mailto:charbeltoumieh1@gmail.com" data-reveal>
+      <span class="inq-mail-text">charbeltoumieh<span class="digit">1</span>@gmail.com</span>
+    </a>
+    <div class="inq-actions" data-reveal>
+      <a class="pill pill--paper magnetic" href="mailto:charbeltoumieh1@gmail.com">Write to me</a>
+      <button class="ghost-link ghost-link--paper" id="copyMail" data-mail="charbeltoumieh1@gmail.com">Copy address</button>
+    </div>
+    <div class="inq-meta" data-reveal>
+      <span>Coventry, UK · Beirut, LB</span>
+      <svg class="hex hex--paper" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      <span>Working across US &amp; EU time zones</span>
+    </div>
+    <div class="inq-links" data-reveal>
+      <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="Charbel_Toumieh_Resume.pdf" download>Curriculum Vitae ↓</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ Colophon ══════════════ -->
+<footer class="colophon">
+  <div class="colo-top">
+    <div class="colo-brand">
+      <svg class="head-mark" viewBox="0 0 64 64" width="40" height="40" fill="none" aria-hidden="true">
+        <circle cx="32" cy="32" r="30.5" stroke="currentColor" stroke-width="2"/>
+        <text x="32" y="41" text-anchor="middle" class="mark-text">CT</text>
+      </svg>
+      <p>Charbel Toumieh<br/><span>AI Engineer — agentic systems, RAG &amp; AI product engineering</span></p>
+    </div>
+    <nav class="colo-nav" aria-label="Footer">
+      <a href="#engineer">The Engineer</a>
+      <a href="#provenance">Experience</a>
+      <a href="#materials">Materials</a>
+      <a href="#works">Works</a>
+      <a href="#formation">Education</a>
+      <a href="#inquiries">Inquiries</a>
+    </nav>
+    <div class="colo-hexes" aria-hidden="true">
+      <svg class="hex" viewBox="0 0 14 16"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      <svg class="hex" viewBox="0 0 14 16"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+      <svg class="hex" viewBox="0 0 14 16"><path d="M7 1l5.2 3v8L7 15l-5.2-3V4L7 1z"/></svg>
+    </div>
+  </div>
+  <div class="colo-bottom">
+    <p>© <span id="year">2026</span> Charbel Toumieh. All rights reserved.</p>
+    <p class="colo-set">Set in Instrument Serif &amp; Inter · built by hand, no frameworks · <a href="#top" class="colo-top-link">Back to top ↑</a></p>
+  </div>
 </footer>
-<script src="script.js"></script>
+
+<script src="script.js" defer></script>
 </body>
 </html>
