@@ -1,35 +1,39 @@
-# Charbel Toumieh — Portfolio
+# Charbel Toumieh — Portfolio · charbel.os
 
-A gallery on putty paper. My portfolio as an AI Engineer, presented as a museum exhibition —
-numbered rooms, wall labels, plate numbers and a colophon.
+Dark AI-lab portfolio: void black, electric violet/cyan, HUD chrome and terminal motifs.
+Built to make a hiring manager stop scrolling.
 
 **Live:** [charbelto.github.io](https://charbelto.github.io)
 
 ---
 
-## Design
+## Signature interactions (all vanilla JS/CSS — zero libraries)
 
-- **Aesthetic** — warm putty canvas (`#c4c3b6`), stark black ink rooms, hairline rules,
-  no gradients, no shadows, no stock imagery. Editorial serif (Instrument Serif) at display
-  sizes for moments; neutral grotesk (Inter) for systems.
-- **Structure** — six numbered rooms: The Engineer · Experience · Materials & Methods ·
-  Selected Works · Education · Inquiries.
-- **Signature moves** — stacked `CHARBEL / TOUMIEH` wordmark justified edge-to-edge,
-  engraved-SVG ink interlude with a notched card, scroll-drawn experience rail, reading-progress
-  hairline, fullscreen index veil, blend-aware header, magnetic pills and a custom cursor ring.
+- **Interactive particle network** — hero constellation that scatters away from the cursor
+- **Boot screen** — terminal log + vertical-columns reveal (once per session)
+- **Immersive char reveals** — headings rise letter-by-letter from blur
+- **Scroll-zoom case study** — the GREAT platform terminal scales up as you scroll
+- **Pinned horizontal gallery** — vertical scroll drives the Selected Works track sideways
+  (native swipe + snap on mobile)
+- **Exploding capability core** — orbital node map that decomposes on hover/tap
+- **3D tilt + spotlight** — cards tilt in perspective and light up around the pointer
+- **Parallax storytelling** — experience rail draws itself; ghost numerals drift at depth
+- **Counter-parallax streams**, magnetic buttons, custom cursor with context tag,
+  reading-progress bar, fullscreen column-slide menu
 
-## Performance
+## Performance & robustness
 
-- Vanilla HTML / CSS / JS — zero frameworks, zero build step, zero dependencies.
-- No raster imagery except one 24 KB portrait; all art is inline SVG.
-- Two font families, three weights total, loaded with `preconnect` + `display=swap`.
-- `content-visibility: auto` on below-fold rooms; all animation is transform/opacity,
-  rAF-throttled, and fully disabled under `prefers-reduced-motion`.
+- Zero frameworks, zero build step. Two font families; all art is CSS/SVG/canvas.
+- Single rAF scroll pipeline; IntersectionObserver reveals; canvas pauses off-screen,
+  DPR-capped, and disabled on touch/reduced-motion.
+- `content-visibility: auto` below the fold. Full `prefers-reduced-motion` fallbacks —
+  pins, tilt, particles and boot all degrade to static.
+- Content is complete without JavaScript. `?flat` renders a static page for QA tooling.
 
-## Accessibility
+## Sections
 
-Semantic landmarks, skip link, focus-visible styles, `aria-expanded`/`aria-hidden` on the menu,
-Escape-to-close, and motion-safe fallbacks. Content renders complete without JavaScript.
+`01 Profile` · `02 Case: GREAT` · `03 Experience` · `04 The Stack` ·
+`05 Selected Works` + full 24-project archive · `06 Education` · `07 Contact`
 
 ## Local development
 
@@ -37,17 +41,6 @@ Escape-to-close, and motion-safe fallbacks. Content renders complete without Jav
 git clone https://github.com/Charbelto/Charbelto.github.io.git
 cd Charbelto.github.io
 python -m http.server 4173   # or: npx serve .
-```
-
-## Structure
-
-```
-├── index.html                    # Content & structure
-├── styles.css                    # Design system & layout
-├── script.js                     # Interaction layer
-├── profile.jpg                   # Portrait (Fig. 01)
-├── Charbel_Toumieh_Resume.pdf    # CV
-└── README.md
 ```
 
 ## Connect
