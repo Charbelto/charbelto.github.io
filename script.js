@@ -17,6 +17,9 @@ const FLAT = document.documentElement.classList.contains('debug-flat');
 
 document.addEventListener('DOMContentLoaded', () => {
   splitChars();
+  // cards that "open" with a wipe instead of the default rise
+  document.querySelectorAll('.xp-body, .profile-card, .edu-card, .case-terminal')
+    .forEach(el => el.setAttribute('data-reveal', 'wipe'));
   initBoot();
   initClock();
   initVeil();
