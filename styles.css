@@ -605,6 +605,12 @@ html.js .hero-badge.is-in {
   -webkit-text-fill-color: transparent; color: transparent;
   animation: hue-drift 9s ease-in-out infinite;
 }
+html.js .hn-line--accent {
+  background: none;
+  -webkit-background-clip: initial; background-clip: initial;
+  -webkit-text-fill-color: initial; color: inherit;
+  animation: none;
+}
 /* Split chars break parent background-clip in some engines — paint per char,
    sliding the gradient by index so the sweep stays continuous across the line */
 .hn-line--accent .ch {
@@ -613,6 +619,7 @@ html.js .hero-badge.is-in {
   background-position: calc(var(--ci, 0) * 15%) 50%;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
+  animation: hue-drift 9s ease-in-out infinite;
 }
 .hero-role {
   font-size: clamp(14px, 1.6vw, 18px);
