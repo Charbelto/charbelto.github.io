@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initCore();
   initArchive();
   initCopyMail();
+  initFAQ();
+  initModal();
+  initStickyMobileCTA();
   if (FINE && !REDUCED && !FLAT) {
     initNet();
     initCursor();
@@ -555,3 +558,100 @@ function initCopyMail() {
     setTimeout(() => { btn.textContent = original; }, 2000);
   });
 }
+
+/* ── FAQ Accordion ───────────────────────────────────────────── */
+function initFAQ() {
+  const items = document.querySelectorAll('.faq-item');
+  items.forEach(item => {
+    const q = item.querySelector('.faq-question');
+    if (!q) return;
+    q.addEventListener('click', () => {
+      const isOpen = item.classList.contains('is-open');
+      items.forEach(i => i.classList.remove('is-open'));
+      if (!isOpen) item.classList.add('is-open');
+    });
+  });
+}
+
+/* ── Case Study Modal ────────────────────────────────────────── */
+function initModal() {
+  const overlay = document.getElementById('caseModal');
+  if (!overlay) return;
+  const closeBtn = overlay.querySelector('.modal-close');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSub = document.getElementById('modalSub');
+  const modalBody = document.getElementById('modalBody');
+
+  const openModal = (data) => {
+    if (modalTitle) modalTitle.textContent = data.title || 'Case Study Deep-Dive';
+    if (modalSub) modalSub.textContent = data.sub || 'Architecture & Implementation';
+    if (modalBody) modalBody.innerHTML = data.body || '<p>Detailed case breakdown loading...</p>';
+    overlay.classList.add('is-active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    overlay.classList.remove('is-active');
+    document.body.style.overflow = '';
+  };
+
+  document.querySelectorAll('[data-modal]').forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const mId = trigger.dataset.modal;
+      if (mId === 'great') {
+        openModal({
+          title: 'GREAT — Multi-Agent Evaluation & Analytics Platform',
+          sub: 'Gabriel & Co. · New York, NY (Remote) · 2024 — Present',
+          body: `
+            <h4>The Challenge</h4>
+            <p>Evaluating customer interactions across 34+ agents and 3 communication channels manually was slow, inconsistent, and unscalable.</p>
+            <h4>Architecture & Solution</h4>
+            <p>Architected an automated multi-agent evaluation pipeline using custom LLM judge prompts, RAG context validation, and automated scoring metrics. Integrated with company telephony and CRM systems.</p>
+            <h4>Key Outcomes</h4>
+            <p>• <strong>-90% Reduction in Manual QA Effort</strong>: Automated 100% of routine call reviews.<br/>
+            • <strong>34+ Agents Monitored</strong>: Real-time scoring and sentiment analytics.<br/>
+            • <strong>Actionable Insights</strong>: Instant compliance flagging and coaching recommendations.</p>
+          `
+        });
+      } else if (mId === 'loopguard') {
+        openModal({
+          title: 'LoopGuard — Agentic Circuit Breaker & Safety Harness',
+          sub: 'Open Source AI Safety Framework · 2025',
+          body: `
+            <h4>The Challenge</h4>
+            <p>Autonomous LLM agents can easily enter infinite execution loops, consuming tokens rapidly and performing unintended actions.</p>
+            <h4>Architecture & Solution</h4>
+            <p>Designed a lightweight Python circuit-breaker decorator that tracks execution graphs, detects state cycles via graph hashing, and halts rogue agents automatically.</p>
+            <h4>Key Outcomes</h4>
+            <p>• <strong>Zero Token Runaway</strong>: Halts infinite recursion within 3 state iterations.<br/>
+            • <strong>Zero Dependency Core</strong>: Drop-in compatibility for LangChain, AutoGen, and custom loopers.</p>
+          `
+        });
+      }
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+}
+
+/* ── Sticky Mobile CTA Controller ────────────────────────────── */
+function initStickyMobileCTA() {
+  const cta = document.getElementById('stickyMobileCTA');
+  if (!cta) return;
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const st = window.scrollY;
+    if (st > 400) {
+      cta.style.transform = 'translateY(0)';
+      cta.style.opacity = '1';
+    } else {
+      cta.style.transform = 'translateY(100%)';
+      cta.style.opacity = '0';
+    }
+    lastScroll = st;
+  }, { passive: true });
+}
+

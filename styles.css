@@ -1434,6 +1434,150 @@ html.debug-flat .stream-track { animation: none; }
   .core .core-node {
     transform: translate(-50%, -50%) rotate(var(--a)) translateX(min(31.5cqw, 200px)) rotate(calc(var(--a) * -1));
   }
-  .tilt { transform: none !important; }
-  .hero-inner { transform: none !important; opacity: 1 !important; }
+  .sticky-mobile-cta { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NEW COMPONENTS: SUBPAGES, BREADCRUMBS, FAQs, TESTIMONIALS, SLA & MOBILE CTA
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Breadcrumbs ───────────────────────────────────────────── */
+.breadcrumbs {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--font-m); font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.breadcrumbs a { color: var(--accent-2); transition: color 0.2s ease; }
+.breadcrumbs a:hover { color: var(--text); }
+.bc-sep { color: var(--faint); }
+.bc-curr { color: var(--text); }
+
+/* ── Subpage Layouts ───────────────────────────────────────── */
+.subpage-body { background: var(--void); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+.subpage-main { flex: 1; position: relative; padding-top: 100px; padding-bottom: 80px; }
+.subpage-container { max-width: 860px; margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 2; }
+
+.error-box, .doc-card, .thank-card {
+  background: var(--carbon);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: clamp(24px, 5vw, 48px);
+  position: relative;
+}
+.error-code { font-family: var(--font-d); font-size: clamp(64px, 12vw, 120px); font-weight: 700; color: var(--accent); line-height: 1; margin: 12px 0; }
+.error-heading, .thank-title, .doc-title { font-family: var(--font-d); font-size: clamp(28px, 4vw, 42px); font-weight: 700; color: var(--text); margin-bottom: 16px; }
+.error-desc, .thank-desc { font-size: clamp(15px, 1.8vw, 18px); color: var(--muted); max-width: 60ch; line-height: 1.6; margin-bottom: 24px; }
+.doc-meta { font-family: var(--font-m); font-size: 12px; color: var(--faint); margin-bottom: 32px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+.doc-sec { margin-bottom: 32px; }
+.doc-sec h2 { font-family: var(--font-d); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+.doc-sec p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+.doc-sec a { color: var(--accent-2); text-decoration: underline; }
+
+.subpage-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 32px; }
+
+/* ── SLA Response Badge ────────────────────────────────────── */
+.sla-badge, .hero-sla-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-m); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--good);
+  background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.28);
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+}
+
+/* ── Terminal Card ─────────────────────────────────────────── */
+.terminal-card {
+  background: #07070c; border: 1px solid var(--line); border-radius: var(--r-sm);
+  overflow: hidden; margin: 24px 0; font-family: var(--font-m); font-size: 12.5px;
+}
+.tc-head {
+  background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--line);
+  padding: 10px 14px; display: flex; align-items: center; gap: 6px;
+}
+.tc-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); }
+.tc-title { margin-left: auto; font-size: 11px; color: var(--faint); }
+.tc-body { padding: 16px; color: var(--text); line-height: 1.6; }
+.tc-dim { color: var(--faint); }
+.tc-green { color: var(--good); }
+
+/* ── FAQs Accordion ────────────────────────────────────────── */
+.faq-list { display: flex; flex-direction: column; gap: 16px; max-width: 900px; margin: 0 auto; }
+.faq-item {
+  background: var(--carbon); border: 1px solid var(--line); border-radius: var(--r-md);
+  overflow: hidden; transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.faq-item:hover, .faq-item.is-open { border-color: rgba(124, 108, 255, 0.4); }
+.faq-item.is-open { box-shadow: 0 0 24px rgba(124, 108, 255, 0.08); }
+.faq-question {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 24px; background: transparent; border: none; color: var(--text);
+  font-family: var(--font-d); font-size: clamp(16px, 2vw, 19px); font-weight: 600;
+  text-align: left; cursor: pointer;
+}
+.faq-icon {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--steel); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--accent-2);
+  flex-shrink: 0; transition: transform 0.3s var(--ease);
+}
+.faq-item.is-open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+.faq-answer {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
+  padding: 0 24px; color: var(--muted); font-size: 15px; line-height: 1.7;
+}
+.faq-item.is-open .faq-answer { max-height: 300px; padding: 0 24px 24px 24px; }
+
+/* ── Testimonials Grid ─────────────────────────────────────── */
+.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1240px; margin: 0 auto; }
+.testimonial-card {
+  background: var(--carbon); border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 30px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
+  position: relative; transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.testimonial-card:hover { transform: translateY(-4px); border-color: rgba(86, 225, 233, 0.35); }
+.t-quote { font-size: 15px; line-height: 1.7; color: var(--text); font-style: italic; position: relative; z-index: 1; }
+.t-author { display: flex; align-items: center; gap: 14px; }
+.t-avatar { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--accent); background: var(--steel); display: flex; align-items: center; justify-content: center; font-family: var(--font-m); font-size: 13px; color: var(--accent-2); font-weight: 600; flex-shrink: 0; }
+.t-info { display: flex; flex-direction: column; }
+.t-name { font-family: var(--font-d); font-size: 15px; font-weight: 600; color: var(--text); }
+.t-role { font-family: var(--font-m); font-size: 11px; color: var(--muted); }
+
+/* ── Case Study Modal ──────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 400; background: rgba(5, 5, 8, 0.85);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center; padding: var(--gutter);
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.is-active { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: var(--carbon); border: 1px solid var(--line-2); border-radius: var(--r-lg);
+  max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto; padding: clamp(24px, 4vw, 40px);
+  position: relative; transform: translateY(20px) scale(0.96); transition: transform 0.3s var(--ease);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(124, 108, 255, 0.15);
+}
+.modal-overlay.is-active .modal-box { transform: translateY(0) scale(1); }
+.modal-close {
+  position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--steel); border: 1px solid var(--line); color: var(--text); font-size: 18px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s ease;
+}
+.modal-close:hover { background: var(--accent); color: #0a0a12; }
+.modal-title { font-family: var(--font-d); font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.modal-subtitle { font-family: var(--font-m); font-size: 12px; color: var(--accent-2); margin-bottom: 20px; }
+.modal-body { font-size: 15px; color: var(--muted); line-height: 1.7; display: flex; flex-direction: column; gap: 16px; }
+.modal-body h4 { font-family: var(--font-d); font-size: 17px; font-weight: 600; color: var(--text); margin-top: 8px; }
+
+/* ── Sticky Mobile CTA ─────────────────────────────────────── */
+.sticky-mobile-cta {
+  display: none;
+}
+@media (max-width: 768px) {
+  .sticky-mobile-cta {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 240;
+    padding: 12px 16px; background: rgba(5, 5, 8, 0.92);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line); gap: 10px; justify-content: center;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+  }
+  .sticky-mobile-cta .btn { flex: 1; text-align: center; justify-content: center; padding: 11px 14px; font-size: 11px; }
 }
