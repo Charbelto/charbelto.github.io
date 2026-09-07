@@ -23,14 +23,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"/>
 <link rel="stylesheet" href="styles.css?v=3.2.0"/>
 
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
+<!-- Google Analytics (GA4) — loaded only after cookie consent, see script.js loadAnalytics() -->
 
 <!-- Structured Data (JSON-LD): Person, ProfessionalService & Breadcrumbs -->
 <script type="application/ld+json">
@@ -212,6 +205,7 @@
       <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
       <a href="privacy.html">Privacy Policy ↗</a>
+      <a href="terms.html">Terms &amp; Conditions ↗</a>
     </div>
   </div>
 </nav>
@@ -227,9 +221,8 @@
 
   <div class="hero-inner" id="heroInner">
     <a class="hero-badge" href="#contact" data-reveal>
-      <i class="status-dot"></i><span>Open to opportunities</span><b aria-hidden="true">→</b>
+      <i class="status-dot"></i><span>Open to opportunities · &lt; 24h response</span><b aria-hidden="true">→</b>
     </a>
-    <span class="hero-sla-badge" data-reveal><i class="status-dot"></i> ⚡ Guaranteed response in &lt; 24h</span>
     <p class="kicker" data-reveal><span class="kicker-prompt">&gt;</span> whoami<span class="caret" aria-hidden="true"></span></p>
     <h1 class="hero-name" aria-label="Charbel Toumieh">
       <span class="hn-line" aria-hidden="true" data-split>CHARBEL</span>
@@ -803,6 +796,7 @@ agents · MCP servers · RAG pipelines · evaluation frameworks · n8n · Node.j
     <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
     <a href="Charbel_Toumieh_Resume.pdf" download>Résumé ↓</a>
     <a href="privacy.html">Privacy Policy ↗</a>
+    <a href="terms.html">Terms &amp; Conditions ↗</a>
   </div>
 </section>
 
@@ -844,13 +838,22 @@ agents · MCP servers · RAG pipelines · evaluation frameworks · n8n · Node.j
       <a href="#testimonials">Reviews</a>
       <a href="#contact">Contact</a>
       <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
     </nav>
   </div>
   <div class="foot-bottom">
     <p>© <span id="year">2026</span> Charbel Toumieh · all rights reserved</p>
-    <p class="foot-set">hand-built · zero frameworks · <a href="privacy.html">Privacy Policy</a> · <a href="#top" class="foot-top-link">back to top ↑</a></p>
+    <p class="foot-set">hand-built · zero frameworks · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · <a href="#top" class="foot-top-link">back to top ↑</a></p>
   </div>
 </footer>
+
+<div class="cookie-banner" id="cookieBanner" hidden role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <p>This site uses optional analytics cookies to understand traffic. See the <a href="privacy.html">Privacy Policy</a>.</p>
+  <div class="cookie-banner-actions">
+    <button type="button" class="btn btn--ghost" id="cookieDecline">Decline</button>
+    <button type="button" class="btn btn--solid" id="cookieAccept">Accept</button>
+  </div>
+</div>
 
 <script src="script.js?v=3.2.0" defer></script>
 </body>
