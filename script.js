@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initModal();
   initStickyMobileCTA();
+  initCookieConsent();
   if (FINE && !REDUCED && !FLAT) {
     initNet();
     initCursor();
@@ -653,5 +654,42 @@ function initStickyMobileCTA() {
     }
     lastScroll = st;
   }, { passive: true });
+}
+
+/* ── Cookie Consent Banner ────────────────────────────────────── */
+function loadAnalytics() {
+  if (window.__gaLoaded) return;
+  window.__gaLoaded = true;
+  const GA_ID = 'G-XXXXXXXXXX'; // replace with real GA4 Measurement ID when available
+  if (GA_ID.includes('XXXX')) return; // placeholder — skip until a real ID is set
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', GA_ID);
+}
+
+function initCookieConsent() {
+  const banner = document.getElementById('cookieBanner');
+  if (!banner) return;
+  const KEY = 'cookie-consent';
+  const consent = localStorage.getItem(KEY);
+  if (consent === 'accepted') { loadAnalytics(); return; }
+  if (consent === 'declined') return;
+  banner.hidden = false;
+  const accept = document.getElementById('cookieAccept');
+  const decline = document.getElementById('cookieDecline');
+  accept?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'accepted');
+    banner.hidden = true;
+    loadAnalytics();
+  });
+  decline?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'declined');
+    banner.hidden = true;
+  });
 }
 
