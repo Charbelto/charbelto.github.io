@@ -1,4 +1,4 @@
-# PROGRESS
+﻿# PROGRESS
 
 _Last updated: 2026-11-01 · branch `redesign/3d-universe` · nothing pushed, merged or deployed_
 
@@ -10,7 +10,7 @@ Direction v2 — **bright, full-colour "Swarm"** — replaced the dark ring mach
 |---|---|
 | `51ba01d` | Checkpoint: first real-time 3D build (dark ring engine) |
 | `643b8a3` / `560f0ac` | Refinement of the dark build, privacy cleanup, perf work |
-| (latest) | v2 bright Swarm rebuild — see `git log` |
+| `b54a151` | v2 bright Swarm rebuild |
 
 ## Done in v2
 - **Research (live):** Lusion, Lando Norris, Bruno Simon opened in a real browser; observations recorded in `3D_REFERENCES.md` (addendum) and `3D_ART_DIRECTION.md`.
@@ -46,3 +46,4 @@ All other roles (art direction, 3D, WebGL, motion, UI/UX, frontend) were done by
 2. Decide on endorsements and the "< 4 h" claim.
 3. Optional: author 2–3 hero assets in Blender (glTF + Meshopt), or add a second signature scene (e.g. a typographic 3D moment).
 4. When approved: merge, set Pages source to GitHub Actions (workflow already in `.github/`). Do not publish before then.
+
