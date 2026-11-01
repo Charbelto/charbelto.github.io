@@ -71,3 +71,7 @@ Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbe
 
 ## Going back to the old design
 `old-design/` is a complete, untouched copy of the site that was live on GitHub Pages before this redesign (it matches `main` at commit `a4b776b`, byte for byte). It is not part of the build and is not deployed. To use it again, copy its contents to the repository root of the branch you deploy (or check out `main`), and set the Pages source back to "Deploy from a branch".
+
+## Hosting notes
+- **charbelto.github.io** is built and deployed by `.github/workflows/deploy.yml` (Pages source: GitHub Actions).
+- **charbel.toumieh.com** is served by a separate **Cloudflare Pages** project (`charbelto-github-io`) that rebuilds on every push to `main`. This site needs a build step, so that project must use: framework preset **Vite** (or build command `npm run build`), build output directory **`dist`**, Node 22 (`.node-version` in the repo sets it). With an empty build command it serves the raw source and the page shows up unstyled.

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { gotoReady } from './helpers.js';
 
 // The name must never overlap the statement above it or the buttons below it, at any window shape.
-const SIZES = [[1851, 843], [1440, 900], [1366, 650], [1280, 720], [1024, 768], [1920, 1080], [2560, 1080], [1536, 730], [1280, 600], [768, 1024], [820, 1180], [390, 844], [360, 640]];
+const SIZES = [[3840, 2160], [5000, 2400], [2560, 1440], [640, 360], [480, 240], [1851, 843], [1440, 900], [1366, 650], [1280, 720], [1024, 768], [1920, 1080], [2560, 1080], [1536, 730], [1280, 600], [768, 1024], [820, 1180], [390, 844], [360, 640]];
 for (const [w, h] of SIZES) {
   test(`hero: name clear of the statement and buttons at ${w}x${h}`, async ({ page }) => {
     await page.setViewportSize({ width: w, height: h });

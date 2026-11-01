@@ -162,21 +162,22 @@ function setupPip() {
    The name sits just above the buttons; if the statement above would still touch it (short or odd-shaped windows),
    both scale down a little until there is clear air between them. */
 function fitHero() {
-  const top = $('.hero-top'); const name = $('.bt-name'); const bottom = $('.hero-bottom'); const layer = $('.back-title');
-  if (!top || !name || !bottom || !layer) return;
+  const hero = $('#top'); const top = $('.hero-top'); const name = $('.bt-name'); const bottom = $('.hero-bottom'); const layer = $('.back-title');
+  if (!hero || !top || !name || !bottom || !layer) return;
   const set = (k, v) => { if (root.style.getPropertyValue(k) !== v) root.style.setProperty(k, v); };
-  const b = bottom.getBoundingClientRect();
-  set('--hb', `${Math.round(layer.getBoundingClientRect().bottom - b.top + 22)}px`);
+  const cs = getComputedStyle(hero);
+  // height the hero needs to hold statement + name + buttons without touching
+  const need = () => parseFloat(cs.paddingTop) + top.offsetHeight + 16 + name.offsetHeight * 1.1 + 22 + bottom.offsetHeight + parseFloat(cs.paddingBottom);
+  set('--hero-need', '0px');
   let hs = 1;
   set('--hs', '1');
-  for (let k = 0; k < 12; k++) {
-    const t = top.getBoundingClientRect(); const n = name.getBoundingClientRect();
-    const fs = parseFloat(getComputedStyle(name).fontSize) || 100;
-    if (t.bottom + 14 <= n.top - fs * 0.1 || t.top >= n.bottom) break; // clear air above the name (or the statement sits elsewhere)
-    hs = Math.max(0.5, hs - 0.06);
-    set('--hs', hs.toFixed(2));
-    if (hs <= 0.5) break;
-  }
+  // 1) shrink the name and statement a little (down to 0.62x) until everything fits in one screen
+  while (need() > innerHeight && hs > 0.62) { hs = Math.max(0.62, hs - 0.06); set('--hs', hs.toFixed(2)); }
+  // 2) still no room (very short or zoomed-in windows): let the hero grow taller than the screen instead of overlapping
+  set('--hero-need', `${Math.ceil(need())}px`);
+  set('--hero-h', `${hero.offsetHeight}px`); // the name layer follows the hero's real height
+  const b = bottom.getBoundingClientRect();
+  set('--hb', `${Math.round(layer.getBoundingClientRect().bottom - b.top + 22)}px`);
 }
 
 /* ───────── virtual scrolling: pinned groups that step through their chapters ─────────

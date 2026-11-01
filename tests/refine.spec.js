@@ -454,7 +454,10 @@ test.describe('lightweight mode (no GPU needed)', () => {
     await page.goto('/?intro=0&lite=0', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 60 });
-    await page.waitForFunction(() => document.documentElement.classList.contains('lite'), null, { timeout: 120_000, polling: 1500 });
+    // poll from outside the page: under a 60x slowdown an in-page poller can starve behind the page's own work
+    let lite = false;
+    for (let i = 0; i < 30 && !lite; i++) { await page.waitForTimeout(3000); lite = await page.evaluate(() => document.documentElement.classList.contains('lite')).catch(() => false); }
+    expect(lite, 'the page fell back to the lightweight mode by itself').toBe(true);
     expect(await page.evaluate(() => getComputedStyle(document.getElementById('world')).display)).toBe('none');
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
     await page.waitForTimeout(800);
