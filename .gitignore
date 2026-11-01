@@ -54,3 +54,5 @@ qa/results.json
 qa/review*/
 qa/test-output/
 dist-*/
+
+qa/menu/

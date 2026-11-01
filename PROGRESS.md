@@ -3,53 +3,42 @@
 _Last updated: 2026-11-01 · branch `redesign/3d-universe` · nothing pushed, merged or deployed_
 
 ## Status in one paragraph
-Direction v2 - **bright, full-colour "Swarm"** - replaced the dark ring machine after the owner said it looked ugly and wanted bright colours, full-screen animation and more signature 3D stories. A single swarm of ~360 glossy toys morphs into a different formation in every chapter (with its own colour story), the whole page floods from one colour world to the next as you scroll, and there is a full-screen interactive Playground. 43 Playwright tests pass; two independent critiques have been run (v1 dark: 6.8/10; v2 bright: 6.5/10 before fixes). **It is not finished** - see *Open creative gaps*.
+Bright full-colour site where **every chapter shows a Blender-authored object about its own topic** and scroll assembles it part by part (reversible): a skin cross-section for DermSense, a call headset and phone for GREAT, a container ship for CMA CGM, a heart over ECG paper for the Meta research, OCR on a document for Intalio, and so on (24 props plus the Pip character). The toy swarm now only appears where it has a job (hero, dive tunnel, interactive playground, a light confetti frame). No em dashes anywhere, and the menu animates. **It is not finished**: see *Open gaps*.
 
 ## Commits
 | Hash | What |
 |---|---|
 | `51ba01d` | Checkpoint: first real-time 3D build (dark ring engine) |
 | `643b8a3` / `560f0ac` | Refinement of the dark build, privacy cleanup, perf work |
-| `b54a151` | v2 bright Swarm rebuild |
+| `b54a151` / `6deda23` | v2 bright Swarm rebuild |
+| `3032cc7` | Pip, the first Blender-authored character |
+| `5542d0c` | Purposeful objects: 24 Blender props, animated menu, no em dashes |
 
-## Done since v2: Pip, a Blender-authored character
-- **Blender 5.1 is installed on this machine**, so I authored a real model: `assets/blender/build_agent.py` → `public/models/agent.glb` (≈ 460 KB, ≈ 14k polygons). A bug was caught by inspecting the exported glTF nodes (eyes and antenna lost their positions when re-parented before a view-layer update) and fixed.
-- **Chapter "Meet Pip"** (`src/scene/agent.js`): perceive → decide → act. Head and eyes follow the cursor, he blinks, hovers and banks; a click or the button makes him wave and hop. New swarm formation (halo orbits) and an indigo colour world.
-- **Tests:** 47 pass on GPU (4 new for Pip), 24 core pass on software WebGL. GPU probe: 60 fps in all 12 chapters (vsync-capped).
-- **Not built:** a second authored model, Draco/Meshopt compression, LODs.
-
-## Done in v2
-- **Research (live):** Lusion, Lando Norris, Bruno Simon opened in a real browser; observations recorded in `3D_REFERENCES.md` (addendum) and `3D_ART_DIRECTION.md`.
-- **Swarm engine** (`src/scene/swarm.js`): 5 original glossy shapes, 19 formations, per-formation colour stories, size multiplier per formation, pointer repulsion, click bursts, recolour.
-- **Full-screen colour:** per-chapter `bg`/`ac` colours interpolated every frame and published as `--bg`/`--ink`/`--ac`; whole page re-themes (auto white/near-black ink); blue loader wipe; scroll-reactive marquee bands.
-- **New signature scenes:** hero chrome sun, dive tunnel, **Playground** (click ripple flood + palette rotation), GREAT layered stack, rainbow-ball contact; helix for experience.
-- **Weak sections rebuilt:** projects as nameable shapes (loop with gate, stacked layers, trajectory cohort, hub-and-spokes, braced mast, node-edge graph); experience/archive/education in saturated colours with the 3D beside them.
-- **Critique fixes** (see `qa/REPORT.md`): density, numerals, MSAA everywhere, fog tied to distance, dive without blur, contact layout, playground legibility.
-- **Perf:** 5–7 draw calls, ≈ 400k tris, 4 lights, governor retained; GPU-headless probe holds 60 fps in 11 chapters at 1920×1080 (vsync-capped).
-- **Privacy:** no analytics/cookies/storage/third-party requests (enforced by tests); fonts self-hosted; legal pages in the new system; endorsements hidden.
-- **Tests:** 43 pass (core, no-WebGL, reduced motion, privacy, colour worlds, playground, tiers, reverse scroll, nav, HUD…).
+## Done in this round
+- **No em dashes anywhere** (118 removed from copy, titles, meta, code comments and docs; the résumé PDF has none). A test scans the repo and the rendered pages and fails if one returns.
+- **Animated menu:** circular two-layer colour wipe grows from the button, links rise in one by one, closing reverses it; closed state is `visibility: hidden` + `inert`. The button is now visible at every width. Frames: `docs/screenshots/menu-animation.jpg`.
+- **24 Blender props** (`assets/blender/build_props.py`, library `props_lib.py`): laptop, orchestra, library, toolbox, scorecard, shield, call, loopguard, derm, oulad, shop, tower, market, nyc, brain, ship, heart, can, ocr, gears, edu, mail, briefcase, archive. The table of what each depicts is in `3D_ART_DIRECTION.md`.
+- **Props engine** (`src/scene/props.js`): lazy loading (current, previous and next two), Draco (945 KB for all 24, decoder served locally), staggered scroll-driven assembly with tumbling parts, idle motion by part-name prefix (rolling chain, tripping lever, meshing gears, scan bars, pulsing rings, bobbing parts, orbiting planes).
+- **Confetti** reduced to about a quarter in prop chapters, shrinks near the lens, and only visible toys are drawn (triangles in prop chapters about 125k, was about 410k).
+- **Bug found and fixed in the Blender library:** BMesh reuses freed vertex slots after a bevel, so "last N vertices" was not "the vertices I just made"; parts were transformed twice and landed in the wrong place. New vertices are now tracked by identity.
+- **Copy** now describes the objects (captions, GREAT and experience intro text).
+- **Phones:** tighter experience cards, prop chapters lifted higher so the whole object shows above the card.
+- **Tests:** 58 pass on GPU (new: no em dash, animated menu, props map and loading and reversible assembly), 24 core pass on software WebGL.
+- **Perf (GPU headless, 1920x1080):** 60 fps in all 13 probed chapters, vsync-capped; see `docs/PERFORMANCE.md` Addendum 3.
 
 ## Subagents actually spawned (cumulative)
-| Agent | Scope | Outcome |
-|---|---|---|
-| Research | `3D_REFERENCES.md` | 8 refs; no screenshots possible (later supplemented by my own live browsing) |
-| QA (Agent 10) | tests + screenshots | 22/24 → fixed → 24/24 |
-| Performance (Agent 9) | `docs/PERFORMANCE.md` | measured counts/bundle; ranked fixes |
-| Independent critic v1 | `qa/CRITIQUE.md` | 6.8/10 (dark build) |
-| Independent critic v2 | `qa/CRITIQUE-v2.md` | 6.5/10 (bright build, before fixes) |
-All other roles (art direction, 3D, WebGL, motion, UI/UX, frontend) were done by the lead, not separate agents.
+Research (`3D_REFERENCES.md`), QA (tests and first critique), Performance audit, independent critic v1 (dark build, 6.8/10), independent critic v2 (bright swarm, 6.5/10). **No new critic has reviewed this prop-based version**; my judgement of it comes from screenshots. All other roles were done by the lead.
 
-## Open creative gaps (honest)
-1. **Only one authored asset (Pip).** Everything else is still the swarm of five primitive shapes; more authored pieces (per-project objects) and a typographic 3D moment would raise the ceiling.
-2. Project formations are legible but abstract; a few would benefit from bespoke geometry or labels.
-3. Motion, intro choreography, pointer repulsion and playground feel are **unverified by me** (stills only).
-4. Tablet portrait still reuses the phone-style bottom-anchored layout.
-5. No Lighthouse/CWV numbers; one GPU only; the in-app pane's 1–11 fps readings are unexplained (probably the pane).
-6. Open decisions for you: endorsement quotes (hidden), the unattributed "average < 4 h" response claim, whether the old site's analytics should ever come back.
+## Open gaps (honest)
+1. **Objects are simple.** They are bevelled primitives, tubes and extrusions, not sculpted or textured; they read clearly and match the toy look, but a professional 3D artist would go further (surface detail, baked lighting, real materials). Some details are flat stand-ins (the DermSense heat map is glowing discs).
+2. **Not reviewed by a fresh critic**, and I can only judge stills: motion, assembly timing, idle animation feel and the menu's feel need your eyes on a real display.
+3. Hero, dive and playground still use the swarm; unused swarm formations remain in `swarm.js` (dead code, safe to prune).
+4. Tablet portrait reuses the phone-style bottom-anchored layout.
+5. No Lighthouse/CWV numbers; one GPU only; the in-app pane's low frame rates remain unexplained (probably the pane).
+6. Open decisions for you: endorsement quotes (hidden), the unattributed "average < 4 h" response claim, whether analytics should ever come back.
 
 ## Next steps
-1. Scroll it on your display (`npm run dev`, press **P** for the HUD) and tell me what feels flat, slow or off-brand.
-2. Decide on endorsements and the "< 4 h" claim.
-3. Optional: author 2–3 hero assets in Blender (glTF + Meshopt), or add a second signature scene (e.g. a typographic 3D moment).
+1. Scroll it on your display (`npm run dev`, press **P** for the HUD) and tell me which objects feel wrong or too simple; I can rebuild any one (`-- <name>` rebuilds a single prop in seconds).
+2. Optional: a fresh independent critique of this version, and pruning the dead swarm formations.
+3. Decide on endorsements and the "< 4 h" claim.
 4. When approved: merge, set Pages source to GitHub Actions (workflow already in `.github/`). Do not publish before then.
-
