@@ -19,6 +19,7 @@ One **swarm of ~360 glossy objects** (pills, rings, rounded cubes, spheres, pins
 |---|---|---|
 | Hero | loose cloud around a **chrome sun** with a ring | all colours |
 | Profile | three spiral arms | all |
+| **Meet Pip** *(new signature)* | halo orbits around a **Blender-authored character** that watches the cursor and waves on click | indigo world, lime eyes |
 | Dive | a tunnel of rings rushing past the lens (FOV 72) | all |
 | Orchestration | hub + three tilted orbits of agents | cream / yellow / mint orbits, blue hub |
 | Retrieval | a spiral **funnel** drawing knowledge to a point | gradient down the funnel |
@@ -50,6 +51,9 @@ Glossy clear-coated plastic (rings, pills, pins), satin ceramic (cubes), coloure
 - **Click / filter / row-hover** → radial burst that settles.
 - **Playground:** click anywhere → colour flood from the cursor + whole palette rotates; button does the same.
 - Camera parallax from the pointer; scroll-driven camera path with damping (fully reversible).
+
+## Pip — the authored character (second signature)
+A small hovering agent modelled in **Blender 5.1** (ssets/blender/build_agent.py → public/models/agent.glb, ≈ 460 KB, ≈ 14k polygons): bevelled coral body with a chest dial, cream head with a visor and lime emissive eyes, antenna, articulated arms and a hover jet. He runs the *perceive → decide → act* loop of every agent I build: the head and eyes follow your cursor, he blinks, banks into your movement, and a click (or the button) makes him wave and hop. It is the one place the site shows a *character* instead of an abstraction.
 
 ## Original assets
 No third-party models, textures or HDRIs. All geometry is primitive/Lathe/RoundedBox generated in code; the five shapes and every formation are original. (Honest limit: nothing is Blender-authored — Blender/Spline MCPs were not available.)

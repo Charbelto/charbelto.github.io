@@ -1,6 +1,6 @@
 # Charbel Toumieh — Portfolio v4 · real-time 3D
 
-An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. No external 3D assets — all geometry, materials and the studio environment are generated in code.
+An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. One Blender-authored model (Pip) plus code-generated geometry — all geometry, materials and the studio environment are generated in code.
 
 > Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and its source in `legacy/`). Nothing here has been pushed or deployed.
 
@@ -40,7 +40,10 @@ src/main.js             boot, loader, intro, reveals, marquee, playground, menu,
 src/style.css           design system (variables driven by the 3D director)
 src/scene/world.js      renderer, bright procedural studio env, lights, scroll director, colour publisher, governor
 src/scene/swarm.js      the swarm: 5 shapes, 19 formations, colour stories, pointer physics
+src/scene/agent.js      Pip: loads the Blender-authored GLB and animates it (look-at, blink, wave, hop)
 src/scene/keyframes.js  camera / formation / background + accent colour per chapter
+assets/blender/         Blender scripts that author the 3D models (see assets/README.md)
+public/models/          exported glTF (agent.glb)
 public/                 static files copied as-is (résumé, robots, sitemap)
 privacy|terms|404|thank-you.html   legal and utility pages (same design system)
 legacy/                 previous site source (not deployed)

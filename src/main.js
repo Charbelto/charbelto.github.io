@@ -122,6 +122,15 @@ function setupPlayground() {
   });
 }
 
+/* ───────── Pip: click the section (or the button) and the character waves and hops ───────── */
+function setupPip() {
+  const sec = $('#meet');
+  if (!sec) return;
+  const wave = () => { window.__world?.wave(); window.__world?.kick(1.5); };
+  $('#pipBtn')?.addEventListener('click', (e) => { e.stopPropagation(); wave(); });
+  sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
+}
+
 /* ───────── rail ───────── */
 function setupRail() {
   const label = $('#railLabel');
@@ -300,6 +309,7 @@ async function boot() {
   setupReveals();
   setupMarquee();
   setupPlayground();
+  setupPip();
   ScrollTrigger.refresh();
   world?.remeasure();
   addEventListener('load', () => { ScrollTrigger.refresh(); world?.remeasure(); });

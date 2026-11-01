@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { buildSwarm, FORMS } from './swarm.js';
 import { KF } from './keyframes.js';
+import { loadAgent } from './agent.js';
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -73,6 +74,10 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   const holder = new THREE.Group();
   holder.add(swarm.group);
   scene.add(holder);
+
+  // Pip loads after the first frame, so a slow/failed download never blocks the page
+  let agent = null;
+  loadAgent(`${import.meta.env.BASE_URL}models/agent.glb`).then((a) => { agent = a; scene.add(a.rig); }).catch((e) => console.warn('[agent] not loaded', e));
 
   /* ───── director ───── */
   const keys = Object.keys(KF.hero).filter((k) => typeof KF.hero[k] === 'number');
@@ -213,6 +218,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
       kick: kickAmt, still: reducedMotion,
       sizeBoost: lerp(1.5, 1, portrait), // on tall screens the camera sits further back, so toys grow to stay chunky
     });
+    agent?.update({ time, dt, amount: cur.agent * ie, pointer, still: reducedMotion });
     key.position.set(6, 10, 8).applyAxisAngle(upv, az * 0.6);
 
     renderer.render(scene, camera);
@@ -267,6 +273,8 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     get intro() { return intro; },
     kick(v = 3) { if (!reducedMotion) kickAmt = Math.min(8, kickAmt + v); },
     recolor: (n) => swarm.recolor(n),
+    wave() { agent?.wave(); },
+    get agentLoaded() { return !!agent; },
     remeasure: measure,
     /** QA hook: jump the damped camera/state straight to the current scroll target */
     snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); publishColours(); },

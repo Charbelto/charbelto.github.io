@@ -21,6 +21,7 @@ Palette of the swarm: `#2433FF #FF4F3D #FFD21F #3DF2B0 #FF6FB5 #F5F1E8 #14141F #
 
 ## Chapter patterns
 - **Hero:** the name sits *behind* the transparent canvas (8.4 vw desktop, ~15 vw phones) in solid + outline; the chrome sun and cloud sit right of it. Buttons and proof points stack in the left column on desktop. Portrait screens get extra camera distance (`pd`) and a lifted subject.
+- **Meet Pip:** indigo world, panel left, the Blender-authored agent right with loose halo orbits; cursor = look-at, click = wave.
 - **Marquee bands:** two full-width ink bands with huge type sliding across; speed boosts with scroll velocity (GSAP ticker).
 - **Ring/idea chapters (01–05):** open type with a ghost outline numeral and a whisper of frosted glass; 3D on the opposite side.
 - **Playground:** full-screen storm, huge type, click ripples a clip-path colour flood from the cursor.
@@ -44,6 +45,9 @@ No analytics, no cookies, no local/session storage, no third-party requests — 
 
 ## Accessibility
 Skip link, landmarks, visible `:focus-visible` (accent), `aria-expanded` menu with Esc + focus move, `role="dialog"` modal with focus trap and inert background, `details/summary` FAQ, canvas `aria-hidden`, readable content without JS/WebGL (`.no-gl`), auto-contrast ink, reduced-motion support. Not yet audited with axe-core or a screen reader.
+
+## Authored assets
+ssets/blender/build_agent.py builds public/models/agent.glb headlessly (see ssets/README.md). Everything else is generated in code.
 
 ## Dev affordances
 `?qa=1` (skip reveals/intro, snap camera) · `?intro=0` · `?at=<kf>` · `?q=low|mid|high` · `?gov=0` (disable resolution governor) · `?perf=1` or key **P** (FPS / frame-time / draw-call HUD).

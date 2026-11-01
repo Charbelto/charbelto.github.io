@@ -3,7 +3,7 @@
 _Updated 2026-11-01 for the bright "Swarm" rebuild (v2). Earlier rounds (dark ring engine) were superseded; their critique lives in `qa/CRITIQUE.md`._
 
 ## Automated results
-`GPU=1 npx playwright test tests/portfolio.spec.js tests/nogl.spec.js tests/refine.spec.js` → **43 / 43 passed** (≈ 2.4 min on a real GPU). The core suite (24 tests) also passes on software WebGL (`npm run test:e2e`); it was re-run on the finished v2 build and passed (24 / 24).
+`GPU=1 npx playwright test tests/portfolio.spec.js tests/nogl.spec.js tests/refine.spec.js` → **47 / 47 passed** (≈ 2.4 min on a real GPU). The core suite (24 tests) also passes on software WebGL (`npm run test:e2e`); it was re-run on the finished v2 build and passed (24 / 24).
 
 | Area | Tests |
 |---|---|
@@ -17,10 +17,11 @@ _Updated 2026-11-01 for the bright "Swarm" rebuild (v2). Earlier rounds (dark ri
 | **Colour worlds:** page `--bg` is lime on the hero, electric blue on the dive, differs on cap1, lime again at contact; `--ink` flips white/near-black for contrast | ✔ |
 | **Playground:** click and button each create a full-screen flood element that is removed afterwards, no errors | ✔ |
 | **Swarm tiers:** 150 / 240 / 360 instances at low / mid / high, < 12 draw calls | ✔ |
+| **Pip (Blender GLB):** loads with the expected named nodes and no errors · file is a valid GLB under 700 KB · head yaw follows the cursor and a click raises the right arm · hidden outside its chapter, shown inside it | ✔ |
 | 7 experience steps keyframed · reverse scrolling returns identical camera positions · nav lands on chapter · governor stats · perf HUD toggle · archive filter | ✔ |
 
 ## Frame-rate probe (`tests/perf.spec.js`, GPU headless, 1920×1080)
-60 fps / 16.6 ms avg / 17 ms worst in all 11 chapters probed (RTX 4070 Laptop). It is vsync-capped, so it proves "holds 60", not headroom. See `docs/PERFORMANCE.md` (Addendum 2) for the unexplained in-app-pane stalls and for what was not measured.
+60 fps / 16.6 ms avg / 17 ms worst in all 12 chapters probed (the Pip chapter: 25 draw calls, 426k triangles) (RTX 4070 Laptop). It is vsync-capped, so it proves "holds 60", not headroom. See `docs/PERFORMANCE.md` (Addendum 2) for the unexplained in-app-pane stalls and for what was not measured.
 
 ## Visual verification
 Matrix: 1440×900, 1280×800, 768×1024, 390×844, 360×780 × 26 chapter states (130 frames) captured on a real GPU, reviewed as contact sheets and individual frames across several rounds. Curated final set: `docs/screenshots/`. Raw runs `qa/review-*` are git-ignored (`GPU=1 OUT=qa/review npx playwright test tests/review.spec.js`).

@@ -12,6 +12,12 @@ Direction v2 — **bright, full-colour "Swarm"** — replaced the dark ring mach
 | `643b8a3` / `560f0ac` | Refinement of the dark build, privacy cleanup, perf work |
 | `b54a151` | v2 bright Swarm rebuild |
 
+## Done since v2: Pip, a Blender-authored character
+- **Blender 5.1 is installed on this machine**, so I authored a real model: `assets/blender/build_agent.py` → `public/models/agent.glb` (≈ 460 KB, ≈ 14k polygons). A bug was caught by inspecting the exported glTF nodes (eyes and antenna lost their positions when re-parented before a view-layer update) and fixed.
+- **Chapter "Meet Pip"** (`src/scene/agent.js`): perceive → decide → act. Head and eyes follow the cursor, he blinks, hovers and banks; a click or the button makes him wave and hop. New swarm formation (halo orbits) and an indigo colour world.
+- **Tests:** 47 pass on GPU (4 new for Pip), 24 core pass on software WebGL. GPU probe: 60 fps in all 12 chapters (vsync-capped).
+- **Not built:** a second authored model, Draco/Meshopt compression, LODs.
+
 ## Done in v2
 - **Research (live):** Lusion, Lando Norris, Bruno Simon opened in a real browser; observations recorded in `3D_REFERENCES.md` (addendum) and `3D_ART_DIRECTION.md`.
 - **Swarm engine** (`src/scene/swarm.js`): 5 original glossy shapes, 19 formations, per-formation colour stories, size multiplier per formation, pointer repulsion, click bursts, recolour.
@@ -34,7 +40,7 @@ Direction v2 — **bright, full-colour "Swarm"** — replaced the dark ring mach
 All other roles (art direction, 3D, WebGL, motion, UI/UX, frontend) were done by the lead, not separate agents.
 
 ## Open creative gaps (honest)
-1. **Everything is one swarm of five primitive shapes.** Formations now read, but there is no authored hero asset (e.g. a Blender-modelled object) and no second rendering style; ceiling for "Awwwards winner" is still above this.
+1. **Only one authored asset (Pip).** Everything else is still the swarm of five primitive shapes; more authored pieces (per-project objects) and a typographic 3D moment would raise the ceiling.
 2. Project formations are legible but abstract; a few would benefit from bespoke geometry or labels.
 3. Motion, intro choreography, pointer repulsion and playground feel are **unverified by me** (stills only).
 4. Tablet portrait still reuses the phone-style bottom-anchored layout.

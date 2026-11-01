@@ -10,9 +10,9 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 const TAU = Math.PI * 2;
 export const PALETTE = ['#2433FF', '#FF4F3D', '#FFD21F', '#3DF2B0', '#FF6FB5', '#F5F1E8', '#14141F', '#B9A6FF'];
 const WEIGHTS = [3, 3, 3, 2, 2, 2, 1, 2];
-export const FORMS = 19;
+export const FORMS = 20;
 // toy size per formation: structures (network, lattice, layers, project shapes) use smaller toys so the SHAPE reads
-const SIZE_MUL = [0.9, 0.8, 0.95, 0.62, 0.62, 0.6, 0.7, 0.66, 1.0, 0.6, 0.58, 0.62, 0.6, 0.6, 0.62, 0.62, 0.7, 0.8, 0.66];
+const SIZE_MUL = [0.9, 0.8, 0.7, 0.95, 0.62, 0.62, 0.6, 0.7, 0.66, 1.0, 0.6, 0.58, 0.62, 0.6, 0.6, 0.62, 0.62, 0.7, 0.8, 0.66];
 
 function rng(seed) {
   let a = seed >>> 0;
@@ -44,41 +44,47 @@ function buildFormations(N, colorIdx) {
     (i, r) => { const rad = 4.4 + Math.pow(r(), 0.7) * 6.5; const th = r() * TAU; const ph = Math.acos(2 * r() - 1); return [3.4 + rad * Math.sin(ph) * Math.cos(th) * 0.9, rad * Math.cos(ph) * 0.7, rad * Math.sin(ph) * Math.sin(th), 0.85 + r() * 0.5]; },
     // 1 profile: three spiral arms
     (i, r) => { const t = r(); const arm = i % 3; const ang = (arm * TAU) / 3 + t * 4.2; const rad = 1.8 + t * 8; return [Math.cos(ang) * rad, (r() - 0.5) * (0.6 + t * 1.6), Math.sin(ang) * rad, 0.8 + (1 - t) * 0.5]; },
-    // 2 dive: a tunnel of rings receding into the screen
+    // 2 meet Pip: loose halo orbits around the character, a sprinkle of toys on the "floor", a far shell
+    (i, r) => {
+      if (i < Math.floor(N * 0.52)) { const id = i % 3; const n = Math.ceil(N * 0.52 / 3); const a = (Math.floor(i / 3) / n) * TAU + id; const R = [5.6, 7.0, 8.4][id]; return [...rot(Math.cos(a) * R, Math.sin(a) * R, 0, ...[[1.35, 0.2, 0], [0.7, -0.8, 0.4], [1.2, 0.9, -0.3]][id]), 0.95]; }
+      if (i < Math.floor(N * 0.72)) { const a = r() * TAU; const R = 2.5 + r() * 6; return [Math.cos(a) * R, -2.6 + r() * 0.3, Math.sin(a) * R, 0.55]; }
+      return dust(r);
+    },
+    // 3 dive: a tunnel of rings receding into the screen
     (i, r) => { const k = Math.floor(i / 10); const a = ((i % 10) / 10) * TAU + k * 0.35; const rad = 5.6 + (r() - 0.5) * 0.9; return [Math.cos(a) * rad, Math.sin(a) * rad, -k * 1.0, 1.15]; },
-    // 3 orchestration: a hub and three gimbal orbits of agents
+    // 4 orchestration: a hub and three gimbal orbits of agents
     (i, r) => {
       if (i < 16) { const ph = Math.acos(2 * r() - 1); const th = r() * TAU; return [0.9 * Math.sin(ph) * Math.cos(th), 0.9 * Math.cos(ph), 0.9 * Math.sin(ph) * Math.sin(th), 0.85, 0]; }
       const j = i - 16; const id = j % 3; const n = Math.ceil((N - 16) / 3); const a = (Math.floor(j / 3) / n) * TAU; const R = [3.3, 5.0, 6.7][id];
       const tilt = [[0.2, 0, 0], [1.15, 0, 0.35], [0.45, 1.05, 0]][id];
       return [...rot(Math.cos(a) * R, Math.sin(a) * R, 0, ...tilt), 1.05, [5, 2, 3][id]];
     },
-    // 4 retrieval: a spiral funnel pulling knowledge toward a point
+    // 5 retrieval: a spiral funnel pulling knowledge toward a point
     (i, r) => { const t = i / N; const ang = t * 34 + r() * 0.3; const rad = 0.5 + 5.8 * Math.pow(1 - t, 1.3); return [Math.cos(ang) * rad, 4.5 - t * 9, Math.sin(ang) * rad, 0.7 + (1 - t) * 0.5, [0, 7, 5, 4, 1, 2][Math.min(5, Math.floor(t * 6))]]; },
-    // 5 tools: a socket lattice (two layers)
+    // 6 tools: a socket lattice (two layers)
     (i) => { const layer = i % 2; const idx = Math.floor(i / 2); const m = Math.ceil(N / 2); const cols = Math.ceil(Math.sqrt(m * 1.15)); const rows = Math.ceil(m / cols); return [((idx % cols) - (cols - 1) / 2) * 1.05, (Math.floor(idx / cols) - (rows - 1) / 2) * 1.05, layer * 1.7 - 0.85, 0.95, ((idx % cols) + Math.floor(idx / cols)) % 2 ? 0 : 5]; },
-    // 6 evaluation: a distribution — instances stack into columns by colour
+    // 7 evaluation: a distribution — instances stack into columns by colour
     (i, r) => [(colorIdx[i] - 3.5) * 1.3, -4.2 + stack[i] * 0.72, (r() - 0.5) * 0.4, 1.0],
-    // 7 reliability: a protective shell
+    // 8 reliability: a protective shell
     (i) => { const ph = Math.acos(1 - (2 * (i + 0.5)) / N); const th = Math.PI * (1 + Math.sqrt(5)) * i; const R = 4.7; return [R * Math.sin(ph) * Math.cos(th), R * Math.cos(ph), R * Math.sin(ph) * Math.sin(th), 1.05]; },
-    // 8 playground: a dense storm of oversized toys around the camera
+    // 9 playground: a dense storm of oversized toys around the camera
     (i, r) => { const rad = 3.5 + Math.pow(r(), 0.8) * 9; const th = r() * TAU; const ph = Math.acos(2 * r() - 1); return [rad * Math.sin(ph) * Math.cos(th), rad * Math.cos(ph) * 0.8, rad * Math.sin(ph) * Math.sin(th), 1.5 + r() * 0.9]; },
-    // 9 GREAT: five evaluation layers (spread is animated in the director)
+    // 10 GREAT: five evaluation layers (spread is animated in the director)
     (i) => { const per = Math.floor(N / 5); const k = Math.min(4, Math.floor(i / per)); const idx = i - k * per; const a = (idx / per) * TAU + k * 0.4; const R = [6.4, 5.6, 4.8, 4.0, 3.2][k]; return [Math.cos(a) * R, (k - 2) * 2.6, Math.sin(a) * R, 1.0, [4, 2, 3, 5, 1][k]]; },
-    // 10 LoopGuard: a closed chain with one breaker at the gate
+    // 11 LoopGuard: a closed chain with one breaker at the gate
     (i, r) => {
       const M = Math.floor(N * 0.78); const G = Math.floor(N * 0.06);
       if (i < M) { const a = (i / M) * (TAU - 0.55) + 0.28; return [Math.cos(a) * 3.9, Math.sin(a) * 3.9, 0, 1.1, 0]; }
       if (i < M + G) { return [3.9 + (r() - 0.5) * 0.7, (r() - 0.5) * 1.1, (r() - 0.5) * 0.9, 1.35, 1]; }
       return dust(r);
     },
-    // 11 DermSense: stacked convolution layers
+    // 12 DermSense: stacked convolution layers
     (i, r) => {
       const per = Math.floor(N * 0.17); const k = Math.floor(i / per);
       if (k < 5) { const a = ((i % per) / per) * TAU; const R = [3.7, 3.3, 2.8, 2.3, 1.8][k]; return [Math.cos(a) * R, (2 - k) * 1.75, Math.sin(a) * R, 0.9, [1, 2, 3, 4, 0][k]]; }
       return dust(r);
     },
-    // 12 OULAD: a cohort of trajectories — bands separate, some drop out
+    // 13 OULAD: a cohort of trajectories — bands separate, some drop out
     (i) => {
       const p = Math.floor(i / 12); const b = i % 12; const s = b / 11;
       const band = [1.7, 0, -1.7][p % 3]; const h = Math.sin(p * 12.9898) * 43758.5453; const jit = (h - Math.floor(h)) - 0.5;
@@ -88,14 +94,14 @@ function buildFormations(N, colorIdx) {
       const drop = p % 5 === 0 && s > 0.55;
       return [-5.3 + 10.6 * s, y, z, 0.85, drop ? 6 : [3, 2, 1][p % 3]];
     },
-    // 13 microservices: a hub, six services, traffic links
+    // 14 microservices: a hub, six services, traffic links
     (i, r) => {
       if (i < 32) { const q = i; return [((q % 4) - 1.5) * 0.7, (Math.floor(q / 4) % 4 - 1.5) * 0.7, (Math.floor(q / 16) - 0.5) * 0.7, 1.05, 1]; }
       if (i < 32 + 96) { const j = i - 32; const c = j % 6; const a = (c / 6) * TAU; const cx = Math.cos(a) * 5.2; const cz = Math.sin(a) * 5.2; const ph = Math.acos(2 * r() - 1); const th = r() * TAU; return [cx + 1.2 * Math.sin(ph) * Math.cos(th), 1.2 * Math.cos(ph), cz + 1.2 * Math.sin(ph) * Math.sin(th), 1.05, [0, 2, 3, 4, 7, 5][c]]; }
       if (i < 32 + 96 + 72) { const j = i - 128; const c = j % 6; const k = Math.floor(j / 6) + 1; const a = (c / 6) * TAU; const t = 0.18 + (k / 13) * 0.62; return [Math.cos(a) * 5.2 * t, (r() - 0.5) * 0.15, Math.sin(a) * 5.2 * t, 0.62, 6]; }
       return dust(r);
     },
-    // 14 cell tower: lattice mast with cross-bracing and broadcast rings
+    // 15 cell tower: lattice mast with cross-bracing and broadcast rings
     (i, r) => {
       const legs = Math.floor(N * 0.36); const braces = Math.floor(N * 0.3);
       const radAt = (t) => 2.3 - t * 1.75;
@@ -109,7 +115,7 @@ function buildFormations(N, colorIdx) {
       if (j < ringN * 3) { const k = Math.floor(j / ringN); const a = ((j % ringN) / ringN) * TAU; const R = 1.9 + k * 1.5; return [Math.cos(a) * R, 4.6 + k * 0.05, Math.sin(a) * R, 0.8, [1, 2, 4][k]]; }
       return dust(r);
     },
-    // 15 supermarket graph: a handful of nodes joined by their nearest neighbours; the shortest path glows
+    // 16 supermarket graph: a handful of nodes joined by their nearest neighbours; the shortest path glows
     (i, r) => {
       const nodes = []; const rr = rng(5);
       for (let n = 0; n < 14; n++) { const u = rr() * 2 - 1; const a = rr() * TAU; const rad = 2.6 + rr() * 2.4; const s = Math.sqrt(1 - u * u); nodes.push([s * Math.cos(a) * rad * 1.35, u * rad * 0.85, s * Math.sin(a) * rad * 1.35]); }
@@ -121,7 +127,7 @@ function buildFormations(N, colorIdx) {
       if (e && j < edges.length * BEADS) { const A = nodes[e[0]]; const B = nodes[e[1]]; const t = ((j % BEADS) + 1) / (BEADS + 1); return [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t, 0.5, 6]; }
       return dust(r);
     },
-    // 16 experience: a double helix the camera orbits
+    // 17 experience: a double helix the camera orbits
     (i, r) => {
       const H = Math.floor(N * 0.68);
       if (i >= H) return dust(r);
@@ -129,9 +135,9 @@ function buildFormations(N, colorIdx) {
       const t = i / H; const a = t * TAU * 2.4 + (i % 2) * Math.PI;
       return [Math.cos(a) * 4.0, -5.5 + t * 11, Math.sin(a) * 4.0, 1.0, i % 2 ? 1 : 0];
     },
-    // 17 calm cloud (archive / education)
+    // 18 calm cloud (archive / education)
     (i, r) => { const rad = 5 + Math.pow(r(), 0.8) * 6; const th = r() * TAU; const y = (r() - 0.5) * 7; return [Math.cos(th) * rad, y, Math.sin(th) * rad, 0.75]; },
-    // 18 contact: a tidy ball of everything
+    // 19 contact: a tidy ball of everything
     (i) => { const sh = i % 4; const n = Math.ceil(N / 4); const idx = Math.floor(i / 4); const R = [2.0, 2.9, 3.8, 4.7][sh]; const ph = Math.acos(1 - (2 * (idx + 0.5)) / n); const th = Math.PI * (1 + Math.sqrt(5)) * idx; return [R * Math.sin(ph) * Math.cos(th), R * Math.cos(ph), R * Math.sin(ph) * Math.sin(th), 1.0, Math.min(7, Math.floor((ph / Math.PI) * 8))]; },
   ];
 
@@ -218,7 +224,7 @@ export function buildSwarm(quality, mats) {
     const fb = Math.min(FORMS - 1, fa + 1);
     let t = form - fa; t = t * t * (3 - 2 * t);
     const A = F[fa].pos; const B = F[fb].pos; const CA = F[fa].col; const CB = F[fb].col;
-    const w9 = (fa === 9 ? 1 - t : 0) + (fb === 9 ? t : 0);
+    const w9 = (fa === 10 ? 1 - t : 0) + (fb === 10 ? t : 0);
     const yMul = 1 + (spread - 1) * w9;
     const ie = intro;
     const sizeMul = (SIZE_MUL[fa] + (SIZE_MUL[fb] - SIZE_MUL[fa]) * t) * sizeBoost;

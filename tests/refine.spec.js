@@ -100,6 +100,63 @@ test.describe('bright colour worlds & playground', () => {
   });
 });
 
+test.describe('Pip — the Blender-authored agent', () => {
+  test('model loads (real glTF with the expected named nodes) and no errors', async ({ page }) => {
+    const errors = trackErrors(page);
+    await gotoReady(page, '?intro=0&qa=1', { settle: 2500 });
+    await page.waitForFunction(() => window.__world.agentLoaded, null, { timeout: 30_000 });
+    const names = await page.evaluate(() => { const n = []; window.__world.scene.traverse((o) => { if (o.name) n.push(o.name); }); return n; });
+    for (const want of ['agent', 'head', 'eye_L', 'eye_R', 'arm_L', 'arm_R', 'antenna', 'jet']) expect(names).toContain(want);
+    expect(errors).toEqual([]);
+  });
+
+  test('model file is a small valid GLB (< 700 KB)', async ({ request }) => {
+    const res = await request.get('/models/agent.glb');
+    expect(res.ok()).toBe(true);
+    const buf = await res.body();
+    expect(buf.subarray(0, 4).toString()).toBe('glTF');
+    expect(buf.length).toBeLessThan(700 * 1024);
+  });
+
+  test('perceive → decide → act: head follows the cursor, click makes the right arm rise', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 2000 });
+    await page.waitForFunction(() => window.__world.agentLoaded, null, { timeout: 30_000 });
+    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); });
+    await page.waitForTimeout(1200);
+    const read = () => page.evaluate(() => { let head; let arm; window.__world.scene.traverse((o) => { if (o.name === 'head') head = o; if (o.name === 'arm_R') arm = o; }); return { yaw: head.rotation.y, armZ: arm.rotation.z }; });
+    await page.mouse.move(100, 450); await page.waitForTimeout(900);
+    const left = await read();
+    await page.mouse.move(1380, 450); await page.waitForTimeout(900);
+    const right = await read();
+    expect(right.yaw - left.yaw).toBeGreaterThan(0.3); // perceives
+    await page.locator('#pipBtn').click(); await page.waitForTimeout(450);
+    const waving = await read();
+    expect(waving.armZ).toBeGreaterThan(1.8); // acts
+  });
+
+  test('Pip is hidden outside its chapter', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 2000 });
+    await page.waitForFunction(() => window.__world.agentLoaded, null, { timeout: 30_000 });
+    await page.evaluate(() => { scrollTo(0, 0); window.__world.snap(); });
+    await page.waitForTimeout(1200);
+    // Pip's wrapper group is the ancestor of the 'agent' node that sits directly under the scene
+    const visible = await page.evaluate(() => {
+      const scene = window.__world.scene; let v = true;
+      scene.traverse((o) => { if (o.name === 'agent') { let top = o; while (top.parent && top.parent !== scene) top = top.parent; v = top.visible; } });
+      return v;
+    });
+    expect(visible).toBe(false);
+    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); });
+    await page.waitForTimeout(1500);
+    const shown = await page.evaluate(() => {
+      const scene = window.__world.scene; let v = false;
+      scene.traverse((o) => { if (o.name === 'agent') { let top = o; while (top.parent && top.parent !== scene) top = top.parent; v = top.visible; } });
+      return v;
+    });
+    expect(shown).toBe(true);
+  });
+});
+
 test.describe('experience, navigation, reversibility', () => {
   test('seven experience steps, each readable and keyframed', async ({ page }) => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
