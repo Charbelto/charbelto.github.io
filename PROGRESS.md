@@ -9,7 +9,7 @@ A working real-time WebGL portfolio: procedural five-ring gimbal engine, scroll-
 | Hash | What |
 |---|---|
 | `51ba01d` | Checkpoint: rebuild as real-time 3D experience (24 tests passing) |
-| (latest) | Refinement phase — see `git log` |
+| `643b8a3` | Refinement phase: visual QA fixes, OULAD redesign, privacy cleanup, perf work, 40 tests |
 
 ## Done in the refinement phase
 - **Visual verification:** screenshot matrix (1440×900, 1280×800, 768×1024, 390×844, 360×780 × 25 chapter states) captured on a real GPU (`GPU=1`), contact-sheeted and reviewed; fixes applied and re-captured over four rounds (`qa/review-base` → `r1` → `r2` → `r3/r4` → `final`; ignored by git, curated set in `docs/screenshots/`).
