@@ -6,7 +6,7 @@
   --ink2: color-mix(in srgb, var(--ink) 82%, transparent);
   --mute: color-mix(in srgb, var(--ink) 62%, transparent);
   --line: color-mix(in srgb, var(--ink) 18%, transparent);
-  --glass: color-mix(in srgb, var(--bg) 74%, transparent);
+  --glass: color-mix(in srgb, var(--bg) 86%, transparent);
   --pad: clamp(18px, 5vw, 84px);
   --f-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --f-serif: 'Instrument Serif', Georgia, serif;
@@ -33,7 +33,7 @@ button { font: inherit; color: inherit; }
 /* ───────── layers ───────── */
 .atmos {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(70% 60% at 70% 25%, rgba(255, 255, 255, 0.26), transparent 62%), var(--bg);
+  background: radial-gradient(70% 60% at 70% 25%, rgba(255, 255, 255, 0.26), transparent 62%), var(--bg-live, var(--bg));
 }
 .back-title {
   position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 100svh; min-height: 560px;
@@ -550,3 +550,26 @@ html.lite .step-pips { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .contact-meta { display: none; }
   .contact .eyebrow { margin-bottom: 12px; font-size: 10.5px; }
 }
+
+
+/* ───────── smoothness: nothing blends or blurs the live canvas ─────────
+   A blurred backdrop over a moving WebGL canvas is re-computed every frame, and a full-screen blended grain layer
+   forces a full-screen composite every frame. Both are gone; the glass is simply a little more opaque. */
+.grain { display: none; }
+.panel, .wide, .cap .panel, .dive-copy, .contact-inner, .play-copy .lede, .step-pips, .menu-btn, .hero-top, .btn--ghost {
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+@media (min-width: 961px) { .cap .panel { background: color-mix(in srgb, var(--bg) 80%, transparent); } }
+.step-pips { background: color-mix(in srgb, var(--bg) 88%, transparent); }
+.menu-btn { background: color-mix(in srgb, var(--bg) 80%, transparent); }
+@media (max-width: 1100px) and (orientation: portrait) { .hero-top { background: color-mix(in srgb, var(--bg) 84%, transparent); } }
+@media (max-width: 720px) { .contact-inner { background: color-mix(in srgb, var(--bg) 84%, transparent); } }
+
+/* scroll reveals (see setupReveals): opacity and transform only */
+.rv { opacity: 0; transform: translate3d(0, 48px, 0); transition: opacity 0.9s ease, transform 1s var(--ease); }
+.rv.is-in { opacity: 1; transform: none; }
+html.qa .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+
+/* a pinned stage is laid out and painted on its own: scrolling one never re-lays-out the rest of the page */
+.stepper.is-live > .stage { contain: layout paint style; }
+.stepper.is-live .chapter { contain: layout style; }

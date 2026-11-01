@@ -22,7 +22,7 @@ const AX_Z = new THREE.Vector3(0, 0, 1);
 const qa = new THREE.Quaternion();
 const v1 = new THREE.Vector3();
 
-export function createProps(scene, baseUrl) {
+export function createProps(scene, baseUrl, onLoaded = null) {
   const loader = new GLTFLoader();
   const draco = new DRACOLoader();
   draco.setDecoderPath(`${baseUrl}draco/`);
@@ -78,7 +78,7 @@ export function createProps(scene, baseUrl) {
     if (!name || entries.has(name)) return Promise.resolve(entries.get(name));
     if (pending.has(name)) return pending.get(name);
     const p = loader.loadAsync(`${baseUrl}models/props/${name}.glb`)
-      .then((g) => prepare(name, g))
+      .then((g) => { const e = prepare(name, g); onLoaded?.(e.wrap); return e; }) // onLoaded: start compiling its shaders now, long before it is first shown
       .catch((e) => { console.warn('[props] failed to load', name, e); return null; })
       .finally(() => pending.delete(name));
     pending.set(name, p);

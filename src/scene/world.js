@@ -41,14 +41,17 @@ function makeMaterials() {
 }
 
 export function createWorld(canvas, { quality = 'high', reducedMotion = false, governor = true, onSlow = null } = {}) {
+  // MSAA multiplies fill cost by 4. On a hi-DPI screen the extra pixels already smooth edges, so only low-DPI screens pay for it.
+  const hiDpi = (window.devicePixelRatio || 1) >= 1.5;
   const Q = {
-    high: { dpr: 1.75, antialias: true },
-    mid: { dpr: 1.25, antialias: true },
-    low: { dpr: 1, antialias: true }, // MSAA everywhere: aliased toy edges looked cheap
+    high: { dpr: 1.5, antialias: !hiDpi },
+    mid: { dpr: 1.25, antialias: !hiDpi },
+    low: { dpr: 1, antialias: !hiDpi },
   }[quality];
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: Q.antialias, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, Q.dpr));
+  renderer.debug.checkShaderErrors = false; // reading the link status blocks the main thread until the shader finishes compiling
   renderer.toneMapping = THREE.NeutralToneMapping; // keeps saturated colours saturated
   renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
@@ -78,7 +81,8 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   let agent = null;
   loadAgent(`${import.meta.env.BASE_URL}models/agent.glb`).then((a) => { agent = a; scene.add(a.rig); }).catch((e) => console.warn('[agent] not loaded', e));
 
-  const props = createProps(scene, import.meta.env.BASE_URL);
+  // a prop's shaders compile in parallel as soon as it loads (a few chapters before it appears), so showing it never stalls a frame
+  const props = createProps(scene, import.meta.env.BASE_URL, (wrap) => { if (!disposed) renderer.compileAsync(wrap, camera, scene).catch(() => {}); });
   const propW = new Map(); // damped assembly weight per prop
   let blend = { a: null, b: null, t: 0, upcoming: [] };
 
@@ -101,6 +105,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   const upv = new THREE.Vector3(0, 1, 0);
   const dir = new THREE.Vector3();
   const pointerWorld = new THREE.Vector3(999, 999, 999);
+  const FAR = new THREE.Vector3(999, 999, 999);
   const ray = new THREE.Vector3();
 
   function measure() {
@@ -115,7 +120,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   }
 
   /* portrait screens: the free band between the header and the card the object may occupy (viewport fractions, damped) */
-  const band = { top: 0.1, bot: 0.55, t: 0.1, b: 0.55, n: 0, mark: null };
+  const band = { top: 0.1, bot: 0.55, t: 0.1, b: 0.55, mark: null, sampled: null };
   function sampleBand() {
     const m = band.mark;
     const card = m?.el?.querySelector('.panel, .xp, .wide, .contact-inner');
@@ -154,6 +159,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     measure();
+    band.sampled = null;
   }
   const onScroll = () => { scrollY = window.scrollY; };
   const onPointer = (e) => {
@@ -207,7 +213,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     // portrait: object chapters fit the free band above the card (and the screen width), so nothing is cropped or hidden
     const fitMix = aspect < 1.1 ? smooth(clamp(cur.nf, 0, 1)) * ie : 0;
     if (fitMix > 0) {
-      if ((frameNo++ & 7) === 0) sampleBand();
+      if (band.sampled !== band.mark) { band.sampled = band.mark; sampleBand(); }
       band.top = lerp(band.top, band.t, 0.2); band.bot = lerp(band.bot, band.b, 0.2);
       const F = Math.max(0.2, band.bot - band.top);
       const dFit = 4.7 / (Math.tan((cur.fov * Math.PI) / 360) * Math.min(aspect * 0.97, F));
@@ -241,7 +247,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     holder.rotation.y = cur.yaw + (reducedMotion ? 0 : Math.sin(time * 0.25) * cur.rock + time * cur.spin);
     swarm.update({
       time, dt, form: clamp(cur.form, 0, FORMS - 1), spread: cur.spread, pointerR: cur.pr, sunAmt: cur.sun, intro: ie,
-      pointerWorld: pointer.tx === 0 && pointer.ty === 0 && !pointerSeen ? new THREE.Vector3(999, 999, 999) : pointerWorld,
+      pointerWorld: pointer.tx === 0 && pointer.ty === 0 && !pointerSeen ? FAR : pointerWorld,
       kick: kickAmt, still: reducedMotion,
       sizeBoost: lerp(1.5, 1, portrait), // on tall screens the camera sits further back, so toys grow to stay chunky
       amount: cur.swarm, nearFade: cur.nf, camDist: d, camPos,
@@ -254,7 +260,6 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     if (governor && ie >= 1 && !disposed) adapt(Math.min(0.6, rawDt));
   }
   let pointerSeen = false;
-  let frameNo = 0;
   let disposed = false;
   let slowStrikes = 0;
 
@@ -263,7 +268,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
      (down to a floor); sustained fast frames raise it again (up to the tier's cap). Hysteresis
      (consecutive verdicts) prevents flapping. Disabled with ?gov=0 and in QA captures. */
   const prCap = Math.min(window.devicePixelRatio || 1, Q.dpr);
-  const prFloor = Math.min(prCap, 0.75);
+  const prFloor = Math.min(prCap, 0.6);
   let pr = prCap;
   let accT = 0; let accN = 0; let verdict = 0;
   const stats = { pr, avgMs: 0, steps: 0 };
@@ -275,15 +280,15 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   function adapt(dt) {
     accT += dt; accN++;
     // a window is 60 frames, or 2.5 s with at least 5 frames (so a struggling device is judged within seconds, not minutes)
-    if (accN < 60 && !(accT >= 2.5 && accN >= 5)) return;
+    if (accN < 40 && !(accT >= 1.6 && accN >= 5)) return;
     const avg = accT / accN; accT = 0; accN = 0;
     stats.avgMs = +(avg * 1000).toFixed(1);
     // a machine that cannot hold even ~11 fps at the lowest resolution twice in a row: hand over to the lightweight mode
     slowStrikes = avg > 0.09 ? slowStrikes + 1 : 0;
     if (slowStrikes >= 2 && onSlow) { const cb = onSlow; onSlow = null; cb(); return; }
-    const v = avg > 0.0245 ? -1 : avg < 0.0125 ? 1 : 0;
+    const v = avg > 0.0185 ? -1 : avg < 0.0125 ? 1 : 0; // aim for about 55 fps or better, not just "playable"
     verdict = v === Math.sign(verdict) || verdict === 0 ? verdict + v : v;
-    if (verdict <= -2 && pr > prFloor) { applyPR(Math.max(prFloor, pr * 0.86)); stats.steps++; verdict = 0; }
+    if (verdict <= -1 && pr > prFloor) { applyPR(Math.max(prFloor, pr * 0.84)); stats.steps++; verdict = 0; }
     else if (verdict >= 3 && pr < prCap) { applyPR(Math.min(prCap, pr * 1.1)); stats.steps++; verdict = 0; }
   }
 
@@ -315,7 +320,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     get agentLoaded() { return !!agent; },
     remeasure: measure,
     /** QA hook: jump the damped camera/state straight to the current scroll target */
-    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); publishColours(); },
+    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); publishColours(); publish.flush(); },
     compile: () => renderer.compileAsync(scene, camera),
     /** force shader link + geometry upload while the loader is still up */
     warm() { renderer.render(scene, camera); },

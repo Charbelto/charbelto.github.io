@@ -72,3 +72,6 @@ Research (`3D_REFERENCES.md`), QA (tests and first critique), Performance audit,
 3. Text over the swarm in dive and play is improved earlier but not re-measured; the ghost numerals and nav contrast items from the critique are not changed.
 4. Lite-mode thresholds are reasoned, not tuned on real low-end hardware. No Lighthouse or Core Web Vitals numbers.
 5. Open decisions for you: endorsement quotes (hidden), the "< 4 h" response claim, whether analytics should ever return.
+
+## Smoothness pass (user report: "so laggy")
+Profiled a scripted full-page scroll and fixed what the profile showed: page-wide colour updates throttled, film grain and backdrop blurs removed, ScrollTrigger replaced by an IntersectionObserver, layout reads removed from scroll handlers, prop shaders precompiled on load, MSAA only on low-DPI screens, tighter resolution governor. Numbers and caveats in `docs/PERFORMANCE.md` Addendum 5. Tests: 68 GPU (1 skipped by design), 24 core software-GL, plus a new smoothness guard. Still only measured on one machine.

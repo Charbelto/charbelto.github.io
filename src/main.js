@@ -1,9 +1,7 @@
 import './fonts.js';
 import './style.css';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const root = document.documentElement;
 root.classList.add('js');
@@ -76,24 +74,29 @@ function revealIntro(world) {
   tl.fromTo(items, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, 1.9);
 }
 
-/* ───────── scroll reveals ───────── */
+/* ───────── scroll reveals ─────────
+   One IntersectionObserver and CSS transitions (compositor only): no per-element scroll triggers to evaluate on every
+   scroll event. Panels replay when scrolled back out of view; list items reveal once. */
 function setupReveals() {
   if (reducedMotion) return;
-  $$('.panel, .wide').forEach((el) => {
-    if (el.closest('.hero') || el.closest('.stepper')) return; // stepper chapters cross-fade with CSS
-    gsap.fromTo(el, { y: 56, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 86%', toggleActions: 'play none none reverse' },
-    });
-  });
-  $$('.edu-grid article, .lead-list li, .arc-list li').forEach((el) => {
-    gsap.fromTo(el, { y: 26, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' },
-    });
-  });
+  const panels = $$('.panel, .wide').filter((el) => !el.closest('.hero') && !el.closest('.stepper')); // stepper chapters cross-fade with CSS
+  const items = $$('.edu-grid article, .lead-list li, .arc-list li');
+  const once = new Set(items);
+  [...panels, ...items].forEach((el) => el.classList.add('rv'));
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); if (once.has(e.target)) io.unobserve(e.target); }
+      else if (e.boundingClientRect.top > 0) e.target.classList.remove('is-in'); // left through the bottom: play again next time
+    }
+  }, { rootMargin: '0px 0px -10% 0px' });
+  [...panels, ...items].forEach((el) => io.observe(el));
   // the name drifts slowly as you leave the hero (parallax against the camera)
-  gsap.to('.bt-name', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true } });
+  const name = $('.bt-name');
+  if (name) {
+    let queued = false;
+    const draw = () => { queued = false; const p = Math.min(1, Math.max(0, scrollY / innerHeight)); name.style.transform = `translate3d(0, ${(-12 * p).toFixed(2)}%, 0)`; };
+    addEventListener('scroll', () => { if (!queued && scrollY < innerHeight * 1.2) { queued = true; requestAnimationFrame(draw); } }, { passive: true });
+  }
 }
 
 /* ───────── full-width marquee bands: speed + direction react to scroll velocity ───────── */
@@ -103,7 +106,12 @@ function setupMarquee() {
     ? gsap.fromTo(track, { xPercent: -50 }, { xPercent: 0, ease: 'none', duration: 28, repeat: -1 })
     : gsap.fromTo(track, { xPercent: 0 }, { xPercent: -50, ease: 'none', duration: 28, repeat: -1 })));
   let boost = 0;
-  ScrollTrigger.create({ onUpdate: (self) => { boost = Math.min(7, Math.abs(self.getVelocity()) / 450); } });
+  let lastY = scrollY; let lastT = performance.now();
+  addEventListener('scroll', () => {
+    const t = performance.now();
+    boost = Math.min(7, (Math.abs(scrollY - lastY) / Math.max(8, t - lastT)) * 1000 / 450);
+    lastY = scrollY; lastT = t;
+  }, { passive: true });
   gsap.ticker.add(() => {
     boost *= 0.94;
     tweens.forEach((t) => t.timeScale(1 + boost));
@@ -192,14 +200,14 @@ function setupSteppers() {
       const S = (Number(o.box.dataset.step) || 0.3) * vh;
       o.box.style.height = `${(o.steps.length - 1) * S + vh}px`;
       const top = o.box.getBoundingClientRect().top + scrollY;
-      o.box._g = { top, S };
+      o.box._g = { top, S, h: o.box.offsetHeight };
       o.steps.forEach((s, i) => { s.dataset.vc = String(Math.round(top + vh / 2 + i * S)); });
     }
   };
   const rail = $('#rail'); const label = $('#railLabel');
   const update = () => {
     for (const o of boxes) {
-      const { top, S } = o.box._g;
+      const { top, S, h } = o.box._g;
       const idx = Math.max(0, Math.min(o.steps.length - 1, Math.round((scrollY - top) / S)));
       if (idx !== o.active) {
         o.active = idx;
@@ -208,9 +216,13 @@ function setupSteppers() {
         o.count.textContent = `${idx + 1} / ${o.steps.length}  ${o.steps[idx].dataset.label || ''}`;
       }
       // the pips belong to the pinned stage only: fade them as the group scrolls in or out
-      o.pips.classList.toggle('is-away', scrollY < top - 40 || scrollY > top + o.box.offsetHeight - innerHeight + 40);
-      const inside = scrollY > top - innerHeight * 0.4 && scrollY < top + o.box.offsetHeight - innerHeight * 0.6;
-      if (inside) { label.textContent = o.steps[idx].dataset.label || ''; rail.classList.remove('is-hidden'); }
+      o.pips.classList.toggle('is-away', scrollY < top - 40 || scrollY > top + h - innerHeight + 40);
+      const inside = scrollY > top - innerHeight * 0.4 && scrollY < top + h - innerHeight * 0.6;
+      if (inside) {
+        const text = o.steps[idx].dataset.label || '';
+        if (label.textContent !== text) label.textContent = text;
+        if (rail.classList.contains('is-hidden')) rail.classList.remove('is-hidden');
+      }
     }
   };
   layoutSteppers = () => { layout(); update(); };
@@ -240,10 +252,14 @@ function setupRail() {
     });
   }, { rootMargin: '-45% 0px -45% 0px' });
   chapters.forEach((c) => io.observe(c));
-  addEventListener('scroll', () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    rail.style.setProperty('--p', (scrollY / Math.max(1, max)).toFixed(4));
-  }, { passive: true });
+  let max = 1; let queued = false;
+  const measure = () => { max = Math.max(1, document.documentElement.scrollHeight - innerHeight); };
+  const write = () => { queued = false; rail.style.setProperty('--p', (scrollY / max).toFixed(4)); };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(write); } }, { passive: true });
+  addEventListener('resize', measure, { passive: true });
+  addEventListener('load', measure);
+  new ResizeObserver(measure).observe(document.body);
+  measure();
 }
 
 /* ───────── menu ───────── */
@@ -409,14 +425,22 @@ function setupDots() {
   const wrap = $('#dots');
   if (!wrap) return;
   const targets = $$('a', wrap).map((a) => ({ a, el: document.querySelector(a.getAttribute('href')) })).filter((t) => t.el);
+  let tops = [];
+  let on = null;
+  const measure = () => { tops = targets.map((t) => t.el.getBoundingClientRect().top + scrollY); update(); };
   const update = () => {
     const mid = scrollY + innerHeight * 0.45;
-    let cur = targets[0];
-    for (const t of targets) if (t.el.getBoundingClientRect().top + scrollY <= mid) cur = t;
-    targets.forEach((t) => t.a.classList.toggle('is-on', t === cur));
+    let cur = 0;
+    tops.forEach((y, i) => { if (y <= mid) cur = i; });
+    if (cur === on) return;
+    on = cur;
+    targets.forEach((t, i) => t.a.classList.toggle('is-on', i === cur));
   };
   addEventListener('scroll', update, { passive: true });
-  update();
+  addEventListener('resize', measure, { passive: true });
+  addEventListener('load', measure);
+  new ResizeObserver(measure).observe(document.body);
+  measure();
 }
 
 /* ───────── boot ───────── */
@@ -477,10 +501,9 @@ async function boot() {
   setupMarquee();
   setupPlayground();
   setupPip();
-  ScrollTrigger.refresh();
   const remeasure = () => { layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
   remeasure();
-  addEventListener('load', () => { ScrollTrigger.refresh(); remeasure(); });
+  addEventListener('load', () => remeasure());
   new ResizeObserver(() => remeasure()).observe(document.body);
 
   // QA hook: ?at=<keyframe> jumps straight to a chapter; ?intro=0 skips the opening animation

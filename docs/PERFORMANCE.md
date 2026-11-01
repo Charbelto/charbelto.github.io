@@ -462,3 +462,23 @@ Chapters now show authored objects instead of swarm formations (see `3D_ART_DIRE
 - **Live fallback:** the resolution governor measures real frame time (not the 50 ms-capped animation delta, which was a bug: it could never see a slow machine). A window is 60 frames or 2.5 s. Two consecutive windows averaging more than 90 ms (under about 11 fps) hand over to lite mode. Verified under Chromium CPU throttling: at 20x slowdown the page ran about 14 fps and the governor lowered the resolution; at 60x it switched to lite mode by itself.
 - **Not measured:** real integrated-GPU laptops, phones or low-end desktops; the thresholds (about 11 fps, 2 windows) are reasoned, not tuned on real hardware.
 - **Page length:** 30 screens down to about 18 (desktop 17.8, phone 18.4) by pinning four groups into virtual steps.
+
+---
+
+# Addendum 5: smoothness pass (2026-11-01)
+
+Measured with `tests/scroll-frames.spec.js` (scripted scroll of the whole page in 9 s, frame intervals) and `tests/scroll-profile.spec.js` (CDP CPU profile of the same scroll), real GPU, 1440x900 at DPR 2, plus CPU throttling to stand in for a weaker machine. **One machine only; no real low-end hardware was available.**
+
+**What the profile showed (before):** about 6.7 ms of every scroll frame went to forced style and layout work (`scrollTo` self time 3.6 s over 9 s), about 0.5 s of main-thread stall from shader linking when props first appeared, and ScrollTrigger evaluated about 50 triggers on every scroll event. Under 6x CPU throttle the page ran at about 6 fps.
+
+**What changed:**
+- The page-wide colour variables (`--bg`, `--ink`, `--ac`) restyle every element, so they now update at most about 11 times a second (with a trailing update so the final colour always lands). The full-screen backdrop follows every frame through a variable on its own element, which is nearly free.
+- Removed the animated full-screen film-grain layer (blended with `multiply`, four times the screen area) and every `backdrop-filter` blur over the canvas; glass panels are slightly more opaque instead.
+- Scroll reveals use one IntersectionObserver and CSS transitions instead of one ScrollTrigger per element; ScrollTrigger is gone from the bundle (main chunk 51 KB to 34 KB gzip). Name parallax and marquee speed use plain scroll listeners.
+- Scroll handlers no longer read layout (cached document height, section tops and group heights; DOM writes only when a value changes).
+- Prop shaders start compiling in parallel the moment a prop loads (a few chapters ahead), and `checkShaderErrors` is off, so showing a prop no longer blocks a frame.
+- MSAA is only used on low-DPI screens (on hi-DPI the extra pixels already smooth edges); the high tier caps at pixel ratio 1.5 (was 1.75).
+- The resolution governor now judges in 40-frame or 1.6 s windows, aims for about 55 fps (was 41), reacts after one slow window and may go down to pixel ratio 0.6.
+- Pinned stages use CSS containment.
+
+**Result (this machine):** CPU time in `scrollTo` fell from 3.6 s to 0.17 s per 9 s scroll; main thread idle went from 25% to 68%; at 4x CPU throttle the page runs about 3x faster than at 6x before (about 63 ms per frame to be compared with about 168 ms); at 2560x1440 DPR 2 it holds a steady 60 fps. Not measured: integrated GPUs, phones, thermals.

@@ -461,3 +461,20 @@ test.describe('lightweight mode (no GPU needed)', () => {
     expect(await page.evaluate(() => document.querySelectorAll('.lite-img').length)).toBe(2);
   });
 });
+
+test.describe('smoothness guards', () => {
+  test('nothing blurs or blends the live canvas; reveals use the observer, not scroll triggers', async ({ page }) => {
+    await gotoReady(page, '?intro=0', { settle: 1500 });
+    const r = await page.evaluate(() => {
+      const bf = (sel) => { const el = document.querySelector(sel); return el ? getComputedStyle(el).backdropFilter : 'none'; };
+      return {
+        panel: bf('.panel'), wide: bf('.wide'), pips: bf('.step-pips'), menu: bf('.menu-btn'),
+        grain: document.querySelector('.grain') ? getComputedStyle(document.querySelector('.grain')).display : 'none',
+        reveals: document.querySelectorAll('.rv').length,
+      };
+    });
+    for (const k of ['panel', 'wide', 'pips', 'menu']) expect(r[k], k).toBe('none');
+    expect(r.grain).toBe('none');
+    expect(r.reveals).toBeGreaterThan(10);
+  });
+});

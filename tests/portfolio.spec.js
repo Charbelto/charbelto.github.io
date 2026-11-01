@@ -6,7 +6,7 @@ const MAIL = 'mailto:charbeltoumieh1@gmail.com';
 test.describe('core / WebGL', () => {
   test('loads with no console errors and renders WebGL frames', async ({ page }) => {
     const errors = trackErrors(page);
-    await gotoReady(page, '?intro=0', { settle: 5000 });
+    await gotoReady(page, '?intro=0&gov=0', { settle: 5000 });
     await expect(page.locator('canvas#world')).toHaveCount(1);
     const info = await page.evaluate(async () => {
       const w = window.__world;
@@ -32,7 +32,7 @@ test.describe('core / WebGL', () => {
   });
 
   test('canvas is non-trivial', async ({ page }) => {
-    await gotoReady(page, '?intro=0&q=low', { settle: 4000 });
+    await gotoReady(page, '?intro=0&q=low&gov=0', { settle: 4000 });
     const buf = await page.locator('canvas#world').screenshot();
     expect(buf.length).toBeGreaterThan(5000);
   });
