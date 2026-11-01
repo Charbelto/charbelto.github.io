@@ -1,50 +1,46 @@
-# Charbel Toumieh — Portfolio · charbel.os
+# Charbel Toumieh — Portfolio v4 · real-time 3D
 
-Dark AI-lab portfolio: void black, electric violet/cyan, HUD chrome and terminal motifs.
-Built to make a hiring manager stop scrolling.
+An immersive WebGL portfolio: a procedural five-ring "engine" the camera dives through as you scroll, an exploded flagship case study (GREAT), and a 3D gallery of project artifacts. Built with **Three.js + GSAP + Vite**. No external 3D assets — all geometry, materials and the studio environment are generated in code.
 
-**Live:** [charbelto.github.io](https://charbelto.github.io)
+> Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and its source in `legacy/`). Nothing here has been pushed or deployed.
 
----
-
-## Signature interactions (all vanilla JS/CSS — zero libraries)
-
-- **Interactive particle network** — hero constellation that scatters away from the cursor
-- **Boot screen** — terminal log + vertical-columns reveal (once per session)
-- **Immersive char reveals** — headings rise letter-by-letter from blur
-- **Scroll-zoom case study** — the GREAT platform terminal scales up as you scroll
-- **Pinned horizontal gallery** — vertical scroll drives the Selected Works track sideways
-  (native swipe + snap on mobile)
-- **Exploding capability core** — orbital node map that decomposes on hover/tap
-- **3D tilt + spotlight** — cards tilt in perspective and light up around the pointer
-- **Parallax storytelling** — experience rail draws itself; ghost numerals drift at depth
-- **Counter-parallax streams**, magnetic buttons, custom cursor with context tag,
-  reading-progress bar, fullscreen column-slide menu
-
-## Performance & robustness
-
-- Zero frameworks, zero build step. Two font families; all art is CSS/SVG/canvas.
-- Single rAF scroll pipeline; IntersectionObserver reveals; canvas pauses off-screen,
-  DPR-capped, and disabled on touch/reduced-motion.
-- `content-visibility: auto` below the fold. Full `prefers-reduced-motion` fallbacks —
-  pins, tilt, particles and boot all degrade to static.
-- Content is complete without JavaScript. `?flat` renders a static page for QA tooling.
-
-## Sections
-
-`01 Profile` · `02 Case: GREAT` · `03 Experience` · `04 The Stack` ·
-`05 Selected Works` + full 24-project archive · `06 Education` · `07 Contact`
-
-## Local development
-
+## Run locally
 ```bash
-git clone https://github.com/Charbelto/Charbelto.github.io.git
-cd Charbelto.github.io
-python -m http.server 4173   # or: npx serve .
+npm install
+npm run dev        # http://127.0.0.1:5173
+```
+Useful query params: `?intro=0` (skip opening), `?at=great2` (jump to a chapter), `?q=low|mid|high` (force quality tier).
+
+## Build & preview
+```bash
+npm run build      # outputs dist/
+npm run preview    # http://127.0.0.1:4173
 ```
 
-## Connect
+## Deploy (GitHub Pages) — not done automatically
+The site is now a Vite app, so Pages must serve the **built** `dist/`, not the repo root. `.github/workflows/deploy.yml` builds and publishes via GitHub Actions. To go live: merge this branch, then in the repo settings choose **Pages → Source: GitHub Actions**. Until then the existing deployment is untouched.
 
-- **Email:** charbeltoumieh1@gmail.com
-- **LinkedIn:** [linkedin.com/in/charbeltoumieh](https://www.linkedin.com/in/charbeltoumieh/)
-- **GitHub:** [github.com/Charbelto](https://github.com/Charbelto)
+## Structure
+```
+index.html              page content (semantic HTML, JSON-LD)
+src/main.js             boot, loader, intro, reveals, menu, modal, filters
+src/style.css           design system
+src/scene/world.js      renderer, procedural studio env, lights, scroll director
+src/scene/machine.js    the engine: rings, pins, core, shard belt, glow shaders
+src/scene/artifacts.js  six project artifacts + gallery arena
+src/scene/keyframes.js  camera/state keyframes per chapter
+public/                 static files copied as-is (résumé, legal pages, robots, sitemap)
+legacy/                 previous site source (not deployed)
+```
+
+## Adding / changing a chapter
+Add a `data-kf="name"` section in `index.html` and a matching entry in `KF` (`src/scene/keyframes.js`). The director handles the rest.
+
+## Quality tiers
+`high` desktop · `mid` tablets/low-core · `low` phones (fewer shards/ticks, lower DPR, no pointer effects, no MSAA). WebGL failure or reduced motion degrades to readable static content.
+
+## Docs
+`3D_ART_DIRECTION.md` · `DESIGN.md` · `3D_REFERENCES.md` · `PROGRESS.md` · `docs/PERFORMANCE.md` · `qa/REPORT.md`
+
+## Connect
+Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbeltoumieh/) · [GitHub](https://github.com/Charbelto)

@@ -1,0 +1,21 @@
+{
+  "name": "charbel-portfolio-3d",
+  "private": true,
+  "version": "4.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "test:e2e": "playwright test tests/portfolio.spec.js tests/nogl.spec.js",
+    "test:shots": "playwright test tests/screenshots.spec.js"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "vite": "^5.4.11"
+  }
+}
