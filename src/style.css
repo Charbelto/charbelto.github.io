@@ -37,9 +37,9 @@ button { font: inherit; color: inherit; }
 }
 .back-title {
   position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 100svh; min-height: 560px;
-  display: flex; align-items: flex-end; padding: 0 var(--pad) clamp(190px, 31svh, 300px); pointer-events: none; overflow: hidden;
+  display: flex; align-items: flex-end; padding: 0 var(--pad) var(--hb, clamp(190px, 31svh, 300px)); pointer-events: none; overflow: hidden;
 }
-.bt-name { margin: 0; font-weight: 800; font-stretch: 125%; line-height: 0.8; letter-spacing: -0.04em; font-size: clamp(3.6rem, 8.4vw, 11rem); color: var(--ink); }
+.bt-name { margin: 0; font-weight: 800; font-stretch: 125%; line-height: 0.8; letter-spacing: -0.04em; font-size: calc(clamp(3.6rem, min(8.4vw, 22svh), 11rem) * var(--hs, 1)); color: var(--ink); }
 .bt-line { display: block; will-change: transform, opacity; }
 .bt-line:nth-child(2) { color: transparent; -webkit-text-stroke: 2px var(--ink); margin-left: 0.04em; }
 #world { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; display: block; pointer-events: none; }
@@ -155,7 +155,7 @@ p { margin: 0 0 1em; }
 /* hero */
 .hero { flex-direction: column; align-items: stretch; justify-content: space-between; padding: 120px var(--pad) 28px; min-height: 100svh; }
 .hero-top { max-width: 640px; }
-.hero-statement { font-size: clamp(1.7rem, 3.5vw, 3.6rem); font-weight: 600; font-stretch: 110%; line-height: 1.08; letter-spacing: -0.02em; margin: 16px 0 0; max-width: 16ch; }
+.hero-statement { font-size: calc(clamp(1.6rem, min(3.5vw, 6.2svh), 3.6rem) * var(--hs, 1)); font-weight: 600; font-stretch: 110%; line-height: 1.08; letter-spacing: -0.02em; margin: 16px 0 0; max-width: 16ch; }
 .hero-bottom { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 22px 40px; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; }
 .hero-stats { display: flex; gap: clamp(18px, 3vw, 44px); margin: 0; }
@@ -169,7 +169,9 @@ p { margin: 0 0 1em; }
 /* desktop: CTAs and proof points stack in the left column so nothing competes with the machine on the right */
 @media (min-width: 961px) {
   .hero-bottom { flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 22px; }
-  .back-title { padding-bottom: clamp(250px, 35svh, 350px); }
+  .back-title { padding-bottom: var(--hb, clamp(250px, 35svh, 350px)); }
+  .hero-statement { max-width: 24ch; }
+  .hero { padding-top: clamp(84px, 12svh, 120px); }
   .hero-stats dd { font-size: clamp(1.8rem, 2.4vw, 2.6rem); }
 }
 
@@ -298,7 +300,7 @@ html.no-gl .scroll-cue { display: none; }
   .chapter.archive, .chapter.experience, .chapter.edu { align-items: flex-start; }
   .panel, .panel--left, .panel--right { width: auto; margin: 0 var(--pad); }
   .back-title { padding-bottom: 27svh; }
-  .bt-name { font-size: 14.5vw; }
+  .bt-name { font-size: calc(14.5vw * var(--hs, 1)); }
 }
 
 html.qa .panel, html.qa .wide, html.qa .xp, html.qa .arc-list li, html.qa .edu-grid article, html.qa .lead-list li, html.qa [data-intro], html.qa .bt-line { opacity: 1 !important; transform: none !important; filter: none !important; }
@@ -327,7 +329,7 @@ html.js .bt-line { opacity: 0; }
   .chapter.hero { align-items: stretch; padding: 96px var(--pad) 20px; }
   .panel, .panel--left, .panel--right { width: auto; margin: 0 14px; padding: 20px; border-radius: 20px; }
   .back-title { padding-bottom: 27svh; }
-  .bt-name { font-size: 14.2vw; padding-left: 4px; }
+  .bt-name { font-size: calc(14.2vw * var(--hs, 1)); padding-left: 4px; }
   .hero-statement { max-width: 14ch; font-size: 1.5rem; }
   .hero-top { max-width: none; }
   .hero-stats { width: 100%; justify-content: space-between; gap: 10px; }
@@ -573,3 +575,26 @@ html.qa .rv { opacity: 1 !important; transform: none !important; transition: non
 /* a pinned stage is laid out and painted on its own: scrolling one never re-lays-out the rest of the page */
 .stepper.is-live > .stage { contain: layout paint style; }
 .stepper.is-live .chapter { contain: layout style; }
+
+/* ───────── design switch (left = classic design, right = this 3D design) ───────── */
+.head-right { display: flex; align-items: center; gap: clamp(12px, 2vw, 26px); }
+.dswitch { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font: 500 11px var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 2px; }
+.dswitch-l, .dswitch-r { opacity: 0.55; transition: opacity 0.3s; }
+.dswitch[data-state='3d'] .dswitch-r, .dswitch[data-state='classic'] .dswitch-l { opacity: 1; }
+.dswitch-track { position: relative; width: 44px; height: 24px; border-radius: 999px; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--bg) 80%, transparent); }
+.dswitch-track i { position: absolute; top: 2px; left: 2px; width: 17px; height: 17px; border-radius: 50%; background: var(--ink); transition: transform 0.35s var(--ease), background 0.25s; transform: translateX(20px); }
+.dswitch.is-flip .dswitch-track i { transform: none; }
+.dswitch:hover .dswitch-track i, .dswitch:focus-visible .dswitch-track i { background: var(--ac); }
+@media (max-width: 720px) { .dswitch-l, .dswitch-r { display: none; } .dswitch { padding: 6px 0; } }
+html.is-switching body { opacity: 0; transition: opacity 0.25s ease; }
+@media (max-width: 480px) {
+  .head { gap: 10px; }
+  .head-right { gap: 8px; }
+  .head-nav .head-cta { padding: 8px 12px; font-size: 11px; }
+  .dswitch-track { width: 38px; height: 22px; }
+  .dswitch-track i { width: 15px; height: 15px; transform: translateX(16px); }
+  .menu-btn { width: 40px; height: 40px; }
+  .brand { gap: 7px; }
+  .brand-name { font-size: 12.5px; }
+}
+@media (max-width: 360px) { .brand-name { display: none; } }

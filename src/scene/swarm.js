@@ -205,6 +205,14 @@ export function buildSwarm(quality, mats) {
     size[i] = 0.85 + rs() * 0.4;
   }
   const off = new Float32Array(N * 3); // pointer / kick displacement (local space)
+  // Each toy glides to its place in the CURRENT formation (it never sweeps through the formations in between), at its own
+  // pace, so a long scroll between very different shapes reads as a calm flow instead of a flash.
+  const cp = new Float32Array(N * 3); const cs = new Float32Array(N); const cc = new Float32Array(N * 3);
+  const pace = new Float32Array(N);
+  for (let i = 0; i < N; i++) pace[i] = 0.55 + rs() * 0.9;
+  let primed = false; let snapNext = false;
+  const FLOW = 1.25; // base glide rate per second (about half a second to cover half the distance)
+  const MAX_SPEED = 4.5; // world units per second, per axis, before each toy's own pace factor
   let shift = 0; // palette rotation (the playground re-colours everything)
 
   // the chrome sun (hero + shell) with a ringed orbit
@@ -223,15 +231,15 @@ export function buildSwarm(quality, mats) {
   const local = new THREE.Vector3();
   const P = new THREE.Vector3();
 
-  function update({ time, dt, form, spread, sunAmt, intro, pointerWorld, pointerR, kick, still, sizeBoost = 1, amount = 1, nearFade = 0, camDist = 15, camPos = null }) {
-    const fa = Math.min(FORMS - 1, Math.max(0, Math.floor(form)));
-    const fb = Math.min(FORMS - 1, fa + 1);
-    let t = form - fa; t = t * t * (3 - 2 * t);
-    const A = F[fa].pos; const B = F[fb].pos; const CA = F[fa].col; const CB = F[fb].col;
-    const w9 = (fa === 10 ? 1 - t : 0) + (fb === 10 ? t : 0);
-    const yMul = 1 + (spread - 1) * w9;
+  function update({ time, dt, form, snap = false, spread, sunAmt, intro, pointerWorld, pointerR, kick, still, sizeBoost = 1, amount = 1, nearFade = 0, camDist = 15, camPos = null }) {
+    const fi = Math.min(FORMS - 1, Math.max(0, Math.round(form)));
+    const T = F[fi].pos; const TC = F[fi].col;
+    const yMul = 1 + (spread - 1) * (fi === 10 ? 1 : 0);
     const ie = intro;
-    const sizeMul = (SIZE_MUL[fa] + (SIZE_MUL[fb] - SIZE_MUL[fa]) * t) * sizeBoost;
+    const sizeMul = SIZE_MUL[fi] * sizeBoost;
+    const jump = snap || snapNext || !primed || still;
+    primed = true; snapNext = false;
+    const kc = jump ? 1 : 1 - Math.exp(-dt * 2.6); // colour glide
     if (camPos) { camLocal.copy(camPos); group.worldToLocal(camLocal); }
     // pointer in the group's local space
     local.copy(pointerWorld); group.worldToLocal(local);
@@ -245,10 +253,15 @@ export function buildSwarm(quality, mats) {
       mesh.count = shown;
       for (let j = 0; j < shown; j++) {
         const i = list[j]; const o = i * 4;
-        let x = A[o] + (B[o] - A[o]) * t;
-        let y = (A[o + 1] + (B[o + 1] - A[o + 1]) * t) * yMul;
-        let z = A[o + 2] + (B[o + 2] - A[o + 2]) * t;
-        let s = (A[o + 3] + (B[o + 3] - A[o + 3]) * t) * sizeMul;
+        const kg = jump ? 1 : 1 - Math.exp(-dt * FLOW * pace[i]);
+        const i3 = i * 3;
+        const cap = jump ? 1e9 : MAX_SPEED * dt * pace[i]; // a calm speed limit, so a long jump between shapes never looks like a flash
+        let mx = (T[o] - cp[i3]) * kg; let my = (T[o + 1] * yMul - cp[i3 + 1]) * kg; let mz = (T[o + 2] - cp[i3 + 2]) * kg;
+        mx = mx > cap ? cap : mx < -cap ? -cap : mx; my = my > cap ? cap : my < -cap ? -cap : my; mz = mz > cap ? cap : mz < -cap ? -cap : mz;
+        cp[i3] += mx; cp[i3 + 1] += my; cp[i3 + 2] += mz;
+        cs[i] += (T[o + 3] * sizeMul - cs[i]) * kg;
+        let x = cp[i3]; let y = cp[i3 + 1]; let z = cp[i3 + 2];
+        let s = cs[i];
         if (!still) { y += Math.sin(time * 0.7 + phase[i]) * 0.14; x += Math.cos(time * 0.5 + phase[i] * 1.3) * 0.08; }
         if (nearFade > 0.001 && camPos) {
           const dx2 = x - camLocal.x; const dy2 = y - camLocal.y; const dz2 = z - camLocal.z;
@@ -278,8 +291,9 @@ export function buildSwarm(quality, mats) {
         d.updateMatrix();
         mesh.setMatrixAt(j, d.matrix);
         // colour: blend the two formations' colour meanings, honouring the recolour shift
-        const ca = (CA[i] + shift) % PALETTE.length; const cb = (CB[i] + shift) % PALETTE.length;
-        tmp.copy(PCOL[ca]); if (ca !== cb) tmp.lerp(PCOL[cb], t);
+        const tcol = PCOL[(TC[i] + shift) % PALETTE.length];
+        cc[i3] += (tcol.r - cc[i3]) * kc; cc[i3 + 1] += (tcol.g - cc[i3 + 1]) * kc; cc[i3 + 2] += (tcol.b - cc[i3 + 2]) * kc;
+        tmp.setRGB(cc[i3], cc[i3 + 1], cc[i3 + 2]);
         mesh.setColorAt(j, tmp);
       }
       mesh.instanceMatrix.needsUpdate = true; mesh.instanceColor.needsUpdate = true;
@@ -291,6 +305,7 @@ export function buildSwarm(quality, mats) {
   }
 
   function recolor(step = 1) { shift = (shift + step) % PALETTE.length; }
+  function snapForm() { snapNext = true; }
 
-  return { group, update, recolor, count: N };
+  return { group, update, recolor, snapForm, count: N };
 }

@@ -93,6 +93,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   let marks = [];
   let scrollY = 0;
   let intro = 0;
+  let formTarget = 0;
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   let kickAmt = 0;
   let visible = true;
@@ -143,6 +144,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     const A = KF[a.name]; const B = KF[b.name];
     for (const k of keys) tgt[k] = lerp(A[k], B[k], t);
     band.mark = t > 0.5 ? b : a;
+    formTarget = (t > 0.5 ? B : A).form; // the swarm glides to the nearer chapter's formation
     blend = { a: A.prop || null, b: B.prop || null, t, upcoming: [marks[i + 2], marks[i + 3]].filter(Boolean).map((mk) => KF[mk.name].prop) };
   }
 
@@ -246,7 +248,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
 
     holder.rotation.y = cur.yaw + (reducedMotion ? 0 : Math.sin(time * 0.25) * cur.rock + time * cur.spin);
     swarm.update({
-      time, dt, form: clamp(cur.form, 0, FORMS - 1), spread: cur.spread, pointerR: cur.pr, sunAmt: cur.sun, intro: ie,
+      time, dt, form: formTarget, spread: cur.spread, pointerR: cur.pr, sunAmt: cur.sun, intro: ie,
       pointerWorld: pointer.tx === 0 && pointer.ty === 0 && !pointerSeen ? FAR : pointerWorld,
       kick: kickAmt, still: reducedMotion,
       sizeBoost: lerp(1.5, 1, portrait), // on tall screens the camera sits further back, so toys grow to stay chunky
@@ -320,7 +322,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     get agentLoaded() { return !!agent; },
     remeasure: measure,
     /** QA hook: jump the damped camera/state straight to the current scroll target */
-    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); publishColours(); publish.flush(); },
+    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); swarm.snapForm(); publishColours(); publish.flush(); },
     compile: () => renderer.compileAsync(scene, camera),
     /** force shader link + geometry upload while the loader is still up */
     warm() { renderer.render(scene, camera); },

@@ -158,6 +158,41 @@ function setupPip() {
   sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
 }
 
+/* ───────── design switch: left = the classic design, right = this 3D design ───────── */
+function setupDesignSwitch() {
+  const a = $('#dswitch');
+  if (!a) return;
+  a.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; // let "open in new tab" work
+    e.preventDefault();
+    a.classList.add('is-flip'); // the knob slides to the left
+    root.classList.add('is-switching');
+    setTimeout(() => { location.href = a.href; }, reducedMotion ? 0 : 320);
+  });
+  addEventListener('pageshow', (e) => { if (e.persisted) { root.classList.remove('is-switching'); a.classList.remove('is-flip'); } });
+}
+
+/* ───────── hero fit: the name, the statement and the buttons never overlap, at any window shape ─────────
+   The name sits just above the buttons; if the statement above would still touch it (short or odd-shaped windows),
+   both scale down a little until there is clear air between them. */
+function fitHero() {
+  const top = $('.hero-top'); const name = $('.bt-name'); const bottom = $('.hero-bottom'); const layer = $('.back-title');
+  if (!top || !name || !bottom || !layer) return;
+  const set = (k, v) => { if (root.style.getPropertyValue(k) !== v) root.style.setProperty(k, v); };
+  const b = bottom.getBoundingClientRect();
+  set('--hb', `${Math.round(layer.getBoundingClientRect().bottom - b.top + 22)}px`);
+  let hs = 1;
+  set('--hs', '1');
+  for (let k = 0; k < 12; k++) {
+    const t = top.getBoundingClientRect(); const n = name.getBoundingClientRect();
+    const fs = parseFloat(getComputedStyle(name).fontSize) || 100;
+    if (t.bottom + 14 <= n.top - fs * 0.1 || t.top >= n.bottom) break; // clear air above the name (or the statement sits elsewhere)
+    hs = Math.max(0.5, hs - 0.06);
+    set('--hs', hs.toFixed(2));
+    if (hs <= 0.5) break;
+  }
+}
+
 /* ───────── virtual scrolling: pinned groups that step through their chapters ─────────
    Each `.stepper` becomes a sticky 100svh stage; its chapters stack inside it and the scroll distance of the group is
    only (steps - 1) x a fraction of a screen. Every step gets a virtual camera marker (data-vc) so the 3D director
@@ -447,6 +482,7 @@ function setupDots() {
 async function boot() {
   if (params.get('poster') === '1') root.classList.add('poster'); // tooling: render the 3D alone on a transparent page
   setupMenu();
+  setupDesignSwitch();
   setupModal();
   setupMisc();
   setupRail();
@@ -501,7 +537,7 @@ async function boot() {
   setupMarquee();
   setupPlayground();
   setupPip();
-  const remeasure = () => { layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
+  const remeasure = () => { fitHero(); layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
   remeasure();
   addEventListener('load', () => remeasure());
   new ResizeObserver(() => remeasure()).observe(document.body);
