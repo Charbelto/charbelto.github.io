@@ -158,20 +158,6 @@ function setupPip() {
   sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
 }
 
-/* ───────── design switch: left = the classic design, right = this 3D design ───────── */
-function setupDesignSwitch() {
-  const a = $('#dswitch');
-  if (!a) return;
-  a.addEventListener('click', (e) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; // let "open in new tab" work
-    e.preventDefault();
-    a.classList.add('is-flip'); // the knob slides to the left
-    root.classList.add('is-switching');
-    setTimeout(() => { location.href = a.href; }, reducedMotion ? 0 : 320);
-  });
-  addEventListener('pageshow', (e) => { if (e.persisted) { root.classList.remove('is-switching'); a.classList.remove('is-flip'); } });
-}
-
 /* ───────── hero fit: the name, the statement and the buttons never overlap, at any window shape ─────────
    The name sits just above the buttons; if the statement above would still touch it (short or odd-shaped windows),
    both scale down a little until there is clear air between them. */
@@ -482,7 +468,6 @@ function setupDots() {
 async function boot() {
   if (params.get('poster') === '1') root.classList.add('poster'); // tooling: render the 3D alone on a transparent page
   setupMenu();
-  setupDesignSwitch();
   setupModal();
   setupMisc();
   setupRail();

@@ -1,11 +1,5 @@
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/sg-400.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/sg-500.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/sg-600.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/sg-700.woff2") format("woff2"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/jb-400.woff2") format("woff2"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/jb-500.woff2") format("woff2"); }
 /* ═══════════════════════════════════════════════════════════════
-   CHARBEL TOUMIEH, PORTFOLIO v3 · charbel.os
+   CHARBEL TOUMIEH — PORTFOLIO v3 · charbel.os
    Dark AI-lab system: void black, electric violet/cyan, HUD chrome.
    Vanilla everything. Transform/opacity motion only. No frameworks.
    ═══════════════════════════════════════════════════════════════ */
@@ -166,7 +160,7 @@ em { font-style: normal; color: var(--accent-2); }
 .chip:hover { border-color: var(--accent); color: var(--text); }
 .chip.is-on { background: var(--accent); border-color: var(--accent); color: #0a0a12; }
 
-/* Spotlight hover reveal, cards light up around the pointer */
+/* Spotlight hover reveal — cards light up around the pointer */
 .spot { position: relative; }
 .spot::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
@@ -187,7 +181,7 @@ em { font-style: normal; color: var(--accent-2); }
   will-change: transform;
 }
 
-/* Spinning rainbow ring, hover border for feature cards */
+/* Spinning rainbow ring — hover border for feature cards */
 @property --spin {
   syntax: '<angle>';
   initial-value: 0deg;
@@ -460,7 +454,7 @@ html.js [data-reveal].is-in {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Opening wipe reveal, cards unfold from the left */
+/* Opening wipe reveal — cards unfold from the left */
 html.js [data-reveal="wipe"].is-in {
   animation-name: reveal-wipe;
   animation-duration: 0.95s;
@@ -470,7 +464,7 @@ html.js [data-reveal="wipe"].is-in {
   to { opacity: 1; clip-path: inset(0 0 0 0 round 16px); }
 }
 
-/* Char-split immersive reveal (blur → sharp), the trigger class
+/* Char-split immersive reveal (blur → sharp) — the trigger class
    creates the animation; paused→running gating is unreliable. */
 .ch { display: inline-block; white-space: pre; }
 html.js .ch { opacity: 0; }
@@ -617,7 +611,7 @@ html.js .hn-line--accent {
   -webkit-text-fill-color: initial; color: inherit;
   animation: none;
 }
-/* Split chars break parent background-clip in some engines, paint per char,
+/* Split chars break parent background-clip in some engines — paint per char,
    sliding the gradient by index so the sweep stays continuous across the line */
 .hn-line--accent .ch {
   background: linear-gradient(92deg, var(--accent), var(--accent-2));
@@ -1389,7 +1383,7 @@ html.js .hn-line--accent {
   .core-center { width: 76px; height: 76px; font-size: 18px; }
 }
 
-/* ── Debug flat mode (?flat), static render for visual QA ─── */
+/* ── Debug flat mode (?flat) — static render for visual QA ─── */
 html.debug-flat .boot, html.debug-flat .hero-net { display: none; }
 html.debug-flat [data-reveal], html.debug-flat .ch {
   opacity: 1 !important; transform: none !important; animation: none !important; filter: none !important;
@@ -1610,18 +1604,3 @@ html.debug-flat .stream-track { animation: none; }
   .cookie-banner-actions { width: 100%; }
   .cookie-banner-actions .btn { flex: 1; justify-content: center; }
 }
-
-
-[hidden] { display: none !important; }
-
-/* ── design switch (shared with the 3D design: left = classic, right = 3D) ── */
-.dswitch { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text); font: 500 11px var(--font-m); letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 4px; }
-.dswitch-l, .dswitch-r { opacity: 0.5; transition: opacity 0.3s; }
-.dswitch[data-state='classic'] .dswitch-l, .dswitch[data-state='3d'] .dswitch-r { opacity: 1; }
-.dswitch-track { position: relative; width: 44px; height: 24px; border-radius: 999px; border: 1.5px solid currentColor; }
-.dswitch-track i { position: absolute; top: 2px; left: 2px; width: 17px; height: 17px; border-radius: 50%; background: var(--accent-2); transition: transform 0.35s var(--ease); }
-.dswitch[data-state='3d'] .dswitch-track i, .dswitch.is-flip .dswitch-track i { transform: translateX(20px); }
-.dswitch:hover .dswitch-track, .dswitch:focus-visible .dswitch-track { border-color: var(--accent); }
-.dswitch:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 999px; }
-@media (max-width: 720px) { .dswitch-l, .dswitch-r { display: none; } .dswitch { padding: 6px 2px; } }
-html.is-switching body { opacity: 0; transition: opacity 0.25s ease; }

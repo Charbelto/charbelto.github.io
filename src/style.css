@@ -576,23 +576,12 @@ html.qa .rv { opacity: 1 !important; transform: none !important; transition: non
 .stepper.is-live > .stage { contain: layout paint style; }
 .stepper.is-live .chapter { contain: layout style; }
 
-/* ───────── design switch (left = classic design, right = this 3D design) ───────── */
+/* header group (nav + menu button) */
 .head-right { display: flex; align-items: center; gap: clamp(12px, 2vw, 26px); }
-.dswitch { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font: 500 11px var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 2px; }
-.dswitch-l, .dswitch-r { opacity: 0.55; transition: opacity 0.3s; }
-.dswitch[data-state='3d'] .dswitch-r, .dswitch[data-state='classic'] .dswitch-l { opacity: 1; }
-.dswitch-track { position: relative; width: 44px; height: 24px; border-radius: 999px; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--bg) 80%, transparent); }
-.dswitch-track i { position: absolute; top: 2px; left: 2px; width: 17px; height: 17px; border-radius: 50%; background: var(--ink); transition: transform 0.35s var(--ease), background 0.25s; transform: translateX(20px); }
-.dswitch.is-flip .dswitch-track i { transform: none; }
-.dswitch:hover .dswitch-track i, .dswitch:focus-visible .dswitch-track i { background: var(--ac); }
-@media (max-width: 720px) { .dswitch-l, .dswitch-r { display: none; } .dswitch { padding: 6px 0; } }
-html.is-switching body { opacity: 0; transition: opacity 0.25s ease; }
 @media (max-width: 480px) {
   .head { gap: 10px; }
   .head-right { gap: 8px; }
   .head-nav .head-cta { padding: 8px 12px; font-size: 11px; }
-  .dswitch-track { width: 38px; height: 22px; }
-  .dswitch-track i { width: 15px; height: 15px; transform: translateX(16px); }
   .menu-btn { width: 40px; height: 40px; }
   .brand { gap: 7px; }
   .brand-name { font-size: 12.5px; }

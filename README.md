@@ -2,7 +2,7 @@
 
 An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. One Blender-authored model (Pip) plus code-generated geometry - all geometry, materials and the studio environment are generated in code.
 
-> Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and its source in `legacy/`). Nothing here has been pushed or deployed.
+> Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and in full in `old-design/`). Nothing here has been pushed or deployed.
 
 ## Run locally
 ```bash
@@ -54,7 +54,7 @@ assets/blender/         Blender scripts that author the 3D models (see assets/RE
 public/models/          exported glTF (agent.glb)
 public/                 static files copied as-is (résumé, robots, sitemap)
 privacy|terms|404|thank-you.html   legal and utility pages (same design system)
-legacy/                 previous site source (not deployed)
+old-design/             the previous site, exactly as it was on GitHub (commit a4b776b); not built, not deployed
 ```
 
 ## Adding / changing a chapter
@@ -68,3 +68,6 @@ Add a `data-kf="name"` section in `index.html` and a matching entry in `KF` (`sr
 
 ## Connect
 Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbeltoumieh/) · [GitHub](https://github.com/Charbelto)
+
+## Going back to the old design
+`old-design/` is a complete, untouched copy of the site that was live on GitHub Pages before this redesign (it matches `main` at commit `a4b776b`, byte for byte). It is not part of the build and is not deployed. To use it again, copy its contents to the repository root of the branch you deploy (or check out `main`), and set the Pages source back to "Deploy from a branch".

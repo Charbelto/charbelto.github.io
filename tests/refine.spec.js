@@ -54,7 +54,7 @@ const EM = String.fromCharCode(0x2014); // the em dash, written as a code point 
 test.describe('house style: no em dashes anywhere', () => {
   test('no em dash in any source, doc or page file (legacy archive and the résumé PDF excluded)', async () => {
     const fs = await import('node:fs'); const path = await import('node:path');
-    const skip = new Set(['node_modules', 'legacy', '.git', 'dist', 'package-lock.json', 'screenshots', 'test-output']);
+    const skip = new Set(['node_modules', 'legacy', 'old-design', '.git', 'dist', 'package-lock.json', 'screenshots', 'test-output']);
     const hits = [];
     const walk = (d) => {
       for (const n of fs.readdirSync(d)) {
