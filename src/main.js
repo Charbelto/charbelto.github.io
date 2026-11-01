@@ -1,3 +1,4 @@
+import './fonts.js';
 import './style.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,6 +12,7 @@ const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const params = new URLSearchParams(location.search);
+if (params.get('qa') === '1') root.classList.add('qa'); // QA captures: reveals/intro skipped
 
 /* ───────── capability + quality tier ───────── */
 function hasWebGL() {
@@ -65,7 +67,7 @@ function setupReveals() {
       scrollTrigger: { trigger: el, start: 'top 86%', toggleActions: 'play none none reverse' },
     });
   });
-  $$('.xp, .edu-grid article, .lead-list li, .arc-list li').forEach((el) => {
+  $$('.edu-grid article, .lead-list li, .arc-list li').forEach((el) => {
     gsap.fromTo(el, { y: 26, opacity: 0 }, {
       y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' },
@@ -81,7 +83,12 @@ function setupRail() {
   const rail = $('#rail');
   const chapters = $$('.chapter[data-label]');
   const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) label.textContent = e.target.dataset.label; });
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      label.textContent = e.target.dataset.label;
+      // the label would print over the long list/FAQ panels, so tuck it away there
+      rail.classList.toggle('is-hidden', ['Archive', 'Education'].includes(e.target.dataset.label));
+    });
   }, { rootMargin: '-45% 0px -45% 0px' });
   chapters.forEach((c) => io.observe(c));
   addEventListener('scroll', () => {
@@ -164,7 +171,10 @@ function setupMisc() {
     const f = chip.dataset.filter;
     rows.forEach((r) => { r.hidden = !(f === 'all' || r.dataset.cat === f); });
     window.__world?.remeasure();
+    window.__world?.kick(5); // the engine answers the filter: rings spin up, then settle
   }));
+  // hovering an archive row nudges the rings a little — the list is wired into the same world
+  $$('#arcList a').forEach((a) => a.addEventListener('pointerenter', () => window.__world?.kick(1.4)));
   const copy = $('#copyMail');
   copy?.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(copy.dataset.mail); copy.textContent = 'Copied ✓'; }
@@ -172,6 +182,30 @@ function setupMisc() {
     setTimeout(() => { copy.textContent = 'Copy address'; }, 2000);
   });
   $('#year').textContent = String(new Date().getFullYear());
+}
+
+/* ───────── perf overlay (?perf=1 or press P) — for measuring on real hardware ───────── */
+function setupPerfHud(world) {
+  let el = null; let raf = 0; let frames = 0; let t0 = performance.now(); let worst = 0; let lastF = t0;
+  const loop = (now) => {
+    raf = requestAnimationFrame(loop);
+    worst = Math.max(worst, now - lastF); lastF = now; frames++;
+    if (now - t0 < 500) return;
+    const fps = (frames * 1000) / (now - t0);
+    const i = world.renderer.info;
+    el.textContent = `${fps.toFixed(0)} fps · ${(1000 / fps).toFixed(1)} ms avg · worst ${worst.toFixed(0)} ms\n`
+      + `${i.render.calls} draws · ${(i.render.triangles / 1000).toFixed(0)}k tris · ${i.memory.geometries} geo · ${i.memory.textures} tex · ${i.programs?.length ?? '?'} progs\n`
+      + `pixel ratio ${world.stats.pr} (gov steps ${world.stats.steps}) · ${innerWidth}×${innerHeight} @${devicePixelRatio}x`;
+    frames = 0; t0 = now; worst = 0;
+  };
+  const toggle = (on) => {
+    if (on && !el) {
+      el = document.createElement('pre'); el.className = 'perf-hud'; el.setAttribute('aria-hidden', 'true'); document.body.append(el);
+      lastF = t0 = performance.now(); frames = 0; raf = requestAnimationFrame(loop);
+    } else if (!on && el) { cancelAnimationFrame(raf); el.remove(); el = null; }
+  };
+  if (params.get('perf') === '1') toggle(true);
+  addEventListener('keydown', (e) => { if ((e.key === 'p' || e.key === 'P') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) toggle(!el); });
 }
 
 /* ───────── boot ───────── */
@@ -199,7 +233,8 @@ async function boot() {
     const { createWorld } = await import('./scene/world.js');
     setPct(35);
     await new Promise((r) => requestAnimationFrame(r));
-    world = createWorld($('#world'), { quality, reducedMotion });
+    const governor = params.get('gov') !== '0' && params.get('qa') !== '1';
+    world = createWorld($('#world'), { quality, reducedMotion, governor });
     window.__world = world;
     setPct(62);
     await Promise.race([world.compile(), new Promise((r) => setTimeout(r, 6000))]);
@@ -216,6 +251,7 @@ async function boot() {
   if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1800))]);
   world?.remeasure();
   world?.start();
+  if (world) setupPerfHud(world);
   setupReveals();
   ScrollTrigger.refresh();
   world?.remeasure();

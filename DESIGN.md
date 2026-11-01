@@ -21,6 +21,20 @@
 - **Instrument Serif italic**: editorial accent words, project subtitles, quotes.
 - **JetBrains Mono**: labels, indices, tags, meta (uppercase, tracked).
 
+## Chapter patterns (refinement phase)
+- **Hero:** the name sits *behind* the transparent canvas at ≈9 vw (desktop) / 14–15 vw (portrait) so that "CHARBEL" is always fully readable and only "TOUMIEH" is deliberately kissed by the rings. Portrait screens get extra camera distance (`pd` keyframe field) and a lifted subject so the machine sits above the name, never over it.
+- **Experience:** one glass card per role (`.xp-step[data-kf=xp1…xp7]`); the machine stays left and the camera orbits to a new angle per role, focusing a different ring (newest role = innermost ring). Content right, 3D visible.
+- **Archive / education:** a narrower right-hand column (`.wide--col`) so the machine remains visible on the left; filter clicks and row hovers feed `world.kick()` which spins the rings up and lets them settle — the list is wired into the same world.
+- **Tall sections:** a zero-size `.kf-anchor[data-kf]` pins a keyframe to the *top* of a long section so the camera has arrived before the reader does.
+- **Gallery:** six original artifacts at 1.2× scale on a 10-unit arena; framing uses `sx ≈ ±0.4` so the object sits in the free half beside its panel. OULAD is a cohort of ~14k learner-trajectory points: one enrolment node, three engagement bands, dropouts that fall away, and a dashed "forecast" zone beyond a glass plane.
+- **Core flare:** camera-facing additive glow with a faint anamorphic streak at the core (depth-tested, so rings occlude it).
+
+## Privacy stance
+No analytics, no cookies, no local/session storage, no third-party requests (fonts are self-hosted via `@fontsource`). Verified by Playwright (`tests/refine.spec.js`). The endorsement quotes from the previous site are kept in the markup but `hidden` until their attribution is verified.
+
+## Dev affordances
+`?qa=1` (skip reveals/intro, snap camera), `?intro=0`, `?at=<kf>`, `?q=low|mid|high`, `?gov=0` (disable resolution governor), `?perf=1` or key **P** (FPS/ms/draw-call HUD).
+
 ## Components
 Chapter panel (`.panel`, left/right alternating) · wide block (`.wide`) · index label (`.idx`) · tag pills · numbered stages · metrics grid · buttons (`.btn--solid|--ghost`) · archive list with filter chips · experience rows · FAQ `details` · modal (focus-managed, Esc closes).
 

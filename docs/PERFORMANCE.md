@@ -339,3 +339,59 @@ The `low` tier is chosen for touch devices narrower than 820 px. Today it still 
 - Memory figures marked [estimated] (MSAA framebuffers, PMREM target) are arithmetic from the formats and sizes, not driver readings. Chrome may reduce MSAA sample counts or disable it on large buffers.
 - Gallery states `w2`, `w4`, `w5` and keyframes `cap2`, `cap4`, `edu` were not sampled. Engine states are near-identical in draw count, and the gallery pieces are covered by `w1`, `w3` and `w6`.
 - The scene source was being edited during the audit. The final measurements were taken against a build made at about 11:3x local time. Re-run the section 7 snippets after structural changes.
+
+---
+
+# Addendum — refinement phase (2026-11-01)
+
+## A. Real-GPU measurements (new) — what they are and are not
+The in-app browser pane of this session runs Chromium on a **real GPU**: `ANGLE (NVIDIA GeForce RTX 4070 Laptop GPU, Direct3D11)`. Using the new `?perf=1` HUD and a small in-page sampler (2.5 s per scene, camera snapped to each chapter) at an emulated **1920×1080 viewport, devicePixelRatio 1.25** (drawing buffer ≈ 2400×1350, `high` tier, dev server, resolution governor on):
+
+| Scene | fps | avg frame | worst frame | draw calls | triangles |
+|---|---:|---:|---:|---:|---:|
+| hero | 142 | 7 ms | 14 ms | 67 | 114k |
+| dive | 143 | 7 ms | 14 ms | 75 | 114k |
+| retrieval (cap2) | 143 | 7 ms | 8 ms | 75 | 114k |
+| GREAT exploded (great1) | 143 | 7 ms | 8 ms | 75 | 114k |
+| GREAT core close-up (great2) | 143 | 7 ms | 14 ms | 65 | 114k |
+| gallery · OULAD (w3) | 143 | 7 ms | 8 ms | 37 | 41k |
+| gallery · microservices (w4) | 143 | 7 ms | 14 ms | 100 | 54k |
+| experience step (xp2) | 144 | 7 ms | 8 ms | 71 | 114k |
+| contact | 143 | 7 ms | 14 ms | 69 | 114k |
+
+**Reading this honestly:** every scene sat at the display's refresh rate (~144 Hz, vsync-capped), so the GPU frame time is *below* ~7 ms — but the cap hides how far below. This proves the experience holds a full refresh rate on a high-end laptop GPU at a large, high-DPI viewport. It does **not** say anything about integrated GPUs, phones, or other browsers. The governor never stepped down (0 steps). Measured on the Vite **dev** server (unbundled) in one session; single run per scene.
+
+**Not measured, so not claimed:** Lighthouse score, LCP, INP, CLS, GPU memory, battery/thermals, real phones/tablets, Safari/Firefox. Software-GL numbers from earlier in this document remain meaningless for FPS.
+
+## B. Optimisations implemented from section 8
+| # | Item | Status |
+|---|---|---|
+| 1 | Pixel caps + resolution governor | **Done.** DPR caps 1.75 / 1.25 / 1.0 per tier; governor lowers pixel ratio (floor 0.75) after two consecutive ~60-frame windows averaging > 24.5 ms and raises it again after three windows < 12.5 ms. Off with `?gov=0` and in QA captures. Exposed in the HUD. |
+| 2 | Lights 6 → 4 | **Done.** Gallery key/rim lights removed; the core point-light re-homes over the framed artifact (constant count → no recompiles). |
+| 3 | Warm-up under loader | **Done.** `world.warm()` forces a render before the loader lifts. |
+| 4 | Cheaper glow tori | **Done** (halo tubes: 3 radial segments). Flat ribbons not done. |
+| 5 | Right-size materials | Not done. |
+| 6 | Remove compositor extras | **Done for mid/low** (grain off; backdrop-filter off on low). |
+| 7 | Mobile address-bar resize churn | **Done** (height-only resizes < 20 % on coarse pointers don't reallocate the buffer). |
+| 8 | Fonts / loader gate | **Done differently:** fonts are now **self-hosted** (`@fontsource`) → no Google Fonts request, no FOUT-induced layout swap from a third party. |
+| 9 | Throttle when scene isn't the subject | Not done (experience/archive keep the scene visible by design). |
+| 10 | Trim gallery geometry | Not done. |
+| 11 | Caching | Host-controlled (GitHub Pages sets its own headers). |
+| new | Shard dissolve | Shards scale to 0 near the camera in the vertex shader (no extra pass). |
+| new | Core flare | One extra additive quad (+1 draw call). |
+
+Bundle after changes (gzip): `main` ≈ 49 KB, lazy `world` (three.js) ≈ 142 KB, CSS ≈ 6 KB, + three self-hosted font files (Archivo variable ≈ 90 KB woff2 latin; Instrument Serif and JetBrains Mono subsets). `dist/` no longer carries the 12 MB of legacy mockups.
+
+## C. Measure it yourself on your computer (exact steps)
+1. `npm run build && npm run preview`, open **http://127.0.0.1:4173/?perf=1** in Chrome at your normal window size. (Press **P** to toggle the HUD any time.) The HUD shows fps, average and worst frame time, draw calls, triangles, programs, **current pixel ratio** and how many governor steps have occurred.
+2. Scroll through the whole page slowly, then quickly, then back up. Watch for the *worst* frame figure and for the governor stepping (a step means your GPU/CPU couldn't hold ~40 fps at the previous resolution).
+3. **Stress test:** DevTools → Performance → ⚙ → *CPU: 6× slowdown*; or use `?q=mid` / `?q=low` to preview weaker tiers; compare `?gov=0` vs default.
+4. **Lighthouse (lab):** DevTools → Lighthouse → *Navigation*, *Mobile*, categories Performance + Accessibility + Best Practices + SEO → *Analyze*. Run it 3× and take the median; run against the **preview build**, not the dev server. Expect Lighthouse's mobile throttling to be harsh on WebGL pages — treat TBT/LCP as a relative signal.
+5. **Core Web Vitals in your own browser (no tracking added):** open DevTools → Console on the preview build and paste:
+```js
+new PerformanceObserver(l => console.log('LCP', l.getEntries().at(-1).startTime|0, 'ms')).observe({type:'largest-contentful-paint', buffered:true});
+let cls = 0; new PerformanceObserver(l => { for (const e of l.getEntries()) if (!e.hadRecentInput) cls += e.value; console.log('CLS', cls.toFixed(3)); }).observe({type:'layout-shift', buffered:true});
+```
+   (INP needs real interactions: use the *Web Vitals* Chrome extension or DevTools → Performance insights.) Real-user (75th-percentile) figures require field data, which this privacy-first site intentionally does not collect.
+6. **GPU confirmation:** visit `chrome://gpu` and confirm *WebGL2: Hardware accelerated*; the HUD readings are meaningless on software GL.
+7. **GPU-accelerated screenshots/tests:** `GPU=1 npx playwright test …` uses your GPU via ANGLE/D3D11 (≈25× faster than the default SwiftShader).

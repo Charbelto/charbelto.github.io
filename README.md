@@ -9,7 +9,19 @@ An immersive WebGL portfolio: a procedural five-ring "engine" the camera dives t
 npm install
 npm run dev        # http://127.0.0.1:5173
 ```
-Useful query params: `?intro=0` (skip opening), `?at=great2` (jump to a chapter), `?q=low|mid|high` (force quality tier).
+Useful query params: `?intro=0` (skip opening), `?at=great2` (jump to a chapter), `?q=low|mid|high` (force quality tier), `?gov=0` (disable the adaptive-resolution governor), `?perf=1` (FPS / frame-time / draw-call HUD — or press **P**), `?qa=1` (skip reveals and snap the camera; used by screenshot tests).
+
+## Tests & screenshots
+```bash
+npx playwright install chromium            # once
+npm run test:e2e                           # core suite (software WebGL, slow but runs anywhere)
+GPU=1 npx playwright test                  # same, on your real GPU (≈25× faster)
+GPU=1 npx playwright test tests/review.spec.js   # screenshot matrix → qa/review/ (5 viewports × all chapters)
+```
+(PowerShell: `$env:GPU='1'; npx playwright test`.)
+
+## Privacy
+No analytics, no cookies, no local storage, no third-party requests (fonts are self-hosted). Enforced by `tests/refine.spec.js`.
 
 ## Build & preview
 ```bash
@@ -40,7 +52,7 @@ Add a `data-kf="name"` section in `index.html` and a matching entry in `KF` (`sr
 `high` desktop · `mid` tablets/low-core · `low` phones (fewer shards/ticks, lower DPR, no pointer effects, no MSAA). WebGL failure or reduced motion degrades to readable static content.
 
 ## Docs
-`3D_ART_DIRECTION.md` · `DESIGN.md` · `3D_REFERENCES.md` · `PROGRESS.md` · `docs/PERFORMANCE.md` · `qa/REPORT.md`
+`3D_ART_DIRECTION.md` · `DESIGN.md` · `3D_REFERENCES.md` · `PROGRESS.md` · `docs/PERFORMANCE.md` · `qa/REPORT.md` · `qa/CRITIQUE.md` · screenshots in `docs/screenshots/`
 
 ## Connect
 Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbeltoumieh/) · [GitHub](https://github.com/Charbelto)

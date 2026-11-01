@@ -1,0 +1,21 @@
+/* Shared styling for the privacy / terms / 404 / thank-you pages */
+body.subpage { min-height: 100svh; display: flex; flex-direction: column; }
+.sub-main { position: relative; z-index: 5; flex: 1; padding: 150px var(--pad) 60px; display: flex; justify-content: center; }
+.sub-card { width: min(820px, 100%); }
+.sub-card .display { margin-bottom: 0.2em; }
+.sub-meta { font: 400 12px var(--f-mono); color: var(--mute); letter-spacing: 0.04em; margin: 0 0 32px; }
+.doc-sec { padding: 22px 0; border-top: 1px solid var(--line); }
+.doc-sec h2 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 700; font-stretch: 108%; letter-spacing: -0.01em; }
+.doc-sec p { color: #cfcbc4; max-width: 68ch; margin: 0; }
+.doc-sec a, .sub-card p a { border-bottom: 1px solid var(--signal); text-decoration: none; }
+.doc-sec code { font-family: var(--f-mono); font-size: 0.9em; color: var(--ink); }
+.sub-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.crumbs { font: 400 12px var(--f-mono); color: var(--mute); margin-bottom: 22px; letter-spacing: 0.06em; }
+.crumbs a { text-decoration: none; border-bottom: 1px solid var(--line); }
+.big-code { font-size: clamp(6rem, 24vw, 18rem); font-weight: 800; font-stretch: 125%; letter-spacing: -0.05em; line-height: 0.8; margin: 0 0 18px; color: transparent; -webkit-text-stroke: 2px rgba(236, 232, 225, 0.7); }
+.sub-center { text-align: left; }
+.sub-center .lede { max-width: 56ch; color: #cfcbc4; }
+.sub-foot { position: relative; z-index: 5; padding: 26px var(--pad) 40px; display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; font: 400 12px var(--f-mono); color: var(--mute); border-top: 1px solid var(--line); }
+.sub-foot a { text-decoration: none; border-bottom: 1px solid var(--line); }
+.sub-foot nav { display: flex; gap: 18px; flex-wrap: wrap; }
+@media (max-width: 720px) { .sub-main { padding-top: 120px; } }

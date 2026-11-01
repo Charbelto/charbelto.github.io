@@ -50,3 +50,7 @@ playwright-report/
 # regenerable QA screenshots (final curated set lives in docs/screenshots)
 qa/screenshots/
 qa/results.json
+
+qa/review*/
+qa/test-output/
+dist-*/

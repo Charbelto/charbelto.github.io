@@ -112,50 +112,136 @@ function dermSense(M) {
   };
 }
 
-/* 3 ── OULAD: a field of retention columns */
+/* 3 ── OULAD: a cohort of learner trajectories. Everyone enrols at one point, then the cohort
+        separates into engagement clusters (GMM-style bands); at-risk learners fall away; past the
+        glass "forecast plane" the paths turn dashed — the model is predicting, not observing. */
 function oulad(M) {
   const g = new THREE.Group();
-  const N = 8;
-  const sp = 0.3;
-  const mat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.3, metalness: 0.55, clearcoat: 0.6, clearcoatRoughness: 0.2 });
-  const cols = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 1, 1, 3, 0.07), mat, N * N);
-  const r = rnd(11);
-  const base = [];
-  const c = new THREE.Color();
-  for (let i = 0; i < N * N; i++) {
-    const x = i % N; const z = Math.floor(i / N);
-    const b = 0.25 + 0.9 * (0.5 + 0.5 * Math.sin(x * 0.9) * Math.cos(z * 0.7)) + r() * 0.35;
-    base.push(b);
-    const hot = (x * 3 + z * 5) % 17 === 0;
-    c.set(hot ? '#ff5a1f' : (x + z) % 2 ? '#1a1b20' : '#9a9ca4');
-    if (hot) c.multiplyScalar(1.4);
-    cols.setColorAt(i, c);
+  const PATHS = 120;
+  const PTS = 120;
+  const total = PATHS * PTS;
+  const aS = new Float32Array(total);
+  const aSeed = new Float32Array(total);
+  const aCl = new Float32Array(total);
+  const aDrop = new Float32Array(total);
+  const pos = new Float32Array(total * 3);
+  const r = rnd(23);
+  let k = 0;
+  for (let p = 0; p < PATHS; p++) {
+    const seed = r();
+    const u = r();
+    const cl = u < 0.42 ? 0 : u < 0.78 ? 1 : 2; // engaged · steady · at-risk
+    const dropChance = [0.06, 0.22, 0.7][cl];
+    const drop = r() < dropChance ? 0.3 + r() * 0.62 : 2.0;
+    for (let i = 0; i < PTS; i++, k++) {
+      aS[k] = i / (PTS - 1); aSeed[k] = seed; aCl[k] = cl; aDrop[k] = drop;
+    }
   }
-  cols.instanceColor.needsUpdate = true;
-  g.add(cols);
-  const plate = new THREE.Mesh(new RoundedBoxGeometry(N * sp + 0.3, 0.07, N * sp + 0.3, 3, 0.03), M.graphite);
-  plate.position.y = -0.04;
-  g.add(plate);
-  // survival curve ribbon
-  const pts = [];
-  for (let i = 0; i <= 60; i++) { const u = i / 60; pts.push(new THREE.Vector3((u - 0.5) * 2.7, 1.5 - 1.1 * u * u * (1.2 - 0.3 * u) + 0.0, -1.35)); }
-  const curve = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 80, 0.016, 6), ember(2.6));
-  g.add(curve);
-  g.position.y = -0.6;
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('aS', new THREE.BufferAttribute(aS, 1));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(aSeed, 1));
+  geo.setAttribute('aCl', new THREE.BufferAttribute(aCl, 1));
+  geo.setAttribute('aDrop', new THREE.BufferAttribute(aDrop, 1));
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 4);
+  const U = { uTime: { value: 0 }, uHeight: { value: 900 } };
+  const mat = new THREE.ShaderMaterial({
+    uniforms: U,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.CustomBlending,
+    blendEquation: THREE.AddEquation,
+    blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneFactor,
+    vertexShader: /* glsl */ `
+      attribute float aS; attribute float aSeed; attribute float aCl; attribute float aDrop;
+      uniform float uTime; uniform float uHeight;
+      varying vec3 vCol; varying float vA;
+      const float L = 3.7;
+      void main() {
+        float s = aS;
+        float spread = mix(0.03, 0.3, smoothstep(0.0, 0.6, s));
+        float yc = (aCl < 0.5 ? 0.62 : aCl < 1.5 ? 0.02 : -0.58) * smoothstep(0.04, 0.72, s);
+        float w = sin(s * 5.0 + aSeed * 31.0) * 0.5 + sin(s * 11.0 + aSeed * 17.0) * 0.25;
+        float w2 = sin(s * 4.0 + aSeed * 23.0) * 0.5 + sin(s * 9.0 + aSeed * 41.0) * 0.25;
+        float y = yc + w * spread;
+        float z = w2 * spread * 1.7;
+        float a = 1.0;
+        vec3 col = aCl < 0.5 ? vec3(0.56, 0.82, 1.0) : aCl < 1.5 ? vec3(0.92, 0.88, 0.8) : vec3(1.0, 0.36, 0.12);
+        if (s > aDrop) {
+          float dd = s - aDrop;
+          y -= dd * dd * 5.5;
+          z += dd * 0.6 * (aSeed - 0.5);
+          a *= exp(-dd * 13.0);
+          col = mix(col, vec3(1.0, 0.36, 0.12), 0.7);
+        }
+        // beyond the forecast plane: dashed, dimmer — predicted, not observed
+        float fp = 0.62;
+        if (s > fp) a *= 0.5 * step(0.5, fract(s * 70.0 + aSeed * 3.0));
+        float pulse = pow(0.5 + 0.5 * sin(s * 18.0 - uTime * 1.6 + aSeed * 6.28), 6.0);
+        a *= 0.34 + 0.9 * pulse;
+        vec3 p = vec3((s - 0.5) * L, y, z);
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_Position = projectionMatrix * mv;
+        float size = 0.016 + 0.02 * pulse;
+        gl_PointSize = max(1.5, size * projectionMatrix[1][1] * uHeight * 0.5 / -mv.z);
+        vCol = col; vA = a;
+      }`,
+    fragmentShader: /* glsl */ `
+      varying vec3 vCol; varying float vA;
+      void main() {
+        vec2 q = gl_PointCoord - 0.5;
+        float d = length(q) * 2.0;
+        float f = smoothstep(1.0, 0.0, d);
+        vec3 c = vCol * vA * f * 1.5;
+        gl_FragColor = vec4(c, clamp(max(c.r, max(c.g, c.b)), 0.0, 1.0));
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+  const cloud = new THREE.Points(geo, mat);
+  cloud.frustumCulled = false;
+  g.add(cloud);
+
+  // glass forecast plane with a machined frame
+  const L = 3.7;
+  const fx = (0.62 - 0.5) * L;
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.1, 1.7),
+    glowMaterial(`vec2 q=(vUv-0.5)*2.0; float e=smoothstep(0.96,1.0,max(abs(q.x),abs(q.y))); float g=0.04+0.06*(1.0-abs(q.y)); c=uColor*(e*0.9+g*0.35);`, { uColor: { value: ICE.clone() } }),
+  );
+  plane.rotation.y = Math.PI / 2;
+  plane.position.x = fx;
+  g.add(plane);
+  const frame = new THREE.Mesh(new THREE.TorusGeometry(1, 0.01, 4, 4), M.titanium);
+  frame.scale.set(1.2, 0.95, 1);
+  frame.rotation.set(0, Math.PI / 2, Math.PI / 4);
+  frame.position.x = fx;
+  g.add(frame);
+
+  // time axis: machined rail with week ticks
+  const rail = new THREE.Mesh(new RoundedBoxGeometry(L + 0.3, 0.03, 0.06, 2, 0.01), M.titanium);
+  rail.position.set(0, -1.15, 0);
+  g.add(rail);
+  const ticks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.012, 0.07, 0.012), M.graphite, 38);
+  for (let i = 0; i < 38; i++) {
+    dummy.position.set((i / 37 - 0.5) * L, -1.1, 0);
+    dummy.rotation.set(0, 0, 0); dummy.scale.set(1, i % 6 === 0 ? 1.8 : 1, 1); dummy.updateMatrix();
+    ticks.setMatrixAt(i, dummy.matrix);
+  }
+  g.add(ticks);
+  // enrolment node
+  const node = new THREE.Mesh(new THREE.SphereGeometry(0.07, 18, 18), ember(3));
+  node.position.set(-0.5 * L, 0, 0);
+  g.add(node);
+
+  g.rotation.x = 0.12;
+  g.scale.setScalar(0.78); // the cohort is wide: keep it inside the free half of the frame
   return {
     group: g,
     update(t) {
-      for (let i = 0; i < N * N; i++) {
-        const x = i % N; const z = Math.floor(i / N);
-        const h = Math.max(0.12, base[i] + 0.16 * Math.sin(t * 0.9 + x * 0.7 + z * 0.5));
-        dummy.position.set((x - (N - 1) / 2) * sp, h / 2, (z - (N - 1) / 2) * sp);
-        dummy.rotation.set(0, 0, 0);
-        dummy.scale.set(0.22, h, 0.22);
-        dummy.updateMatrix();
-        cols.setMatrixAt(i, dummy.matrix);
-      }
-      cols.instanceMatrix.needsUpdate = true;
-      g.rotation.y = t * 0.14 + 0.5;
+      U.uTime.value = t;
+      U.uHeight.value = innerHeight * Math.min(devicePixelRatio || 1, 1.75);
+      g.rotation.y = Math.sin(t * 0.22) * 0.5 - 0.25;
     },
   };
 }
@@ -326,7 +412,16 @@ export function buildGallery(M, quality) {
     const [x, y, z] = galleryPos(j);
     const holder = new THREE.Group();
     holder.position.set(x, y, z);
+    holder.scale.setScalar(1.55);
     holder.add(it.group);
+    // a pool of molten light on the arena floor under each artifact (ties it to the engine's core glow)
+    const pool = new THREE.Mesh(
+      new THREE.CircleGeometry(2.6, 64),
+      glowMaterial(`vec2 q=(vUv-0.5)*2.0; float r=length(q); float a=pow(max(0.0,1.0-r),2.4); float ring=smoothstep(0.72,0.74,r)*(1.0-smoothstep(0.74,0.77,r)); c=uColor*(a*0.17+ring*0.22);`, { uColor: { value: SIGNAL.clone() } }),
+    );
+    pool.rotation.x = -Math.PI / 2;
+    pool.position.y = -2.15;
+    holder.add(pool);
     holder.rotation.y = 0; // faces centre naturally; camera approaches from outside
     group.add(holder);
     return { ...it, holder };
@@ -337,7 +432,7 @@ export function buildGallery(M, quality) {
   const ticks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.04, 0.02, 0.18), M.titanium, tickN);
   for (let i = 0; i < tickN; i++) {
     const a = (i / tickN) * TAU;
-    dummy.position.set(Math.sin(a) * (GALLERY_R + 0), GALLERY_Y - 1.9, Math.cos(a) * (GALLERY_R + 0) - GALLERY_R);
+    dummy.position.set(Math.sin(a) * (GALLERY_R + 0), GALLERY_Y - 3.3, Math.cos(a) * (GALLERY_R + 0) - GALLERY_R);
     dummy.rotation.set(0, a, 0);
     dummy.scale.set(1, 1, i % 5 === 0 ? 2 : 1);
     dummy.updateMatrix();
@@ -349,7 +444,7 @@ export function buildGallery(M, quality) {
     glowMaterial('vec2 q=(vUv-0.5)*2.0; c = uColor*0.05;', { uColor: { value: SIGNAL.clone() } }),
   );
   ring.rotation.x = -Math.PI / 2;
-  ring.position.set(0, GALLERY_Y - 1.9, -GALLERY_R);
+  ring.position.set(0, GALLERY_Y - 3.3, -GALLERY_R);
   group.add(ring);
 
   // dust

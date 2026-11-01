@@ -1,6 +1,9 @@
 import { defineConfig } from '@playwright/test';
 
-export const GL_ARGS = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--enable-webgl'];
+// Default: software WebGL (works anywhere, slow). GPU=1: use the machine's real GPU through ANGLE/D3D11 (much faster; use for screenshots).
+export const GL_ARGS = process.env.GPU === '1'
+  ? ['--enable-gpu', '--ignore-gpu-blocklist', '--use-angle=d3d11', '--enable-webgl']
+  : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--enable-webgl'];
 
 export default defineConfig({
   testDir: './tests',

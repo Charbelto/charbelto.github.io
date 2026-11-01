@@ -33,6 +33,8 @@ void main(){ vec3 c = vec3(0.0); ${fragBody}
 /* ───────────────────────── palette & materials ───────────────────────── */
 export const SIGNAL = new THREE.Color('#ff5a1f'); // molten signal
 export const ICE = new THREE.Color('#8fd0ff'); // cool counter-pulse
+export const GOLD = new THREE.Color('#ffb340'); // tools / MCP ring
+export const MINT = new THREE.Color('#5ff0b4'); // evaluation ring ("pass")
 
 export function makeMaterials() {
   const ceramic = new THREE.MeshPhysicalMaterial({
@@ -179,8 +181,8 @@ export function buildEngine(mats, quality) {
   const cfgs = [
     { rOut: 5.1, width: 0.62, h: 0.5, segs: 28, color: SIGNAL, speed: 0.07, density: 3, spin: 0.045, axis: 'x', tilt: 0.0 },
     { rOut: 4.12, width: 0.55, h: 0.46, segs: 24, color: ICE, speed: -0.09, density: 4, spin: -0.07, axis: 'y', tilt: 0.52 },
-    { rOut: 3.27, width: 0.5, h: 0.42, segs: 20, color: SIGNAL, speed: 0.11, density: 5, spin: 0.1, axis: 'x', tilt: -0.62 },
-    { rOut: 2.5, width: 0.44, h: 0.38, segs: 16, color: ICE, speed: -0.13, density: 4, spin: -0.14, axis: 'y', tilt: 0.7 },
+    { rOut: 3.27, width: 0.5, h: 0.42, segs: 20, color: GOLD, speed: 0.11, density: 5, spin: 0.1, axis: 'x', tilt: -0.62 },
+    { rOut: 2.5, width: 0.44, h: 0.38, segs: 16, color: MINT, speed: -0.13, density: 4, spin: -0.14, axis: 'y', tilt: 0.7, scanner: true },
     { rOut: 1.86, width: 0.38, h: 0.34, segs: 12, color: SIGNAL, speed: 0.16, density: 3, spin: 0.2, axis: 'x', tilt: -0.55 },
   ];
 
@@ -213,7 +215,26 @@ export function buildEngine(mats, quality) {
         prev.spinner.add(holder);
       }
     }
-    rings.push({ cfg, pivot, spinner, pulse: ring.pulse, h: ring.h, rIn: ring.rIn, rOut: ring.rOut });
+    // evaluation ring: a scanning plane sweeps through the aperture (judging every cross-section)
+    let scanner = null;
+    if (cfg.scanner) {
+      const U = { uGain: { value: 1 }, uColor: { value: MINT.clone() } };
+      const mesh = new THREE.Mesh(
+        new THREE.CircleGeometry(ring.rIn - 0.04, 96),
+        glowMaterial(
+          `vec2 q = (vUv - 0.5) * 2.0; float r = length(q);
+           float edge = smoothstep(0.82, 0.985, r) * (1.0 - smoothstep(0.985, 1.0, r));
+           float grid = max(smoothstep(0.97, 1.0, abs(sin(q.x * 9.0))), smoothstep(0.97, 1.0, abs(sin(q.y * 9.0)))) * (1.0 - smoothstep(0.9, 1.0, r));
+           c = uColor * (edge * 1.4 + grid * 0.22 + (1.0 - r) * 0.035) * uGain;`,
+          U,
+        ),
+      );
+      mesh.material.side = THREE.DoubleSide;
+      mesh.renderOrder = 4;
+      spinner.add(mesh);
+      scanner = { mesh, U, travel: ring.h * 0.5 + 0.55 };
+    }
+    rings.push({ cfg, pivot, spinner, pulse: ring.pulse, h: ring.h, rIn: ring.rIn, rOut: ring.rOut, scanner });
     // children nest inside the spinner so they inherit spin
     parent = spinner;
     prev = { rIn: ring.rIn, spinner };
@@ -298,7 +319,7 @@ export function buildEngine(mats, quality) {
     dummy.position.set(Math.cos(a) * rad, y, Math.sin(a) * rad);
     // plates lie roughly in the belt plane with a little tumble, like chips in a slow orbit
     dummy.rotation.set((rnd() - 0.5) * 1.1, rnd() * TAU, (rnd() - 0.5) * 1.1);
-    const s = 0.05 + Math.pow(rnd(), 3.4) * 0.3;
+    const s = 0.04 + Math.pow(rnd(), 3.4) * 0.2;
     dummy.scale.set(s * (0.7 + rnd()), s * 0.6, s * (0.6 + rnd() * 0.8));
     dummy.updateMatrix();
     shards.setMatrixAt(i, dummy.matrix);
@@ -310,10 +331,22 @@ export function buildEngine(mats, quality) {
   shards.instanceMatrix.needsUpdate = true;
   shards.instanceColor.needsUpdate = true;
   const shardMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.3, metalness: 0.9, envMapIntensity: 1.2 });
+  // chips dissolve (scale to 0) as the camera gets close, so nothing ever fills the lens
+  shardMat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      #ifdef USE_INSTANCING
+        vec3 ic = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+        transformed *= smoothstep(3.0, 8.5, distance(ic, cameraPosition));
+      #endif`);
+  };
   shards.material = shardMat;
   const shardGroup = new THREE.Group();
   shardGroup.add(shards);
-  root.add(shardGroup);
+  // the belt is inclined so it reads as an ellipse around the machine instead of crossing the lens
+  const shardTilt = new THREE.Group();
+  shardTilt.rotation.set(0.32, 0, 0.1);
+  shardTilt.add(shardGroup);
+  root.add(shardTilt);
 
   return { root, rings, core, coreU, discU, shardGroup, innerSpinner };
 }

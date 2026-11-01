@@ -1,42 +1,49 @@
 # PROGRESS
 
-_Last updated: 2026-11-01 · branch `redesign/3d-universe` · nothing pushed or deployed_
+_Last updated: 2026-11-01 · branch `redesign/3d-universe` · nothing pushed, merged or deployed_
 
-## Completed
-- Repo inspected; redesign branch created; previous site preserved on `main` and in `legacy/`.
-- Vite + Three.js 0.170 + GSAP project scaffolded; `npm run build` passes (JS ≈ 190 KB gzip total, 3D chunk lazy-loaded).
-- **Quality gate passed (visually, in a real browser):** procedural five-ring gimbal engine with ceramic/titanium PBR, glass+ember core, shard belt, light channels; hero with the name occluded by the machine; axial *dive* transition; five ring chapters; exploded GREAT stack; six-artifact 3D gallery; frontal contact scene.
-- Full content migrated (profile, GREAT, experience ×7, 24 projects, education, FAQ + JSON-LD, résumé, links, case modals).
-- Responsive: desktop, tablet, phone (bottom-anchored panels, subject lifted into upper half, quality tiers).
-- Reduced-motion + no-WebGL fallbacks implemented.
-- Docs: `3D_ART_DIRECTION.md`, `DESIGN.md`, `3D_REFERENCES.md` (research agent), README, GitHub Pages workflow (dormant).
+## Status in one paragraph
+A working real-time WebGL portfolio: procedural five-ring gimbal engine, scroll-driven camera director, exploded GREAT case study, six original 3D project artifacts, per-role experience orbit, self-hosted fonts, no tracking. It has been reviewed in rendered screenshots at five viewports and by an independent reviewer (6.8/10 from stills — "shortlist-plausible, not a winner"). **It is not finished**: see *Open creative gaps*.
+
+## Commits
+| Hash | What |
+|---|---|
+| `51ba01d` | Checkpoint: rebuild as real-time 3D experience (24 tests passing) |
+| (latest) | Refinement phase — see `git log` |
+
+## Done in the refinement phase
+- **Visual verification:** screenshot matrix (1440×900, 1280×800, 768×1024, 390×844, 360×780 × 25 chapter states) captured on a real GPU (`GPU=1`), contact-sheeted and reviewed; fixes applied and re-captured over four rounds (`qa/review-base` → `r1` → `r2` → `r3/r4` → `final`; ignored by git, curated set in `docs/screenshots/`).
+- **Hero:** name now fully legible at all sizes (8.4 vw desktop / 14.5–15.6 vw portrait), machine re-seated (`pd` portrait-distance param), CTAs + proof points moved to the left column on desktop so the metal stays clear.
+- **OULAD artifact:** replaced the stock bar chart with a cohort of ~14k learner-trajectory points (enrolment → 3 engagement bands → dropouts fall away → dashed forecast zone beyond a glass plane), tied to the project (retention forecasting, GMM/DBSCAN clusters).
+- **Ring chapters:** distinct accent per ring (orchestration orange, retrieval ice, tools gold, evaluation mint with a scanning plane, reliability orange); desktop chapters now use open type with a ghost numeral instead of a box.
+- **Gallery:** artifacts at 1.55×, arena re-spaced, light pools under each, framing fixed so nothing clips behind panels.
+- **Archive / experience / education:** experience = one glass card per role while the camera orbits and focuses a different ring; archive + education sit in a right column with the machine visible on the left; filters/hover spin the rings (`world.kick`). Rail label hides over long lists.
+- **Core:** camera-facing flare with a faint anamorphic streak.
+- **Privacy & content:** analytics audit (none was ever active — placeholder ID only); privacy/terms/404/thank-you rebuilt in the new system with no cookie banner; fonts self-hosted; Playwright asserts zero third-party requests, cookies, storage and analytics scripts. Endorsement quotes hidden (`hidden` attribute, kept in markup) pending verification.
+- **Performance:** lights 6→4, governor (adaptive pixel ratio), DPR caps, warm-up, shard dissolve near camera, mobile resize-churn guard, `?perf=1` HUD. Real-GPU measurement (RTX 4070 Laptop, 1920×1080 @1.25 DPR): ~143 fps (vsync-capped) in every scene — see `docs/PERFORMANCE.md` §A for what that does and does not prove.
+- **Tests:** 40 Playwright tests pass (core, no-WebGL fallback, reduced motion, privacy/third-party, reverse-scroll reversibility, experience steps, nav, HUD, filters).
 
 ## Subagents actually spawned
-| Agent | Scope | Status |
+| Agent | Scope | Outcome |
 |---|---|---|
-| Research | `3D_REFERENCES.md` | done (8 refs; no screenshots possible; Zajno via snippets only) |
-| QA (Agent 10) | `tests/`, `qa/` — Playwright tests, screenshots, independent critique | done. 22/24 first run → fixes applied → **24/24 pass**. Report in `qa/REPORT.md` (written by lead; agent couldn't write it) |
-| Performance (Agent 9) | `docs/PERFORMANCE.md` — budgets, bundle, renderer.info | done. Measured (software GL): hero 68 draw calls / 158k tris, JS 188 KB gzip. Applied: lower DPR caps, shader warm-up under loader, no grain/blur on mid/low, cheaper glow halos. **Not yet applied:** light reduction (6→4), ribbon glow, resolution governor, font gating |
+| Research | `3D_REFERENCES.md` | 8 references; no screenshots possible; Zajno via snippets only |
+| QA (Agent 10) | tests + screenshots + first critique | 22/24 → fixes → 24/24 |
+| Performance (Agent 9) | `docs/PERFORMANCE.md` | measured draw calls/bundle on software GL; ranked fixes |
+| Independent critic (fresh) | `qa/CRITIQUE.md` | 6.8/10; ranked 10 fixes (most applied — see `qa/REPORT.md`) |
 
-Roles not delegated (done by the lead): 3D art direction, CGI/asset generation, WebGL engineering, motion, UI design, UX, frontend. They were not simulated as separate agents.
+All other roles (art direction, CGI, WebGL, motion, UI, UX, frontend) were done by the lead, not separate agents.
 
-## Design decisions
-- Transparent canvas over the page so the name can sit *behind* the machine.
-- No postprocessing/bloom; glow limited to additive light channels (cheaper, and avoids hiding weak geometry).
-- Procedural everything (no GLB/HDR downloads): clean licensing, tiny payload.
-- Analytics: the legacy site had a placeholder GA ID (`G-XXXXXXXXXX`) behind a cookie banner; neither was ported. Privacy page copy still mentions optional analytics — review before publishing.
+## Open creative gaps (honest)
+1. **Range:** the 3D story is still mostly one machine from many angles. A second signature set-piece (e.g. a retrieval "library" scene or tools "docking bay") would raise the ceiling.
+2. **Gallery** is improved but the artifacts are still simpler than the engine; they'd benefit from authored models (Blender) and a rim/bloom treatment.
+3. **Type ↔ 3D interplay** beyond the hero name (e.g. headline occluded by a ring) is only used in the ring chapters' ghost numerals.
+4. Tablet portrait reuses the phone layout; a true two-column tablet composition is not done.
+5. Not judged: motion feel, intro choreography, pointer interaction — stills only. Needs your eyes on a real display.
+6. Remaining perf items (flat-ribbon glow, material right-sizing, gallery geometry merge) not done; no Lighthouse/CWV measured.
+7. Endorsements and the unattributed "response < 4h" claims need your decision.
 
-## Known problems / limits
-- No Blender/Spline/Chrome-DevTools/Playwright **MCP** servers were available; Playwright is used as an npm dev tool instead. No `.blend`/`.glb` sources.
-- No real-GPU profiling or field Core Web Vitals yet → **no performance targets are claimed as met.**
-- Shader compile + geometry build make first load slow on weak CPUs (see `docs/PERFORMANCE.md`).
-- Endorsement quotes from the old site are unattributed (roles only) — kept, but worth confirming you want them.
-- `public/styles.css` is only used by the legacy legal/404 pages.
-
-## Exact next steps
-1. Remaining perf items in `docs/PERFORMANCE.md` (fewer lights, ribbon glow, resolution governor, font gating).
-2. Re-screenshot at 1440×900 / 820×1180 / 390×844 (`npm run test:shots`) to confirm the mobile/tablet CSS fixes visually — the e2e suite passed, but I have not re-viewed those screenshots.
-2b. Give the OULAD artifact a more distinctive form; add a 3D moment to experience/archive.
-3. Decide on the endorsements and analytics.
-4. Update legal/404 pages to the new type system (optional).
-5. When approved: merge, set Pages source to GitHub Actions.
+## Next steps
+1. Scroll through it on your display (`npm run dev`, press **P** for the HUD) and tell me what feels flat or slow.
+2. Decide on endorsements; verify the "<4h average" claim before publishing.
+3. Optional: author 2–3 hero-quality assets in Blender (glTF + Meshopt) for the gallery.
+4. When approved: merge, set Pages source to GitHub Actions (workflow already in `.github/`). Do not publish before then.
