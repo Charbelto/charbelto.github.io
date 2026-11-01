@@ -1,32 +1,30 @@
 import * as THREE from 'three';
-import { buildEngine, makeMaterials, glowMaterial, SIGNAL } from './machine.js';
-import { buildGallery } from './artifacts.js';
-import { KF, GALLERY_Y } from './keyframes.js';
+import { buildSwarm, FORMS } from './swarm.js';
+import { KF } from './keyframes.js';
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const smooth = (t) => t * t * (3 - 2 * t);
 const lerp = (a, b, t) => a + (b - a) * t;
+const hex2 = (v) => Math.round(clamp(v, 0, 1) * 255).toString(16).padStart(2, '0');
+const toHex = (r, g, b) => `#${hex2(r)}${hex2(g)}${hex2(b)}`;
+const INK_DARK = [0.043, 0.043, 0.078];
 
-/** Studio HDR built procedurally (no external files): dark hall + softboxes. */
+/** Bright studio HDR built procedurally: light hall, white softboxes, a few coloured cards for colourful reflections. */
 function buildEnvironment(renderer) {
   const s = new THREE.Scene();
-  const room = new THREE.Mesh(
-    new THREE.BoxGeometry(40, 28, 40),
-    new THREE.MeshBasicMaterial({ color: 0x050508, side: THREE.BackSide }),
-  );
-  s.add(room);
-  const panel = (w, h, pos, color, k, look = [0, 0, 0]) => {
+  s.add(new THREE.Mesh(new THREE.BoxGeometry(40, 28, 40), new THREE.MeshBasicMaterial({ color: 0xc9cfe8, side: THREE.BackSide })));
+  const panel = (w, h, pos, color, k) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), side: THREE.DoubleSide }));
-    m.position.set(...pos);
-    m.lookAt(...look);
-    s.add(m);
+    m.position.set(...pos); m.lookAt(0, 0, 0); s.add(m);
   };
-  panel(16, 10, [3, 13, 4], '#fff1e0', 7); // overhead key
-  panel(3, 22, [-17, 2, 2], '#b9cfee', 3.2); // cool strip left (kept desaturated: pure blue read as plastic)
-  panel(3, 22, [17, 0, 6], '#ff8a4a', 5); // warm strip right
-  panel(26, 3, [0, 3, -19], '#ffffff', 3); // back rim
-  panel(30, 30, [0, -13.5, 0], '#2a2018', 0.5); // warm floor bounce
-  panel(5, 5, [-6, -4, 16], '#7fb0ff', 1.6); // front fill
+  panel(18, 11, [2, 13, 5], '#ffffff', 6); // overhead softbox
+  panel(3.5, 22, [-17, 2, 3], '#ffffff', 4); // strip left
+  panel(3.5, 22, [17, 1, 6], '#fff3d9', 4.5); // strip right
+  panel(26, 4, [0, 4, -19], '#ffffff', 3.5); // back rim
+  panel(30, 30, [0, -13.5, 0], '#b9a6ff', 1.4); // lilac floor bounce
+  panel(7, 7, [-12, 5, -12], '#D4FF1F', 3.2); // lime card
+  panel(7, 7, [12, -2, -12], '#FF4F3D', 3.2); // coral card
+  panel(6, 6, [0, 6, 16], '#2433FF', 2.4); // blue card (front)
   const pm = new THREE.PMREMGenerator(renderer);
   const tex = pm.fromScene(s, 0.02).texture;
   pm.dispose();
@@ -34,78 +32,69 @@ function buildEnvironment(renderer) {
   return tex;
 }
 
+function makeMaterials() {
+  const plastic = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.2, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.06 });
+  const satin = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.38, metalness: 0, clearcoat: 0.5, clearcoatRoughness: 0.2 });
+  const chrome = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.14, metalness: 1 });
+  const sunChrome = new THREE.MeshPhysicalMaterial({ color: '#f3f5ff', roughness: 0.04, metalness: 1 });
+  return { plastic, satin, chrome, sunChrome };
+}
+
 export function createWorld(canvas, { quality = 'high', reducedMotion = false, governor = true } = {}) {
   const Q = {
-    high: { dpr: 1.75, ticks: 240, torus: 280, shards: 1700, antialias: true },
-    mid: { dpr: 1.25, ticks: 180, torus: 200, shards: 900, antialias: true },
-    low: { dpr: 1, ticks: 120, torus: 140, shards: 420, antialias: false },
+    high: { dpr: 1.75, antialias: true },
+    mid: { dpr: 1.25, antialias: true },
+    low: { dpr: 1, antialias: true }, // MSAA everywhere: aliased toy edges looked cheap
   }[quality];
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: Q.antialias, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, Q.dpr));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMapping = THREE.NeutralToneMapping; // keeps saturated colours saturated
+  renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x07080b, 0.017);
+  const fogColor = new THREE.Color(KF.hero.bgr, KF.hero.bgg, KF.hero.bgb);
+  scene.fog = new THREE.FogExp2(fogColor, 0.014); // distant toys melt into the page colour
   scene.environment = buildEnvironment(renderer);
-  scene.environmentIntensity = 0.95;
+  scene.environmentIntensity = 1.15;
 
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 400);
-
-  /* lights */
-  const key = new THREE.DirectionalLight('#ffe6cf', 2.4);
-  key.position.set(6, 9, 8);
-  const rim = new THREE.DirectionalLight('#7fb6ff', 2.2);
-  rim.position.set(-9, 2, -8);
-  const coreLight = new THREE.PointLight(SIGNAL, 60, 16, 2);
-  const cursorLight = new THREE.PointLight('#ffd2a8', 14, 14, 2);
-  scene.add(key, rim, coreLight, cursorLight);
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 300);
+  const key = new THREE.DirectionalLight('#ffffff', 2.2);
+  key.position.set(6, 10, 8);
+  const hemi = new THREE.HemisphereLight('#ffffff', '#b9a6ff', 0.9);
+  const cursorLight = new THREE.PointLight('#ffffff', 26, 18, 2); // four lights total with the key + hemisphere + fill
+  const fill = new THREE.DirectionalLight('#ffe9c9', 0.9);
+  fill.position.set(-8, -2, 6);
+  scene.add(key, hemi, fill, cursorLight);
 
   const mats = makeMaterials();
-  const engine = buildEngine(mats, Q);
-  const holder = new THREE.Group(); // machine centering / orientation
-  holder.add(engine.root);
+  const swarm = buildSwarm(quality, mats);
+  const holder = new THREE.Group();
+  holder.add(swarm.group);
   scene.add(holder);
-
-  const gallery = buildGallery(mats, quality);
-  gallery.group.position.y = 0;
-  scene.add(gallery.group);
-  // four lights total: the point "core" light is re-homed to hover over whichever artifact is framed
-
-  // core flare: a camera-facing glow + faint anamorphic streak at the core (depth-tested, so rings occlude it)
-  const flareU = { uGain: { value: 1 }, uColor: { value: SIGNAL.clone() } };
-  const flare = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1),
-    glowMaterial(
-      `vec2 q = (vUv - 0.5) * 2.0; float r = length(q);
-       float core = pow(max(0.0, 1.0 - r), 3.2);
-       float streak = exp(-abs(q.y) * 22.0) * exp(-abs(q.x) * 2.6);
-       c = (uColor * core * 0.55 + vec3(1.0, 0.8, 0.6) * streak * 0.22) * uGain;`,
-      flareU,
-    ),
-  );
-  flare.renderOrder = 5;
-  flare.frustumCulled = false;
-  scene.add(flare);
 
   /* ───── director ───── */
   const keys = Object.keys(KF.hero).filter((k) => typeof KF.hero[k] === 'number');
   const cur = { ...KF.hero };
   const tgt = { ...KF.hero };
-  let marks = []; // [{name, center}]
+  let marks = [];
   let scrollY = 0;
-  let intro = 0; // 0 exploded/far → 1 assembled
-  const pointer = { x: 0, y: 0, tx: 0, ty: 0, vx: 0 };
-  let impulse = 0;
-  let kickAmt = 0; // extra ring-spin energy from UI events (archive filters / row hovers)
+  let intro = 0;
+  const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  let kickAmt = 0;
   let visible = true;
   let last = performance.now();
   let raf = 0;
-  let spinPhase = engine.rings.map(() => 0);
+  let lastCss = '';
   const lookAt = new THREE.Vector3();
   const camPos = new THREE.Vector3();
+  const sph = new THREE.Vector3();
+  const right = new THREE.Vector3();
+  const upv = new THREE.Vector3(0, 1, 0);
+  const dir = new THREE.Vector3();
+  const pointerWorld = new THREE.Vector3(999, 999, 999);
+  const ray = new THREE.Vector3();
 
   function measure() {
     marks = [...document.querySelectorAll('[data-kf]')]
@@ -125,9 +114,8 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     const a = marks[i];
     const b = marks[Math.min(i + 1, marks.length - 1)];
     let t = b === a ? 0 : clamp((m - a.center) / (b.center - a.center), 0, 1);
-    t = reducedMotion ? (t > 0.5 ? 1 : 0) : smooth(clamp((t - 0.12) / 0.76, 0, 1));
-    const A = KF[a.name];
-    const B = KF[b.name];
+    t = reducedMotion ? (t > 0.5 ? 1 : 0) : smooth(clamp((t - 0.1) / 0.8, 0, 1));
+    const A = KF[a.name]; const B = KF[b.name];
     for (const k of keys) tgt[k] = lerp(A[k], B[k], t);
   }
 
@@ -144,20 +132,29 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     camera.updateProjectionMatrix();
     measure();
   }
-
-  function onScroll() { scrollY = window.scrollY; }
-  function onPointer(e) {
+  const onScroll = () => { scrollY = window.scrollY; };
+  const onPointer = (e) => {
     pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
     pointer.ty = -((e.clientY / window.innerHeight) * 2 - 1);
+  };
+
+  /** publish the interpolated colours as CSS variables → the whole page floods from one colour to the next */
+  function publishColours() {
+    const lum = 0.2126 * cur.bgr + 0.7152 * cur.bgg + 0.0722 * cur.bgb;
+    const k = smooth(clamp((lum - 0.27) / 0.07, 0, 1)); // 0 → white ink, 1 → near-black ink (coral/pink/yellow all take dark ink; blue/violet take white)
+    const ink = [lerp(1, INK_DARK[0], k), lerp(1, INK_DARK[1], k), lerp(1, INK_DARK[2], k)];
+    const css = `${toHex(cur.bgr, cur.bgg, cur.bgb)}|${toHex(...ink)}|${toHex(cur.acr, cur.acg, cur.acb)}`;
+    if (css === lastCss) return;
+    lastCss = css;
+    const [bg, inkH, ac] = css.split('|');
+    const st = document.documentElement.style;
+    st.setProperty('--bg', bg); st.setProperty('--ink', inkH); st.setProperty('--ac', ac);
+    st.setProperty('--lum', lum.toFixed(3));
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', bg);
   }
 
   /* ───── frame ───── */
-  const sph = new THREE.Vector3();
-  const right = new THREE.Vector3();
-  const upv = new THREE.Vector3(0, 1, 0);
-  const cursorWorld = new THREE.Vector3();
-  const dir = new THREE.Vector3();
-
   function frame(now) {
     raf = requestAnimationFrame(frame);
     if (!visible || document.hidden) { last = now; return; }
@@ -166,112 +163,67 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     const time = now / 1000;
 
     solveTarget();
-    const k = reducedMotion ? 1 : 1 - Math.exp(-dt * 3.2);
-    for (const key of keys) cur[key] = lerp(cur[key], tgt[key], key === 'fov' ? Math.min(1, k * 1.2) : k);
+    const k = reducedMotion ? 1 : 1 - Math.exp(-dt * 3.4);
+    for (const key of keys) cur[key] = lerp(cur[key], tgt[key], key === 'fov' ? Math.min(1, k * 1.2) : key.startsWith('bg') || key.startsWith('ac') ? Math.min(1, k * 1.5) : k);
+    publishColours();
+    fogColor.setRGB(cur.bgr, cur.bgg, cur.bgb, THREE.SRGBColorSpace);
 
     pointer.x = lerp(pointer.x, pointer.tx, 1 - Math.exp(-dt * 4));
     pointer.y = lerp(pointer.y, pointer.ty, 1 - Math.exp(-dt * 4));
-    const pv = (pointer.tx - pointer.x);
-    impulse = lerp(impulse, clamp(Math.abs(pv) * 5, 0, 6), 1 - Math.exp(-dt * 6));
+    kickAmt *= Math.exp(-dt * 2.6);
 
-    kickAmt *= Math.exp(-dt * 2.2);
     const ie = smooth(intro);
     const aspect = camera.aspect;
     const portrait = clamp((aspect - 0.62) / 0.95, 0, 1); // 0 phone … 1 desktop
-    const fitD = aspect < 1.25 ? lerp(1.8, 1, portrait) : 1;
-
-    /* machine state */
-    const flat = Math.max(cur.flat, 1 - ie);
-    const explode = Math.max(cur.explode, (1 - ie) * 1.1);
-    const vert = cur.vert;
-    engine.rings.forEach((r, i) => {
-      const axis = r.cfg.axis;
-      const osc = Math.sin(time * 0.23 + i * 1.7) * 0.07 + pointer.x * 0.04 * (i % 2 ? 1 : -1);
-      r.pivot.rotation[axis] = lerp(r.cfg.tilt + osc, 0, flat);
-      r.pivot.position.z = explode * (i === 0 ? 0 : 1.5);
-      if (!reducedMotion) spinPhase[i] += dt * r.cfg.spin * (1 + (impulse + kickAmt) * 2.2) * (0.35 + 0.65 * ie);
-      r.spinner.rotation.z = spinPhase[i];
-      const em = clamp(1 - Math.abs(i - cur.focus), 0, 1);
-      r.pulse.uTime.value = time;
-      r.pulse.uFocus.value = em;
-      r.pulse.uGain.value = lerp(0.35, 1, ie) * (cur.focus < 0 ? 1 : 0.55 + 0.45 * em);
-      if (r.scanner) {
-        r.scanner.mesh.position.z = Math.sin(time * 1.1) * r.scanner.travel;
-        r.scanner.U.uGain.value = lerp(0.22, 0.85, em) * lerp(0.3, 1, ie);
-      }
-    });
-    engine.coreU.uTime.value = time;
-    engine.discU.uTime.value = time;
-    const coreGain = cur.core * lerp(0.2, 1, ie);
-    engine.coreU.uGain.value = coreGain * 0.9;
-    engine.discU.uGain.value = coreGain;
-    engine.core.rotation.z = time * 0.22;
-    engine.shardGroup.rotation.y = time * 0.018;
-    engine.shardGroup.scale.setScalar(cur.shards * lerp(1.6, 1, ie));
-
-    engine.root.rotation.x = lerp(0.0, -Math.PI / 2, vert);
-    holder.rotation.y = cur.yaw + pointer.x * 0.1;
-    holder.rotation.x = -pointer.y * 0.05;
-    holder.position.y = -explode * 3.0 * vert;
-    const inGallery = cur.cy < -20;
-    gallery.group.visible = cur.cy < -10 || tgt.cy < -10;
-    holder.visible = !(inGallery && Math.abs(cur.cy - GALLERY_Y) < 6);
-    gallery.update(time, pointer, dt);
+    const fitD = aspect < 1.25 ? lerp(1.6, 1, portrait) : 1;
 
     /* camera */
-    const az = cur.az + pointer.x * 0.05;
-    const el = cur.el + pointer.y * 0.03;
-    const d = cur.d * fitD * lerp(cur.pd, 1, portrait) * lerp(1.7, 1, ie);
+    const az = cur.az + pointer.x * 0.06;
+    const el = cur.el + pointer.y * 0.04;
+    const wide = lerp(1.24, 1, smooth(clamp((cur.fov - 40) / 30, 0, 1))); // formations sit a little smaller so type stays clear (the dive keeps its close lens)
+    const d = cur.d * wide * fitD * lerp(cur.pd, 1, portrait) * lerp(1.6, 1, ie);
     sph.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)).multiplyScalar(d);
     const vh = Math.tan((cur.fov * Math.PI) / 360) * d;
     right.set(Math.cos(az), 0, -Math.sin(az));
     const shift = cur.sx * vh * aspect * portrait * ie;
     // portrait: lift the subject into the upper half, above the bottom-anchored text panel
-    const lift = (1 - portrait) * 0.46 * vh * (cur.dim > 0.4 ? 0 : 1);
+    const lift = (1 - portrait) * 0.42 * vh;
     lookAt.set(cur.cx, cur.cy - lift, cur.cz).addScaledVector(right, -shift);
     camPos.set(cur.cx, cur.cy - lift, cur.cz).add(sph).addScaledVector(right, -shift);
     camera.position.copy(camPos);
     camera.lookAt(lookAt);
     camera.fov = cur.fov;
     camera.updateProjectionMatrix();
+    camera.updateMatrixWorld();
+    scene.fog.density = 0.3 / d; // fog tracks camera distance, so far-away framings (phones) don't wash the swarm out
 
-    // core light: rides the core (also when exploded); in the gallery it hovers above-and-toward-camera of the framed artifact
-    const gal = clamp((-cur.cy - 8) / 30, 0, 1);
-    engine.core.getWorldPosition(sph);
-    dir.copy(camPos).sub(lookAt).normalize();
-    coreLight.position.set(
-      lerp(sph.x, lookAt.x + dir.x * 3 + right.x * 1.5, gal),
-      lerp(sph.y, lookAt.y + 3.4, gal),
-      lerp(sph.z, lookAt.z + dir.z * 3 + right.z * 1.5, gal),
-    );
-    coreLight.intensity = lerp(40 + 60 * cur.core, 85, gal);
+    /* pointer → world point on the plane through the look-at target (for repulsion + light) */
+    ray.set(pointer.x, pointer.y, 0.5).unproject(camera).sub(camPos).normalize();
+    dir.copy(lookAt).sub(camPos);
+    const planeDist = dir.length();
+    dir.normalize();
+    const denom = ray.dot(dir);
+    if (denom > 1e-4 && pointer.tx < 5) pointerWorld.copy(camPos).addScaledVector(ray, planeDist / denom);
+    cursorLight.position.copy(pointerWorld).addScaledVector(dir, -4);
 
-    flare.visible = gal < 0.5 && holder.visible;
-    if (flare.visible) {
-      engine.core.getWorldPosition(flare.position);
-      flare.quaternion.copy(camera.quaternion);
-      const fd = flare.position.distanceTo(camPos);
-      flare.scale.setScalar(clamp(fd * 0.42, 3, 9) * (0.8 + 0.3 * cur.core));
-      flareU.uGain.value = cur.core * lerp(0.2, 1, ie) * 0.55;
-    }
-
-    // cursor light: swept across the machine in camera space
-    dir.copy(lookAt).sub(camPos).normalize();
-    cursorWorld.copy(camPos).addScaledVector(dir, d * 0.55).addScaledVector(right, pointer.x * vh * aspect * 0.8).addScaledVector(upv, pointer.y * vh * 0.8);
-    cursorLight.position.copy(cursorWorld);
-    cursorLight.intensity = (inGallery ? 10 : 18) * (0.5 + 0.5 * ie);
-
-    key.position.set(6, 9, 8).applyAxisAngle(upv, az * 0.6);
-    document.documentElement.style.setProperty('--dim', cur.dim.toFixed(3));
+    holder.rotation.y = cur.yaw + (reducedMotion ? 0 : Math.sin(time * 0.25) * cur.rock + time * cur.spin);
+    swarm.update({
+      time, dt, form: clamp(cur.form, 0, FORMS - 1), spread: cur.spread, pointerR: cur.pr, sunAmt: cur.sun, intro: ie,
+      pointerWorld: pointer.tx === 0 && pointer.ty === 0 && !pointerSeen ? new THREE.Vector3(999, 999, 999) : pointerWorld,
+      kick: kickAmt, still: reducedMotion,
+      sizeBoost: lerp(1.5, 1, portrait), // on tall screens the camera sits further back, so toys grow to stay chunky
+    });
+    key.position.set(6, 10, 8).applyAxisAngle(upv, az * 0.6);
 
     renderer.render(scene, camera);
     if (governor && ie >= 1) adapt(dt);
   }
+  let pointerSeen = false;
 
   /* ───── adaptive resolution governor ─────
      Measures the average frame time over ~60 frames. Sustained slow frames lower the pixel ratio
      (down to a floor); sustained fast frames raise it again (up to the tier's cap). Hysteresis
-     (two consecutive verdicts) prevents flapping. Disabled with ?gov=0 and in QA captures. */
+     (consecutive verdicts) prevents flapping. Disabled with ?gov=0 and in QA captures. */
   const prCap = Math.min(window.devicePixelRatio || 1, Q.dpr);
   const prFloor = Math.min(prCap, 0.75);
   let pr = prCap;
@@ -296,24 +248,29 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   /* ───── public ───── */
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('scroll', onScroll, { passive: true });
-  if (!reducedMotion && quality !== 'low') window.addEventListener('pointermove', onPointer, { passive: true });
+  if (!reducedMotion && quality !== 'low') {
+    window.addEventListener('pointermove', (e) => { pointerSeen = true; onPointer(e); }, { passive: true });
+    window.addEventListener('pointerdown', () => { kickAmt = Math.min(8, kickAmt + 2.2); }, { passive: true });
+  }
   const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
   io.observe(canvas);
   scrollY = window.scrollY;
   resize();
   solveTarget();
   Object.assign(cur, tgt);
+  publishColours();
 
   return {
-    renderer, scene, camera, engine, gallery, stats,
+    renderer, scene, camera, swarm, stats,
     start() { last = performance.now(); raf = requestAnimationFrame(frame); },
     setIntro(v) { intro = v; },
-    kick(v = 3) { if (!reducedMotion) kickAmt = Math.min(8, kickAmt + v); },
     get intro() { return intro; },
+    kick(v = 3) { if (!reducedMotion) kickAmt = Math.min(8, kickAmt + v); },
+    recolor: (n) => swarm.recolor(n),
     remeasure: measure,
-    compile: () => renderer.compileAsync(scene, camera),
     /** QA hook: jump the damped camera/state straight to the current scroll target */
-    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); },
+    snap() { measure(); scrollY = window.scrollY; solveTarget(); Object.assign(cur, tgt); publishColours(); },
+    compile: () => renderer.compileAsync(scene, camera),
     /** force shader link + geometry upload while the loader is still up */
     warm() { renderer.render(scene, camera); },
     dispose() { cancelAnimationFrame(raf); renderer.dispose(); },

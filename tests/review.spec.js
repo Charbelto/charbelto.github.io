@@ -10,7 +10,7 @@ const ALL_SIZES = {
   mobile390: [390, 844],
   mobile360: [360, 780],
 };
-const ALL_KFS = ['hero', 'profile', 'dive', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'great1', 'great2', 'great3',
+const ALL_KFS = ['hero', 'profile', 'dive', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'play', 'great1', 'great2', 'great3',
   'w1', 'w2', 'w3', 'w4', 'w5', 'w6', 'archive', 'xp0', 'xp1', 'xp2', 'xp4', 'xp7', 'edu', 'contact'];
 const OUT = process.env.OUT || 'qa/review';
 const KFS = process.env.KFS ? process.env.KFS.split(',') : ALL_KFS;

@@ -1,65 +1,67 @@
 /**
- * Camera + scene-state keyframes. Each `[data-kf="name"]` element in the page owns one keyframe;
- * the director interpolates between them as the page scrolls.
+ * Camera + colour + formation keyframes. Each `[data-kf="name"]` element in the page owns one keyframe;
+ * the director interpolates between them as the page scrolls — including the FULL-SCREEN background colour,
+ * so the whole page floods from one colour world into the next.
  *
- *  c        orbit centre (world)            d    orbit distance      az/el  orbit angles
- *  fov      lens                            sx   lateral framing: fraction of half-width the subject sits right of centre
- *  flat     0 gimbal → 1 coplanar stack     explode  ring separation along the (vertical) axis
- *  vert     0 axis toward viewer → 1 axis vertical
- *  shards   shard-belt radius scale         core glow     focus  ring emphasised (-1 none)
- *  dim      0..1 darkening the page applies behind dense reading content
+ *  cx,cy,cz  orbit centre        d  orbit distance      az/el  orbit angles     fov  lens
+ *  sx        lateral framing: fraction of half-width the subject sits right of centre
+ *  pd        extra camera distance on portrait screens
+ *  form      swarm formation index (see swarm.js)   spread  vertical spread of the GREAT layers
+ *  sun       chrome sun amount      rock/spin  idle sway / rotation of the swarm      yaw  base rotation
+ *  pr        pointer repulsion radius        bg / ac   page background colour and accent colour (hex)
  */
-export const GALLERY_Y = -70;
-export const GALLERY_R = 13;
-export const galleryAngle = (j) => (j - 2.5) * 0.6;
-export const galleryPos = (j) => {
-  const a = galleryAngle(j);
-  return [Math.sin(a) * GALLERY_R, GALLERY_Y, Math.cos(a) * GALLERY_R - GALLERY_R];
-};
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
 
 const BASE = {
-  cx: 0, cy: 0, cz: 0, d: 15, az: 0.4, el: 0.15, fov: 34, sx: 0, pd: 1, // pd: extra distance on portrait screens
-  flat: 0, explode: 0, vert: 0, shards: 1, core: 1, focus: -1, dim: 0, yaw: 0,
+  cx: 0, cy: 0, cz: 0, d: 16, az: 0.3, el: 0.12, fov: 34, sx: 0, pd: 1,
+  form: 0, spread: 1, sun: 0, rock: 0.12, spin: 0.03, yaw: 0, pr: 2.6,
 };
-const kf = (o) => ({ ...BASE, ...o });
+const kf = ({ bg, ac, ...o }) => {
+  const [br, bgc, bb] = hex(bg); const [ar, ag, ab] = hex(ac);
+  return { ...BASE, ...o, bgr: br, bgg: bgc, bgb: bb, acr: ar, acg: ag, acb: ab };
+};
 
-const work = (j, sx) => {
-  const [x, y, z] = galleryPos(j);
-  return kf({ cx: x, cy: y + 0.1, cz: z, d: 8.6, az: galleryAngle(j) + 0.35, el: 0.14, fov: 36, sx: sx * 0.72, core: 0.6, shards: 1.2 });
-};
+const LIME = '#D4FF1F'; const BLUE = '#2433FF'; const CORAL = '#FF5A3C'; const SKY = '#8FDCFF';
+const YEL = '#FFD21F'; const MINT = '#3DF2B0'; const PINK = '#FF6FB5'; const VIOLET = '#5B2BFF';
+const CREAM = '#F5F1E8'; const PEACH = '#FFC9A8'; const MINTL = '#A6F7D6'; const LILAC = '#CDBBFF';
+const LEMON = '#FFF07A'; const PAPER = '#EEF0FF';
+const SKY2 = '#9CC9FF';
 
 export const KF = {
-  hero: kf({ d: 11, az: 0.62, el: 0.14, fov: 34, sx: 0.9, pd: 1.64, core: 0.95, yaw: -0.15 }),
-  profile: kf({ d: 12.5, az: -0.6, el: 0.2, fov: 34, sx: 0.58, core: 0.9, yaw: 0.2 }),
-  dive: kf({ d: 6.6, az: 0.0, el: 0.03, fov: 62, sx: 0, core: 1.35 }),
+  hero: kf({ bg: LIME, ac: BLUE, form: 0, sun: 1, d: 17, az: 0.3, el: 0.1, sx: 0.85, pd: 1.55, rock: 0.15, spin: 0.045 }),
+  profile: kf({ bg: LILAC, ac: '#FF3B2F', form: 1, d: 17, az: -0.4, el: 0.3, sx: 0.6, spin: 0.05 }),
+  dive: kf({ bg: BLUE, ac: LIME, form: 2, cz: -6, d: 12, az: 0, el: 0, fov: 72, sx: 0, spin: 0, rock: 0 }),
 
-  cap1: kf({ d: 13.5, az: 0.95, el: 0.3, fov: 36, sx: -0.62, focus: 0, core: 1.0 }),
-  cap2: kf({ d: 14, az: -0.75, el: 0.12, fov: 36, sx: 0.62, focus: 1, shards: 0.5, core: 1.1 }),
-  cap3: kf({ d: 12.2, az: 1.35, el: 0.22, fov: 36, sx: -0.6, focus: 2, core: 1.15 }),
-  cap4: kf({ d: 12.5, az: -0.9, el: 0.36, fov: 36, sx: 0.6, focus: 3, core: 1.2 }),
-  cap5: kf({ d: 10.5, az: 0.35, el: 0.12, fov: 38, sx: -0.6, focus: 4, core: 1.6 }),
+  cap1: kf({ bg: CORAL, ac: '#FFF1B8', form: 3, d: 20, az: 0.9, el: 0.3, sx: -0.55 }),
+  cap2: kf({ bg: SKY, ac: BLUE, form: 4, d: 16, az: -0.6, el: 0.15, sx: 0.55 }),
+  cap3: kf({ bg: YEL, ac: '#FF3B2F', form: 5, d: 17, az: 0.9, el: 0.1, sx: -0.55, spin: 0.02 }),
+  cap4: kf({ bg: MINT, ac: BLUE, form: 6, d: 17, az: -0.25, el: 0.05, sx: 0.55, spin: 0, rock: 0.2 }),
+  cap5: kf({ bg: PINK, ac: BLUE, form: 7, d: 16, az: 0.5, el: 0.15, sx: -0.55 }),
 
-  great1: kf({ d: 19, az: 0.62, el: 0.2, fov: 34, sx: 0.5, flat: 1, explode: 1, vert: 1, core: 1.2, focus: -1 }),
-  great2: kf({ cy: 3.2, d: 7.2, az: -0.55, el: 0.26, fov: 38, sx: -0.5, flat: 1, explode: 1, vert: 1, core: 1.3, focus: 3 }),
-  great3: kf({ cy: 1.6, d: 13.5, az: 0.25, el: 0.55, fov: 34, sx: 0.5, flat: 1, explode: 0.55, vert: 1, core: 1.7, focus: 1 }),
+  play: kf({ bg: '#1FD6FF', ac: '#FF1F8E', form: 8, d: 13, az: 0, el: 0.05, fov: 46, sx: 0, spin: 0.05, rock: 0.2, pr: 4.4 }),
 
-  w1: work(0, 0.5),
-  w2: work(1, -0.5),
-  w3: work(2, 0.5),
-  w4: work(3, -0.5),
-  w5: work(4, 0.5),
-  w6: work(5, -0.5),
+  great1: kf({ bg: VIOLET, ac: LIME, form: 9, d: 20, az: 0.5, el: 0.2, sx: 0.5, spin: 0.04 }),
+  great2: kf({ bg: VIOLET, ac: LIME, form: 9, cy: 1.5, d: 12, az: -0.5, el: 0.22, sx: -0.5, spread: 1.25, spin: 0.03 }),
+  great3: kf({ bg: BLUE, ac: LIME, form: 9, d: 19, az: 0.2, el: 0.5, sx: 0.5, spread: 0.55, spin: 0.05 }),
 
-  // Experience: the machine stays on the left and orbits; newest role = innermost ring (focus), oldest = outer
-  xp0: kf({ d: 17, az: 0.9, el: 0.16, fov: 34, sx: -0.55, core: 0.9, dim: 0.12, yaw: 0.3 }),
-  xp1: kf({ d: 10.5, az: 0.35, el: 0.1, fov: 36, sx: -0.55, focus: 4, core: 1.5, dim: 0.12 }),
-  xp2: kf({ d: 11, az: -0.5, el: 0.28, fov: 36, sx: -0.55, focus: 3, core: 1.2, dim: 0.12 }),
-  xp3: kf({ d: 12, az: 0.75, el: 0.3, fov: 36, sx: -0.55, focus: 2, core: 1.1, dim: 0.12 }),
-  xp4: kf({ d: 13, az: -1.0, el: 0.12, fov: 36, sx: -0.55, focus: 1, core: 1.0, dim: 0.12 }),
-  xp5: kf({ d: 14.5, az: 0.55, el: -0.12, fov: 36, sx: -0.55, focus: 0, core: 0.9, dim: 0.12 }),
-  xp6: kf({ d: 16, az: -0.35, el: 0.2, fov: 34, sx: -0.55, focus: 0, core: 0.85, dim: 0.14 }),
-  xp7: kf({ d: 18, az: 0.2, el: 0.08, fov: 34, sx: -0.55, focus: -1, core: 0.8, dim: 0.16 }),
-  arc: kf({ d: 15, az: 1.35, el: 0.2, fov: 34, sx: -0.55, core: 0.85, dim: 0.16, yaw: 0.2 }),
-  edu: kf({ d: 18, az: 2.0, el: 0.26, fov: 34, sx: -0.6, core: 0.8, dim: 0.22 }),
-  contact: kf({ d: 11.5, az: 0.12, el: 0.06, fov: 32, sx: 0.0, core: 1.5, shards: 0.8, dim: 0.28 }),
+  w1: kf({ bg: CREAM, ac: BLUE, form: 10, d: 15, az: 0.2, el: 0.08, sx: 0.5, spin: 0, rock: 0.4 }),
+  w2: kf({ bg: PEACH, ac: BLUE, form: 11, d: 15, az: -0.2, el: 0.2, sx: -0.5, spin: 0, rock: 0.45 }),
+  w3: kf({ bg: MINTL, ac: BLUE, form: 12, d: 14.5, az: 0.15, el: 0.12, sx: 0.5, spin: 0, rock: 0.3 }),
+  w4: kf({ bg: LILAC, ac: '#FF3B2F', form: 13, d: 17, az: -0.2, el: 0.62, sx: -0.5, spin: 0.05, rock: 0.2 }),
+  w5: kf({ bg: SKY, ac: BLUE, form: 14, d: 16, az: 0.25, el: 0.05, sx: 0.5, spin: 0.04, rock: 0.2 }),
+  w6: kf({ bg: LEMON, ac: BLUE, form: 15, d: 16, az: -0.2, el: 0.15, sx: -0.5, spin: 0.05, rock: 0.2 }),
+
+  // Experience: one calm paper-white world; the helix is orbited role by role
+  xp0: kf({ bg: LILAC, ac: BLUE, form: 16, d: 27, az: 0.9, el: 0.15, sx: -0.55, spin: 0.02 }),
+  xp1: kf({ bg: SKY, ac: BLUE, form: 16, cy: 3, d: 19, az: 0.3, el: 0.1, sx: -0.55, spin: 0.02 }),
+  xp2: kf({ bg: MINTL, ac: BLUE, form: 16, cy: 1.8, d: 20, az: -0.5, el: 0.2, sx: -0.55, spin: 0.02 }),
+  xp3: kf({ bg: LILAC, ac: BLUE, form: 16, cy: 0.5, d: 20, az: 0.8, el: 0.25, sx: -0.55, spin: 0.02 }),
+  xp4: kf({ bg: SKY, ac: BLUE, form: 16, cy: -0.8, d: 20, az: -1.0, el: 0.1, sx: -0.55, spin: 0.02 }),
+  xp5: kf({ bg: MINTL, ac: BLUE, form: 16, cy: -2, d: 20, az: 0.6, el: -0.1, sx: -0.55, spin: 0.02 }),
+  xp6: kf({ bg: LILAC, ac: BLUE, form: 16, cy: -3, d: 20, az: -0.4, el: 0.2, sx: -0.55, spin: 0.02 }),
+  xp7: kf({ bg: SKY, ac: BLUE, form: 16, cy: -3.5, d: 23, az: 0.2, el: 0.08, sx: -0.55, spin: 0.02 }),
+  arc: kf({ bg: SKY2, ac: BLUE, form: 17, d: 19, az: 1.2, el: 0.2, sx: -0.58, spin: 0.03 }),
+  edu: kf({ bg: MINTL, ac: BLUE, form: 17, d: 19, az: 2.0, el: 0.25, sx: -0.58, spin: 0.03 }),
+
+  contact: kf({ bg: LIME, ac: BLUE, form: 18, d: 17, az: 0.15, el: 0.08, sx: 0.55, spin: 0.08, rock: 0.1 }),
 };

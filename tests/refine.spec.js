@@ -50,6 +50,56 @@ test.describe('privacy & content decisions', () => {
   }
 });
 
+test.describe('bright colour worlds & playground', () => {
+  const goto = (page, id) => page.evaluate((k) => {
+    const el = document.querySelector(`[data-kf="${k}"]`);
+    const r = el.getBoundingClientRect();
+    scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+    window.__world.snap();
+    return getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase();
+  }, id);
+
+  test('the whole page floods from one colour world to the next as you scroll', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    const hero = await goto(page, 'hero');
+    const dive = await goto(page, 'dive');
+    const cap1 = await goto(page, 'cap1');
+    const contact = await goto(page, 'contact');
+    expect(hero).toBe('#d4ff1f'); // lime
+    expect(dive).toBe('#2433ff'); // electric blue
+    expect(new Set([hero, dive, cap1]).size).toBe(3);
+    expect(contact).toBe('#d4ff1f'); // bookend
+    // ink flips for contrast: white on blue, near-black on lime
+    await goto(page, 'dive');
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ink').trim().toLowerCase())).toBe('#ffffff');
+    await goto(page, 'hero');
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ink').trim().toLowerCase())).toBe('#0b0b14');
+  });
+
+  test('playground: a click ripples a full-screen colour flood and then cleans up', async ({ page }) => {
+    const errors = trackErrors(page);
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    await goto(page, 'play');
+    await page.waitForTimeout(400);
+    await page.mouse.click(260, 260);
+    await expect(page.locator('.flood')).toHaveCount(1);
+    await expect(page.locator('.flood')).toHaveCount(0, { timeout: 8000 });
+    await page.locator('#playBtn').click();
+    await expect(page.locator('.flood')).toHaveCount(1);
+    await expect(page.locator('.flood')).toHaveCount(0, { timeout: 8000 });
+    expect(errors).toEqual([]);
+  });
+
+  test('swarm: 150 / 240 / 360 instances by tier, a handful of draw calls', async ({ page }) => {
+    for (const [q, n] of [['low', 150], ['mid', 240], ['high', 360]]) {
+      await gotoReady(page, `?intro=0&qa=1&q=${q}`, { settle: 1200 });
+      const info = await page.evaluate(() => ({ count: window.__world.swarm.count, calls: window.__world.renderer.info.render.calls }));
+      expect(info.count).toBe(n);
+      expect(info.calls).toBeLessThan(12);
+    }
+  });
+});
+
 test.describe('experience, navigation, reversibility', () => {
   test('seven experience steps, each readable and keyframed', async ({ page }) => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });

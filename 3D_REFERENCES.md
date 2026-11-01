@@ -132,3 +132,20 @@ URLs: `dribbble.com/shots/25860515-...` and `.../25914349-Case-study-...`
 - **Awwwards dates:** The 2026 SOTD dates (Spyker, Don't Look Up, Colombel) are as reported by the fetched pages; the session date is Nov 1, 2026.
 - **Technique claims for Lusion v3 and the Lando Norris hero** are partly [prior]/[search] and are labelled as such. Awwwards tags (e.g. "WebGL", "Three.js") are creator-supplied and show intent, not proof of how much of the page is 3D.
 - **Not covered:** Awwwards 3D pages 2-5, Dribbble 3d-website tag, labs.lusion.co, Porsche: Dream Machine, and any licensing review of Bruno Simon's repo (check its LICENSE before reusing any code).
+
+
+---
+
+## Addendum (2026-11-01): first-hand observations from a real browser
+
+The earlier sections were written without being able to see the sites render. These notes come from opening the sites in the in-app Chromium (real GPU) and taking screenshots. They are observations of a few frames at a few scroll positions — not a full audit.
+
+| Site | What I actually saw | Takeaway used in this project |
+|---|---|---|
+| **lusion.co** | A heavy numeric loader (000 → 100) on black, then a **light lavender page**; a large **rounded window** holding dozens of glossy interlocking pieces in black, white and electric blue; huge light-weight grotesk headline ("Bold Ideas, Brought to Life"); pill-shaped "Let's talk" / "Menu" buttons; "Scroll to explore" with small + markers. | Bright page + glossy toy-like objects in a few strong primaries; chunky pills; very large type. |
+| **landonorris.com** | Loader is a **full-screen electric lime** with a tiny dark mark and small caps label. | Colour itself is the identity; full-bleed colour floods. |
+| **bruno-simon.com** | Loader is a saturated **blue/violet** field with a neon ring and a grid of small blue crosses. | Saturated colour worlds; playful physical feel. |
+
+**Not copied:** layouts, geometry, copy, interaction code or the specific colour sets. What carried over is generic: *colour as identity, glossy objects, big type, rounded windows/pills, physical play.* The implementation (swarm formations, colour stories, flood transitions) is original.
+
+Search for further bright/colourful 2026 examples (Awwwards inspiration pages for a Google Cloud playful WebGL demo, Active Theory's BMO piece, etc.) returned titles only; I did not open them, and blog statistics about 3D's share of 2026 winners are unverified.

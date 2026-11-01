@@ -1,6 +1,6 @@
 # Charbel Toumieh — Portfolio v4 · real-time 3D
 
-An immersive WebGL portfolio: a procedural five-ring "engine" the camera dives through as you scroll, an exploded flagship case study (GREAT), and a 3D gallery of project artifacts. Built with **Three.js + GSAP + Vite**. No external 3D assets — all geometry, materials and the studio environment are generated in code.
+An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. No external 3D assets — all geometry, materials and the studio environment are generated in code.
 
 > Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and its source in `legacy/`). Nothing here has been pushed or deployed.
 
@@ -17,6 +17,7 @@ npx playwright install chromium            # once
 npm run test:e2e                           # core suite (software WebGL, slow but runs anywhere)
 GPU=1 npx playwright test                  # same, on your real GPU (≈25× faster)
 GPU=1 npx playwright test tests/review.spec.js   # screenshot matrix → qa/review/ (5 viewports × all chapters)
+GPU=1 npx playwright test tests/perf.spec.js     # per-chapter frame-rate probe at 1920×1080
 ```
 (PowerShell: `$env:GPU='1'; npx playwright test`.)
 
@@ -35,21 +36,21 @@ The site is now a Vite app, so Pages must serve the **built** `dist/`, not the r
 ## Structure
 ```
 index.html              page content (semantic HTML, JSON-LD)
-src/main.js             boot, loader, intro, reveals, menu, modal, filters
-src/style.css           design system
-src/scene/world.js      renderer, procedural studio env, lights, scroll director
-src/scene/machine.js    the engine: rings, pins, core, shard belt, glow shaders
-src/scene/artifacts.js  six project artifacts + gallery arena
-src/scene/keyframes.js  camera/state keyframes per chapter
-public/                 static files copied as-is (résumé, legal pages, robots, sitemap)
+src/main.js             boot, loader, intro, reveals, marquee, playground, menu, modal, filters
+src/style.css           design system (variables driven by the 3D director)
+src/scene/world.js      renderer, bright procedural studio env, lights, scroll director, colour publisher, governor
+src/scene/swarm.js      the swarm: 5 shapes, 19 formations, colour stories, pointer physics
+src/scene/keyframes.js  camera / formation / background + accent colour per chapter
+public/                 static files copied as-is (résumé, robots, sitemap)
+privacy|terms|404|thank-you.html   legal and utility pages (same design system)
 legacy/                 previous site source (not deployed)
 ```
 
 ## Adding / changing a chapter
-Add a `data-kf="name"` section in `index.html` and a matching entry in `KF` (`src/scene/keyframes.js`). The director handles the rest.
+Add a `data-kf="name"` section in `index.html` and a matching entry in `KF` (`src/scene/keyframes.js`: camera, formation index, `bg` / `ac` colours). To add a formation, append a function to `defs` in `src/scene/swarm.js` (return `[x, y, z, scale, colourIndex?]` per instance) and bump `FORMS`.
 
 ## Quality tiers
-`high` desktop · `mid` tablets/low-core · `low` phones (fewer shards/ticks, lower DPR, no pointer effects, no MSAA). WebGL failure or reduced motion degrades to readable static content.
+`high` 360 toys · `mid` 240 · `low` 150 (lower pixel ratio, fewer segments, no pointer effects, no MSAA). WebGL failure or reduced motion degrades to readable static content.
 
 ## Docs
 `3D_ART_DIRECTION.md` · `DESIGN.md` · `3D_REFERENCES.md` · `PROGRESS.md` · `docs/PERFORMANCE.md` · `qa/REPORT.md` · `qa/CRITIQUE.md` · screenshots in `docs/screenshots/`

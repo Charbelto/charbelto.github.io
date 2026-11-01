@@ -395,3 +395,32 @@ let cls = 0; new PerformanceObserver(l => { for (const e of l.getEntries()) if (
    (INP needs real interactions: use the *Web Vitals* Chrome extension or DevTools → Performance insights.) Real-user (75th-percentile) figures require field data, which this privacy-first site intentionally does not collect.
 6. **GPU confirmation:** visit `chrome://gpu` and confirm *WebGL2: Hardware accelerated*; the HUD readings are meaningless on software GL.
 7. **GPU-accelerated screenshots/tests:** `GPU=1 npx playwright test …` uses your GPU via ANGLE/D3D11 (≈25× faster than the default SwiftShader).
+
+
+---
+
+# Addendum 2 — bright "Swarm" rebuild (2026-11-01)
+
+The ring "engine" was replaced by an instanced toy swarm (`src/scene/swarm.js`). Sections 2–3 and §A–C above describe the *old* scene's counts; the numbers below are for the new one.
+
+## Scene budget (measured with `renderer.info`)
+| | high tier | notes |
+|---|---|---|
+| Draw calls | 5 (7 in the hero, with the chrome sun + ring) | one `InstancedMesh` per shape |
+| Triangles | ≈ 400k (hero ≈ 406k) | 360 instances × five shapes |
+| Lights | 4 | key, hemisphere, fill, cursor point |
+| Per-frame CPU | `renderer.render` ≈ 0.4 ms, `swarm.update` ≈ 0.16 ms (measured in-page) | 360 matrix + colour writes |
+| Instances by tier | 360 / 240 / 150 | `?q=high|mid|low` |
+
+## Frame rate — what was and was not measured
+`GPU=1 npx playwright test tests/perf.spec.js` (headless Chromium on the **RTX 4070 Laptop GPU** via ANGLE/D3D11, 1920×1080, resolution governor off, 3 s per chapter): **60 fps, 16.6 ms average, 17 ms worst frame in all 11 chapters probed** (hero, dive, cap1, cap3, cap5, playground, great1, w3, w5, xp2, contact). Headless rAF is vsync-capped at 60 Hz, so this shows the page *holds* 60 fps at this size on this GPU; it does **not** show how much headroom there is, nor anything about other GPUs, phones, Safari or Firefox.
+
+**A caveat I hit and should be honest about:** the in-app browser pane in this session reported 1–11 fps for the *same* page at the same moment (and stayed ~2 fps even with `renderer.render` replaced by a no-op and with the canvas/`main`/grain hidden, while a plain HTML page in the same pane ran at 139 fps and the JS side of every frame cost < 1 ms). That pattern points at the pane's own throttling, not the scene, but I could not prove it. If you see low frame rates on your machine, press **P** for the HUD and tell me the numbers.
+
+## Not measured (so not claimed)
+Lighthouse, LCP, INP, CLS, GPU memory, battery/thermals, real phones/tablets, other browsers. Use §C above — the steps still apply (`?perf=1`, press **P**).
+
+## Cost drivers to watch
+- Triangles scale with instances × shape detail; the `low` tier uses 150 instances and ~60 % segment counts.
+- `backdrop-filter` tiles (dive, contact, cards) sit over a transparent WebGL canvas — they are disabled on the `low` tier.
+- Per-frame CSS-variable writes (`--bg`, `--ink`, `--ac`) restyle the page only while a colour is actually changing (guarded by a string compare).

@@ -77,6 +77,51 @@ function setupReveals() {
   gsap.to('.bt-name', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true } });
 }
 
+/* ───────── full-width marquee bands: speed + direction react to scroll velocity ───────── */
+function setupMarquee() {
+  if (reducedMotion) return;
+  const tweens = $$('.marquee-track').map((track, i) => (i % 2
+    ? gsap.fromTo(track, { xPercent: -50 }, { xPercent: 0, ease: 'none', duration: 28, repeat: -1 })
+    : gsap.fromTo(track, { xPercent: 0 }, { xPercent: -50, ease: 'none', duration: 28, repeat: -1 })));
+  let boost = 0;
+  ScrollTrigger.create({ onUpdate: (self) => { boost = Math.min(7, Math.abs(self.getVelocity()) / 450); } });
+  gsap.ticker.add(() => {
+    boost *= 0.94;
+    tweens.forEach((t) => t.timeScale(1 + boost));
+  });
+}
+
+/* ───────── playground: click ripples a full-screen colour flood from the cursor and re-colours the swarm ───────── */
+const FLOODS = ['#ff1f8e', '#d4ff1f', '#2433ff', '#ffd21f', '#3df2b0', '#ff5a3c'];
+let floodIdx = 0;
+function colourFlood(x, y) {
+  const el = document.createElement('div');
+  el.className = 'flood';
+  el.style.background = FLOODS[floodIdx++ % FLOODS.length];
+  document.body.append(el);
+  const max = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) * 1.05;
+  if (reducedMotion) { setTimeout(() => el.remove(), 250); return; }
+  gsap.fromTo(el, { clipPath: `circle(0px at ${x}px ${y}px)` }, {
+    clipPath: `circle(${max}px at ${x}px ${y}px)`, duration: 0.7, ease: 'power3.in',
+    onComplete: () => gsap.to(el, { opacity: 0, duration: 0.6, ease: 'power1.out', onComplete: () => el.remove() }),
+  });
+}
+function setupPlayground() {
+  const sec = $('#playground');
+  if (!sec) return;
+  const btn = $('#playBtn');
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.__world?.recolor(1); window.__world?.kick(6);
+    const r = btn.getBoundingClientRect(); colourFlood(r.left + r.width / 2, r.top + r.height / 2);
+  });
+  sec.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('a, button')) return;
+    window.__world?.recolor(1); window.__world?.kick(5);
+    colourFlood(e.clientX, e.clientY);
+  });
+}
+
 /* ───────── rail ───────── */
 function setupRail() {
   const label = $('#railLabel');
@@ -171,7 +216,7 @@ function setupMisc() {
     const f = chip.dataset.filter;
     rows.forEach((r) => { r.hidden = !(f === 'all' || r.dataset.cat === f); });
     window.__world?.remeasure();
-    window.__world?.kick(5); // the engine answers the filter: rings spin up, then settle
+    window.__world?.kick(5); // the swarm answers the filter: it bursts outward, then settles
   }));
   // hovering an archive row nudges the rings a little — the list is wired into the same world
   $$('#arcList a').forEach((a) => a.addEventListener('pointerenter', () => window.__world?.kick(1.4)));
@@ -253,6 +298,8 @@ async function boot() {
   world?.start();
   if (world) setupPerfHud(world);
   setupReveals();
+  setupMarquee();
+  setupPlayground();
   ScrollTrigger.refresh();
   world?.remeasure();
   addEventListener('load', () => { ScrollTrigger.refresh(); world?.remeasure(); });

@@ -16,8 +16,8 @@
 <meta name="twitter:title" content="Charbel Toumieh — AI Engineer"/>
 <meta name="twitter:description" content="Agentic systems, RAG architectures and AI product engineering — production-grade intelligent systems."/>
 <meta name="twitter:image" content="https://charbelto.github.io/profile.jpg"/>
-<meta name="theme-color" content="#07080b"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2307080b'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23ece8e1' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='11' fill='%23ff5a1f'/%3E%3C/svg%3E"/>
+<meta name="theme-color" content="#d4ff1f"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23d4ff1f'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%230b0b14' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='12' fill='%232433ff'/%3E%3C/svg%3E"/>
 
 <script type="application/ld+json">
 {
@@ -80,14 +80,13 @@
 </div>
 
 <canvas id="world" aria-hidden="true"></canvas>
-<div class="dimmer" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
 <!-- loader -->
 <div class="loader" id="loader" role="status" aria-live="polite">
   <div class="loader-inner">
     <span class="loader-mark" aria-hidden="true"></span>
-    <span class="loader-text">Assembling the engine <b id="loaderPct">0</b>%</span>
+    <span class="loader-text">Loading the swarm <b id="loaderPct">0</b>%</span>
   </div>
 </div>
 
@@ -152,6 +151,8 @@
   </div>
 </section>
 
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Agents</span><span><i>✦</i></span><span>RAG</span><span><i>✦</i></span><span>Evals</span><span><i>✦</i></span><span>MCP</span><span><i>✦</i></span><span>LLM systems</span><span>Agents</span><span><i>✦</i></span><span>RAG</span><span><i>✦</i></span><span>Evals</span><span><i>✦</i></span><span>MCP</span><span><i>✦</i></span><span>LLM systems</span></div></div>
+
 <!-- ═══════════ PROFILE ═══════════ -->
 <section class="chapter profile" id="profile" data-kf="profile" data-label="Profile">
   <div class="panel panel--left">
@@ -176,7 +177,7 @@
   <div class="dive-copy">
     <p class="eyebrow"><span class="dot"></span> Scroll to enter</p>
     <h2 class="display display--xl">Step inside<br/><em>the system.</em></h2>
-    <p class="lede">Five concentric rings. One engine. This is how the intelligent systems I build are layered — orchestration, retrieval, tools, evaluation, reliability.</p>
+    <p class="lede">Hundreds of moving parts, five layers, one system. This is how the intelligent systems I build are structured — orchestration, retrieval, tools, evaluation, reliability.</p>
   </div>
 </section>
 
@@ -184,7 +185,7 @@
 <div id="capabilities">
   <section class="chapter cap" data-kf="cap1" data-label="Orchestration">
     <div class="panel panel--right">
-      <p class="idx"><b>R1</b> Outer ring · orchestration</p>
+      <p class="idx"><b>01</b> Orchestration · the agent network</p>
       <h2 class="display">Multi-agent orchestration</h2>
       <p>Agents that plan, delegate and hand off — coordinated as a system, not a prompt. Agent architecture, multi-agent workflows and the glue that keeps them accountable.</p>
       <ul class="tags"><li>AI Agents</li><li>Multi-Agent Systems</li><li>Agent Orchestration</li><li>LangGraph</li><li>LangChain</li><li>LlamaIndex</li><li>n8n</li></ul>
@@ -192,7 +193,7 @@
   </section>
   <section class="chapter cap" data-kf="cap2" data-label="Retrieval">
     <div class="panel panel--left">
-      <p class="idx"><b>R2</b> Retrieval ring</p>
+      <p class="idx"><b>02</b> Retrieval · the funnel</p>
       <h2 class="display">Retrieval &amp; knowledge systems</h2>
       <p>RAG pipelines that ground answers in the right context: chunking, vector search and structured outputs — shards of knowledge converging on a question.</p>
       <ul class="tags"><li>RAG</li><li>Vector Databases</li><li>Semantic Search</li><li>Prompt Engineering</li><li>Structured Outputs</li></ul>
@@ -200,7 +201,7 @@
   </section>
   <section class="chapter cap" data-kf="cap3" data-label="Tools & MCP">
     <div class="panel panel--right">
-      <p class="idx"><b>R3</b> Tooling ring</p>
+      <p class="idx"><b>03</b> Tooling · the socket lattice</p>
       <h2 class="display">Tool calling &amp; MCP</h2>
       <p>MCP servers and function calling that connect models to real systems — internal tools, AWS data sources, dashboards. 24+ tools integrated behind one agent surface at Gabriel &amp; Co.</p>
       <ul class="tags"><li>MCP</li><li>Tool / Function Calling</li><li>REST APIs</li><li>Python</li><li>Node.js</li><li>PHP</li><li>Flask</li></ul>
@@ -208,21 +209,31 @@
   </section>
   <section class="chapter cap" data-kf="cap4" data-label="Evaluation">
     <div class="panel panel--left">
-      <p class="idx"><b>R4</b> Evaluation ring</p>
+      <p class="idx"><b>04</b> Evaluation · the distribution</p>
       <h2 class="display">Evaluation you can trust</h2>
-      <p>Evaluation frameworks, scoring methodologies and A/B prompt testing — judged against benchmarks, not vibes. The ring that decides whether a system ships. <strong>+65% evaluation quality</strong> on GREAT.</p>
+      <p>Evaluation frameworks, scoring methodologies and A/B prompt testing — judged against benchmarks, not vibes. The layer that decides whether a system ships. <strong>+65% evaluation quality</strong> on GREAT.</p>
       <ul class="tags"><li>LLM Evaluation</li><li>A/B Prompt Testing</li><li>Benchmarking</li><li>Hallucination Reduction</li><li>Self-Verification</li></ul>
     </div>
   </section>
   <section class="chapter cap" data-kf="cap5" data-label="Reliability">
     <div class="panel panel--right">
-      <p class="idx"><b>R5</b> Inner ring · reliability</p>
+      <p class="idx"><b>05</b> Reliability · the shield</p>
       <h2 class="display">Reliable in production</h2>
       <p>Guardrails, circuit breakers and regression benchmarks so agents fail safely — plus the cloud, data and dashboards that make a system observable to the business.</p>
       <ul class="tags"><li>Guardrails (LoopGuard)</li><li>AWS</li><li>Azure</li><li>KPI Definition</li><li>Experimentation</li></ul>
     </div>
   </section>
 </div>
+
+<!-- ═══════════ PLAYGROUND ═══════════ -->
+<section class="chapter playground" id="playground" data-kf="play" data-label="Playground">
+  <div class="play-copy">
+    <p class="eyebrow"><span class="dot"></span> Interactive · try it</p>
+    <h2 class="display display--xxl">Play with <em>the swarm.</em></h2>
+    <p class="lede">Move your cursor to push it around. Click anywhere to burst it open.</p>
+    <button class="btn btn--solid" id="playBtn" type="button">Re-colour everything ✦</button>
+  </div>
+</section>
 
 <!-- ═══════════ GREAT ═══════════ -->
 <div id="great">
@@ -231,7 +242,7 @@
       <p class="idx"><b>Flagship</b> Case study · 2024 — present</p>
       <h2 class="display display--xl">GREAT</h2>
       <p class="lede">An AI quality-assurance platform that replaced manual call review across 34+ agents and three channels (inbound, outbound, email).</p>
-      <p>The machine separates into its evaluation layers — each ring below becomes a stage in the pipeline. Designed and led end-to-end at Gabriel &amp; Co., New York.</p>
+      <p>The swarm separates into evaluation layers — each layer becomes a stage in the pipeline. Designed and led end-to-end at Gabriel &amp; Co., New York.</p>
     </div>
   </section>
   <section class="chapter great" data-kf="great2" data-label="Architecture">
@@ -369,7 +380,7 @@
     <div class="panel panel--right">
       <p class="idx"><b>05</b> Experience · 2023 — present</p>
       <h2 class="display">Where the work happened</h2>
-      <p class="lede">Seven roles across AI engineering, research and data. The camera orbits the engine as you read — the current role sits at the core, earlier work radiates outward.</p>
+      <p class="lede">Seven roles across AI engineering, research and data. The camera climbs a double helix of work as you read — one strand per discipline, one turn per role.</p>
     </div>
   </div>
   <div class="chapter xp-step" data-kf="xp1" data-label="Gabriel & Co.">
@@ -493,6 +504,8 @@
     </div>
   </div>
 </section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Let’s build</span><span><i>✦</i></span><span>something</span><span><i>✦</i></span><span>that ships</span><span>Let’s build</span><span><i>✦</i></span><span>something</span><span><i>✦</i></span><span>that ships</span></div></div>
 
 <!-- ═══════════ CONTACT ═══════════ -->
 <section class="chapter contact" id="contact" data-kf="contact" data-label="Contact">
