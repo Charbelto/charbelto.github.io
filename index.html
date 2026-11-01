@@ -130,6 +130,15 @@
 <!-- chapter progress rail -->
 <aside class="rail" id="rail" aria-hidden="true"><i id="railFill"></i><span id="railLabel">Intro</span></aside>
 
+<nav class="dots" id="dots" aria-label="Jump to a section">
+  <a href="#top" aria-label="Intro"><span>Intro</span></a>
+  <a href="#capabilities" aria-label="Systems"><span>Systems</span></a>
+  <a href="#great" aria-label="GREAT"><span>GREAT</span></a>
+  <a href="#works" aria-label="Works"><span>Works</span></a>
+  <a href="#experience" aria-label="Experience"><span>Experience</span></a>
+  <a href="#contact" aria-label="Contact"><span>Contact</span></a>
+</nav>
+
 <main id="main">
 
 <!-- ═══════════ HERO ═══════════ -->
@@ -195,7 +204,7 @@
 </section>
 
 <!-- ═══════════ CAPABILITIES (5 rings) ═══════════ -->
-<div id="capabilities">
+<div id="capabilities" class="stepper" data-step="0.3">
   <section class="chapter cap" data-kf="cap1" data-label="Orchestration">
     <div class="panel panel--right">
       <p class="idx"><b>01</b> Orchestration · a conductor and its agents</p>
@@ -249,7 +258,7 @@
 </section>
 
 <!-- ═══════════ GREAT ═══════════ -->
-<div id="great">
+<div id="great" class="stepper" data-step="0.32">
   <section class="chapter great" data-kf="great1" data-label="GREAT">
     <div class="panel panel--left">
       <p class="idx"><b>Flagship</b> Case study · 2024 to present</p>
@@ -288,6 +297,7 @@
 
 <!-- ═══════════ WORKS (gallery) ═══════════ -->
 <div id="works">
+  <div class="stepper" data-step="0.3">
   <section class="chapter work" data-kf="w1" data-label="01 LoopGuard">
     <div class="panel panel--left work-panel">
       <p class="idx"><b>01</b> flagship · Python library</p>
@@ -349,6 +359,8 @@
     </div>
   </section>
 
+  </div>
+
   <section class="chapter archive" data-label="Archive">
     <span class="kf-anchor" data-kf="arc" aria-hidden="true"></span>
     <div class="wide wide--col">
@@ -388,7 +400,7 @@
 </div>
 
 <!-- ═══════════ EXPERIENCE ═══════════ -->
-<section class="experience" id="experience">
+<section class="experience stepper" id="experience" data-step="0.3">
   <div class="chapter xp-intro" data-kf="xp0" data-label="Experience">
     <div class="panel panel--right">
       <p class="idx"><b>05</b> Experience · 2023 to present</p>

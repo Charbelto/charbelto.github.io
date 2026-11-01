@@ -451,3 +451,14 @@ Chapters now show authored objects instead of swarm formations (see `3D_ART_DIRE
 - Prop chapters render about 125k triangles (down from about 410k when hidden confetti was still being drawn at zero size: `mesh.count` is now cut to the visible fraction).
 - Assets: 24 props, 945 KB total after Draco, 20 to 80 KB each, loaded lazily (the current, previous and next two props). The Draco WASM decoder is served from this origin (`public/draco`, about 340 KB), so there is still no third-party request.
 - Headless rAF is vsync-capped at 60 Hz: this proves the page holds 60 fps at this size on this GPU, not how much headroom there is. Other GPUs, phones, Safari and Firefox are untested. Lighthouse, LCP, INP, CLS not measured.
+
+
+---
+
+# Addendum 4: devices without a GPU (2026-11-01)
+
+- **Detection:** no WebGL, a context that fails `failIfMajorPerformanceCaveat`, or a renderer string matching SwiftShader / llvmpipe / softpipe / WARP / "Basic Render" gives the lightweight mode before any 3D code is loaded (the 3D chunk, about 160 KB gzip, is never downloaded).
+- **Cost of lite mode:** no WebGL, no canvas, no per-frame JavaScript. A scroll event updates three CSS variables and two image opacities in one requestAnimationFrame; posters are about 40 KB each and are fetched only for the next two chapters.
+- **Live fallback:** the resolution governor measures real frame time (not the 50 ms-capped animation delta, which was a bug: it could never see a slow machine). A window is 60 frames or 2.5 s. Two consecutive windows averaging more than 90 ms (under about 11 fps) hand over to lite mode. Verified under Chromium CPU throttling: at 20x slowdown the page ran about 14 fps and the governor lowered the resolution; at 60x it switched to lite mode by itself.
+- **Not measured:** real integrated-GPU laptops, phones or low-end desktops; the thresholds (about 11 fps, 2 windows) are reasoned, not tuned on real hardware.
+- **Page length:** 30 screens down to about 18 (desktop 17.8, phone 18.4) by pinning four groups into virtual steps.

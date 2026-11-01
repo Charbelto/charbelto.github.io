@@ -21,6 +21,13 @@ GPU=1 npx playwright test tests/perf.spec.js     # per-chapter frame-rate probe 
 ```
 (PowerShell: `$env:GPU='1'; npx playwright test`.)
 
+## No GPU? (lightweight mode)
+Machines without a usable GPU get posters instead of live WebGL, automatically (see `DESIGN.md`). Force it with `?lite=1`, force 3D with `?lite=0`. Regenerate the posters after changing a scene:
+```bash
+node tools/make-posters.mjs        # needs a GPU and the dev server on :5173
+python tools/posters-to-webp.py
+```
+
 ## Privacy
 No analytics, no cookies, no local storage, no third-party requests (fonts are self-hosted). Enforced by `tests/refine.spec.js`.
 
@@ -38,6 +45,7 @@ The site is now a Vite app, so Pages must serve the **built** `dist/`, not the r
 index.html              page content (semantic HTML, JSON-LD)
 src/main.js             boot, loader, intro, reveals, marquee, playground, menu, modal, filters
 src/style.css           design system (variables driven by the 3D director)
+src/lite.js              lightweight (no-GPU) director: posters + colour flood
 src/scene/world.js      renderer, bright procedural studio env, lights, scroll director, colour publisher, governor
 src/scene/swarm.js      the swarm: 5 shapes, 19 formations, colour stories, pointer physics
 src/scene/agent.js      Pip: loads the Blender-authored GLB and animates it (look-at, blink, wave, hop)

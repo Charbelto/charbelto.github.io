@@ -18,8 +18,7 @@ test('frame-rate probe', async ({ page }) => {
   for (const kf of KFS) {
     const r = await page.evaluate(async (id) => {
       const el = document.querySelector(`[data-kf="${id}"]`);
-      const b = el.getBoundingClientRect();
-      scrollTo(0, b.top + scrollY + b.height / 2 - innerHeight / 2);
+      scrollTo(0, window.__kfY(el));
       window.__world.snap();
       await new Promise((res) => setTimeout(res, 1200));
       const info = window.__world.renderer.info;

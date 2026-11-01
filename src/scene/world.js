@@ -3,13 +3,11 @@ import { buildSwarm, FORMS } from './swarm.js';
 import { KF } from './keyframes.js';
 import { loadAgent } from './agent.js';
 import { createProps } from './props.js';
+import { createColourPublisher } from './colours.js';
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const smooth = (t) => t * t * (3 - 2 * t);
 const lerp = (a, b, t) => a + (b - a) * t;
-const hex2 = (v) => Math.round(clamp(v, 0, 1) * 255).toString(16).padStart(2, '0');
-const toHex = (r, g, b) => `#${hex2(r)}${hex2(g)}${hex2(b)}`;
-const INK_DARK = [0.043, 0.043, 0.078];
 
 /** Bright studio HDR built procedurally: light hall, white softboxes, a few coloured cards for colourful reflections. */
 function buildEnvironment(renderer) {
@@ -42,7 +40,7 @@ function makeMaterials() {
   return { plastic, satin, chrome, sunChrome };
 }
 
-export function createWorld(canvas, { quality = 'high', reducedMotion = false, governor = true } = {}) {
+export function createWorld(canvas, { quality = 'high', reducedMotion = false, governor = true, onSlow = null } = {}) {
   const Q = {
     high: { dpr: 1.75, antialias: true },
     mid: { dpr: 1.25, antialias: true },
@@ -96,7 +94,6 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   let visible = true;
   let last = performance.now();
   let raf = 0;
-  let lastCss = '';
   const lookAt = new THREE.Vector3();
   const camPos = new THREE.Vector3();
   const sph = new THREE.Vector3();
@@ -110,10 +107,23 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     marks = [...document.querySelectorAll('[data-kf]')]
       .filter((el) => KF[el.dataset.kf])
       .map((el) => {
+        if (el.dataset.vc) return { name: el.dataset.kf, center: Number(el.dataset.vc), el }; // virtual step inside a pinned group
         const r = el.getBoundingClientRect();
-        return { name: el.dataset.kf, center: r.top + window.scrollY + r.height / 2 };
+        return { name: el.dataset.kf, center: r.top + window.scrollY + r.height / 2, el };
       })
       .sort((a, b) => a.center - b.center);
+  }
+
+  /* portrait screens: the free band between the header and the card the object may occupy (viewport fractions, damped) */
+  const band = { top: 0.1, bot: 0.55, t: 0.1, b: 0.55, n: 0, mark: null };
+  function sampleBand() {
+    const m = band.mark;
+    const card = m?.el?.querySelector('.panel, .xp, .wide, .contact-inner');
+    const h = window.innerHeight;
+    const r = card?.getBoundingClientRect();
+    band.t = Math.min(0.2, 78 / h);
+    // the card is translated 16 px while hidden; ignore that
+    band.b = r && r.height ? clamp((r.top - 8) / h, 0.3, 0.98) : 0.62;
   }
 
   function solveTarget() {
@@ -127,11 +137,13 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     t = reducedMotion ? (t > 0.5 ? 1 : 0) : smooth(clamp((t - 0.1) / 0.8, 0, 1));
     const A = KF[a.name]; const B = KF[b.name];
     for (const k of keys) tgt[k] = lerp(A[k], B[k], t);
+    band.mark = t > 0.5 ? b : a;
     blend = { a: A.prop || null, b: B.prop || null, t, upcoming: [marks[i + 2], marks[i + 3]].filter(Boolean).map((mk) => KF[mk.name].prop) };
   }
 
   let lastW = 0; let lastH = 0;
   function resize() {
+    if (disposed) return;
     const w = canvas.clientWidth || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
     // mobile address-bar show/hide fires height-only resizes: don't reallocate the drawing buffer for those
@@ -149,27 +161,16 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     pointer.ty = -((e.clientY / window.innerHeight) * 2 - 1);
   };
 
-  /** publish the interpolated colours as CSS variables → the whole page floods from one colour to the next */
-  function publishColours() {
-    const lum = 0.2126 * cur.bgr + 0.7152 * cur.bgg + 0.0722 * cur.bgb;
-    const k = smooth(clamp((lum - 0.27) / 0.07, 0, 1)); // 0 → white ink, 1 → near-black ink (coral/pink/yellow all take dark ink; blue/violet take white)
-    const ink = [lerp(1, INK_DARK[0], k), lerp(1, INK_DARK[1], k), lerp(1, INK_DARK[2], k)];
-    const css = `${toHex(cur.bgr, cur.bgg, cur.bgb)}|${toHex(...ink)}|${toHex(cur.acr, cur.acg, cur.acb)}`;
-    if (css === lastCss) return;
-    lastCss = css;
-    const [bg, inkH, ac] = css.split('|');
-    const st = document.documentElement.style;
-    st.setProperty('--bg', bg); st.setProperty('--ink', inkH); st.setProperty('--ac', ac);
-    st.setProperty('--lum', lum.toFixed(3));
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', bg);
-  }
+  const publish = createColourPublisher();
+  const publishColours = () => publish(cur);
 
   /* ───── frame ───── */
   function frame(now) {
+    if (disposed) return;
     raf = requestAnimationFrame(frame);
     if (!visible || document.hidden) { last = now; return; }
-    const dt = Math.min(0.05, (now - last) / 1000);
+    const rawDt = (now - last) / 1000; // true frame time (the governor must see slow frames; dt below is capped for the animation maths)
+    const dt = Math.min(0.05, rawDt);
     last = now;
     const time = now / 1000;
 
@@ -202,13 +203,23 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     const az = cur.az + pointer.x * 0.06;
     const el = cur.el + pointer.y * 0.04;
     const wide = lerp(1.24, 1, smooth(clamp((cur.fov - 40) / 30, 0, 1))); // formations sit a little smaller so type stays clear (the dive keeps its close lens)
-    const d = cur.d * wide * fitD * lerp(cur.pd, 1, portrait) * lerp(1.6, 1, ie);
+    let d = cur.d * wide * fitD * lerp(cur.pd, 1, portrait) * lerp(1.6, 1, ie);
+    // portrait: object chapters fit the free band above the card (and the screen width), so nothing is cropped or hidden
+    const fitMix = aspect < 1.1 ? smooth(clamp(cur.nf, 0, 1)) * ie : 0;
+    if (fitMix > 0) {
+      if ((frameNo++ & 7) === 0) sampleBand();
+      band.top = lerp(band.top, band.t, 0.2); band.bot = lerp(band.bot, band.b, 0.2);
+      const F = Math.max(0.2, band.bot - band.top);
+      const dFit = 4.7 / (Math.tan((cur.fov * Math.PI) / 360) * Math.min(aspect * 0.97, F));
+      d = lerp(d, dFit, fitMix);
+    }
     sph.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)).multiplyScalar(d);
     const vh = Math.tan((cur.fov * Math.PI) / 360) * d;
     right.set(Math.cos(az), 0, -Math.sin(az));
     const shift = cur.sx * vh * aspect * portrait * ie;
     // portrait: lift the subject into the upper half, above the bottom-anchored text panel
-    const lift = (1 - portrait) * (0.42 + 0.2 * cur.nf) * vh; // object chapters sit a little higher: their cards are taller
+    const bandLift = (1 - (band.top + band.bot)) * vh; // centre the object in the band between header and card
+    const lift = lerp((1 - portrait) * (0.42 + 0.2 * cur.nf) * vh, bandLift, fitMix);
     lookAt.set(cur.cx, cur.cy - lift, cur.cz).addScaledVector(right, -shift);
     camPos.set(cur.cx, cur.cy - lift, cur.cz).add(sph).addScaledVector(right, -shift);
     camera.position.copy(camPos);
@@ -240,9 +251,12 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     key.position.set(6, 10, 8).applyAxisAngle(upv, az * 0.6);
 
     renderer.render(scene, camera);
-    if (governor && ie >= 1) adapt(dt);
+    if (governor && ie >= 1 && !disposed) adapt(Math.min(0.6, rawDt));
   }
   let pointerSeen = false;
+  let frameNo = 0;
+  let disposed = false;
+  let slowStrikes = 0;
 
   /* ───── adaptive resolution governor ─────
      Measures the average frame time over ~60 frames. Sustained slow frames lower the pixel ratio
@@ -260,9 +274,13 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   }
   function adapt(dt) {
     accT += dt; accN++;
-    if (accN < 60) return;
+    // a window is 60 frames, or 2.5 s with at least 5 frames (so a struggling device is judged within seconds, not minutes)
+    if (accN < 60 && !(accT >= 2.5 && accN >= 5)) return;
     const avg = accT / accN; accT = 0; accN = 0;
     stats.avgMs = +(avg * 1000).toFixed(1);
+    // a machine that cannot hold even ~11 fps at the lowest resolution twice in a row: hand over to the lightweight mode
+    slowStrikes = avg > 0.09 ? slowStrikes + 1 : 0;
+    if (slowStrikes >= 2 && onSlow) { const cb = onSlow; onSlow = null; cb(); return; }
     const v = avg > 0.0245 ? -1 : avg < 0.0125 ? 1 : 0;
     verdict = v === Math.sign(verdict) || verdict === 0 ? verdict + v : v;
     if (verdict <= -2 && pr > prFloor) { applyPR(Math.max(prFloor, pr * 0.86)); stats.steps++; verdict = 0; }
@@ -301,6 +319,11 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     compile: () => renderer.compileAsync(scene, camera),
     /** force shader link + geometry upload while the loader is still up */
     warm() { renderer.render(scene, camera); },
-    dispose() { cancelAnimationFrame(raf); renderer.dispose(); },
+    dispose() {
+      disposed = true; cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize); window.removeEventListener('scroll', onScroll);
+      io.disconnect();
+      try { renderer.dispose(); renderer.forceContextLoss(); } catch { /* already gone */ }
+    },
   };
 }

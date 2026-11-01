@@ -56,3 +56,7 @@ qa/test-output/
 dist-*/
 
 qa/menu/
+
+qa/posters-raw/
+qa/step/
+qa/name-*.png

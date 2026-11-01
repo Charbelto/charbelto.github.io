@@ -19,6 +19,9 @@ _Updated 2026-11-01 for the bright "Swarm" rebuild (v2). Earlier rounds (dark ri
 | **Swarm tiers:** 150 / 240 / 360 instances at low / mid / high, < 12 draw calls | ✔ |
 | **Pip (Blender GLB):** loads with the expected named nodes and no errors · file is a valid GLB under 700 KB · head yaw follows the cursor and a click raises the right arm · hidden outside its chapter, shown inside it | ✔ |
 | **House style:** no em dash in any source/doc/page file, rendered page text, titles, meta or case modals | ✔ |
+| **Shorter page and virtual steps:** under 20 screens on desktop and 21 on a phone; exactly one step visible per pinned group; step pips work from the keyboard; six quick-jump dots; no horizontal overflow at 360 px | ✔ |
+| **The name is never hidden:** name layer above the canvas | ✔ |
+| **Lightweight mode:** forced lite has no WebGL, posters cross-fade, colours still flood, no errors, no third-party requests; phones get portrait posters; all 60 posters exist and are small; a software renderer is detected automatically (default run); a throttled GPU machine falls back by itself (GPU run) | ✔ |
 | **Animated menu:** opens as a growing wipe (not a snap), links stagger in, closes smoothly, ends hidden and inert | ✔ |
 | **Chapter props:** projects get 6 different objects, roles 7, capabilities 5; every object ships as a valid GLB under 120 KB; every prop chapter assembles its object with no errors; assembly is scroll-driven and reversible | ✔ |
 | 7 experience steps keyframed · reverse scrolling returns identical camera positions · nav lands on chapter · governor stats · perf HUD toggle · archive filter | ✔ |

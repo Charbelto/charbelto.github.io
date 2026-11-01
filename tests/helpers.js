@@ -20,6 +20,7 @@ export function trackErrors(page) {
 
 /** Navigate and wait for the loader to be gone + a few frames. */
 export async function gotoReady(page, qs = '?intro=0&q=low', { settle = 3000 } = {}) {
+  if (!/[?&]lite=/.test(qs)) qs += (qs.includes('?') ? '&' : '?') + 'lite=0';
   await page.goto('/' + qs, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
   await page.waitForTimeout(settle);
@@ -33,3 +34,9 @@ export const REPO_LINKS = [
   'https://github.com/Charbelto/Network-Cell-Analyzer',
   'https://github.com/Charbelto/DSA-Supermarket-Analysis',
 ];
+
+/** Scroll so a chapter's camera marker is mid-screen (works for virtual steps inside pinned groups) and let it settle. */
+export async function goKf(page, name, wait = 900) {
+  await page.evaluate((n) => { scrollTo(0, window.__kfY(document.querySelector(`[data-kf="${n}"]`))); }, name);
+  await page.waitForTimeout(wait);
+}

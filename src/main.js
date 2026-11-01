@@ -21,6 +21,25 @@ function hasWebGL() {
     return !!(window.WebGL2RenderingContext && c.getContext('webgl2'));
   } catch { return false; }
 }
+/** 'full' (real GPU), or 'lite' (software rendering / no WebGL / forced). ?lite=1 forces lite, ?lite=0 forces 3D when WebGL exists. */
+function chooseMode() {
+  const forced = params.get('lite');
+  if (!hasWebGL()) return { lite: true, reason: 'nogl' };
+  if (forced === '1') return { lite: true, reason: 'forced' };
+  if (forced === '0') return { lite: false };
+  try {
+    // a context that fails with failIfMajorPerformanceCaveat is a software rasteriser (SwiftShader, llvmpipe, WARP...)
+    const c = document.createElement('canvas');
+    const strict = c.getContext('webgl2', { failIfMajorPerformanceCaveat: true });
+    if (!strict) return { lite: true, reason: 'software' };
+    const gl = document.createElement('canvas').getContext('webgl2');
+    const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+    const name = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
+    if (/swiftshader|llvmpipe|softpipe|software|basic render|microsoft basic/i.test(name)) return { lite: true, reason: 'software' };
+  } catch { /* fall through to 3D */ }
+  return { lite: false };
+}
+
 function pickQuality() {
   const forced = params.get('q');
   if (['low', 'mid', 'high'].includes(forced)) return forced;
@@ -61,7 +80,7 @@ function revealIntro(world) {
 function setupReveals() {
   if (reducedMotion) return;
   $$('.panel, .wide').forEach((el) => {
-    if (el.closest('.hero')) return;
+    if (el.closest('.hero') || el.closest('.stepper')) return; // stepper chapters cross-fade with CSS
     gsap.fromTo(el, { y: 56, opacity: 0 }, {
       y: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 86%', toggleActions: 'play none none reverse' },
@@ -131,11 +150,87 @@ function setupPip() {
   sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
 }
 
+/* ───────── virtual scrolling: pinned groups that step through their chapters ─────────
+   Each `.stepper` becomes a sticky 100svh stage; its chapters stack inside it and the scroll distance of the group is
+   only (steps - 1) x a fraction of a screen. Every step gets a virtual camera marker (data-vc) so the 3D director
+   follows the steps exactly as it follows normal chapters. Pips under the stage jump between steps. */
+let layoutSteppers = () => {};
+function setupSteppers() {
+  const boxes = $$('.stepper').map((box) => {
+    const steps = $$(':scope > .chapter', box);
+    const stage = document.createElement('div');
+    stage.className = 'stage';
+    steps.forEach((s) => stage.append(s));
+    const pips = document.createElement('div');
+    pips.className = 'step-pips';
+    pips.setAttribute('role', 'group');
+    pips.setAttribute('aria-label', 'Steps');
+    const buttons = steps.map((s, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Step ${i + 1} of ${steps.length}: ${s.dataset.label || ''}`);
+      b.addEventListener('click', () => {
+        const g = box._g;
+        scrollTo({ top: g.top + i * g.S, behavior: reducedMotion ? 'auto' : 'smooth' });
+      });
+      pips.append(b);
+      return b;
+    });
+    const count = document.createElement('span');
+    count.className = 'step-count';
+    count.setAttribute('aria-hidden', 'true');
+    pips.prepend(count);
+    stage.append(pips);
+    box.append(stage);
+    box.classList.add('is-live');
+    return { box, steps, buttons, pips, count, active: -1 };
+  });
+
+  const layout = () => {
+    const vh = innerHeight;
+    for (const o of boxes) {
+      const S = (Number(o.box.dataset.step) || 0.3) * vh;
+      o.box.style.height = `${(o.steps.length - 1) * S + vh}px`;
+      const top = o.box.getBoundingClientRect().top + scrollY;
+      o.box._g = { top, S };
+      o.steps.forEach((s, i) => { s.dataset.vc = String(Math.round(top + vh / 2 + i * S)); });
+    }
+  };
+  const rail = $('#rail'); const label = $('#railLabel');
+  const update = () => {
+    for (const o of boxes) {
+      const { top, S } = o.box._g;
+      const idx = Math.max(0, Math.min(o.steps.length - 1, Math.round((scrollY - top) / S)));
+      if (idx !== o.active) {
+        o.active = idx;
+        o.steps.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+        o.buttons.forEach((b, i) => b.setAttribute('aria-current', String(i === idx)));
+        o.count.textContent = `${idx + 1} / ${o.steps.length}  ${o.steps[idx].dataset.label || ''}`;
+      }
+      // the pips belong to the pinned stage only: fade them as the group scrolls in or out
+      o.pips.classList.toggle('is-away', scrollY < top - 40 || scrollY > top + o.box.offsetHeight - innerHeight + 40);
+      const inside = scrollY > top - innerHeight * 0.4 && scrollY < top + o.box.offsetHeight - innerHeight * 0.6;
+      if (inside) { label.textContent = o.steps[idx].dataset.label || ''; rail.classList.remove('is-hidden'); }
+    }
+  };
+  layoutSteppers = () => { layout(); update(); };
+  layout(); update();
+  addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', () => { layout(); update(); }, { passive: true });
+}
+
+/** scroll position at which a chapter's camera marker sits at the middle of the screen (virtual steps included) */
+window.__kfY = (el) => {
+  if (el.dataset.vc) return Number(el.dataset.vc) - innerHeight / 2;
+  const r = el.getBoundingClientRect();
+  return r.top + scrollY + r.height / 2 - innerHeight / 2;
+};
+
 /* ───────── rail ───────── */
 function setupRail() {
   const label = $('#railLabel');
   const rail = $('#rail');
-  const chapters = $$('.chapter[data-label]');
+  const chapters = $$('.chapter[data-label]').filter((c) => !c.closest('.stepper')); // stepper chapters set the label themselves
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -280,69 +375,124 @@ function setupPerfHud(world) {
   addEventListener('keydown', (e) => { if ((e.key === 'p' || e.key === 'P') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) toggle(!el); });
 }
 
+/* ───────── lightweight mode (no GPU needed) ───────── */
+function showLiteBanner(reason) {
+  const el = $('#noWebgl');
+  el.replaceChildren();
+  const span = document.createElement('span');
+  span.textContent = reason === 'nogl'
+    ? 'Interactive 3D is unavailable on this device. The full portfolio is below.'
+    : 'Lightweight mode: interactive 3D is off on this device so everything stays smooth.';
+  el.append(span);
+  if (reason !== 'nogl') {
+    const a = document.createElement('a');
+    a.href = '?lite=0'; a.textContent = 'Try full 3D'; a.className = 'banner-link';
+    el.append(' ', a);
+  }
+  el.hidden = false;
+  if (reason !== 'forced') setTimeout(() => el.classList.add('is-quiet'), 9000);
+}
+
+async function startLite(reason) {
+  root.classList.add('lite');
+  if (reason === 'nogl') root.classList.add('no-gl');
+  root.dataset.q = 'low';
+  const { createLite } = await import('./lite.js');
+  const lite = createLite({ baseUrl: import.meta.env.BASE_URL, reducedMotion });
+  window.__lite = lite;
+  showLiteBanner(reason);
+  return lite;
+}
+
+/* ───────── quick navigation dots ───────── */
+function setupDots() {
+  const wrap = $('#dots');
+  if (!wrap) return;
+  const targets = $$('a', wrap).map((a) => ({ a, el: document.querySelector(a.getAttribute('href')) })).filter((t) => t.el);
+  const update = () => {
+    const mid = scrollY + innerHeight * 0.45;
+    let cur = targets[0];
+    for (const t of targets) if (t.el.getBoundingClientRect().top + scrollY <= mid) cur = t;
+    targets.forEach((t) => t.a.classList.toggle('is-on', t === cur));
+  };
+  addEventListener('scroll', update, { passive: true });
+  update();
+}
+
 /* ───────── boot ───────── */
 async function boot() {
+  if (params.get('poster') === '1') root.classList.add('poster'); // tooling: render the 3D alone on a transparent page
   setupMenu();
   setupModal();
   setupMisc();
   setupRail();
+  setupSteppers();
+  setupDots();
 
-  const canGL = hasWebGL();
-  if (!canGL) {
-    root.classList.add('no-gl');
-    $('#noWebgl').hidden = false;
-    revealIntro(null);
-    setupReveals();
-    finishLoader();
-    return;
-  }
-
-  setPct(8);
-  const quality = pickQuality();
-  root.dataset.q = quality;
+  const mode = chooseMode();
   let world = null;
-  try {
-    const { createWorld } = await import('./scene/world.js');
-    setPct(35);
-    await new Promise((r) => requestAnimationFrame(r));
-    const governor = params.get('gov') !== '0' && params.get('qa') !== '1';
-    world = createWorld($('#world'), { quality, reducedMotion, governor });
-    window.__world = world;
-    setPct(62);
-    await Promise.race([world.compile(), new Promise((r) => setTimeout(r, 6000))]);
-    setPct(80);
-    await new Promise((r) => requestAnimationFrame(r));
-    world.warm();
-    setPct(92);
-  } catch (err) {
-    console.error('[3D] failed to start, falling back to static layout', err);
-    root.classList.add('no-gl');
-    $('#noWebgl').hidden = false;
+  let lite = null;
+
+  if (mode.lite) {
+    setPct(40);
+    lite = await startLite(mode.reason);
+  } else {
+    setPct(8);
+    const quality = pickQuality();
+    root.dataset.q = quality;
+    try {
+      const { createWorld } = await import('./scene/world.js');
+      setPct(35);
+      await new Promise((r) => requestAnimationFrame(r));
+      const governor = params.get('gov') !== '0' && params.get('qa') !== '1';
+      world = createWorld($('#world'), {
+        quality, reducedMotion, governor,
+        // a frame rate that stays unplayable even at the lowest resolution: switch to the lightweight mode, live
+        onSlow: governor ? async () => {
+          world?.dispose(); $('#world').style.display = 'none';
+          delete window.__world; world = null;
+          lite = await startLite('slow'); lite.start();
+        } : null,
+      });
+      window.__world = world;
+      setPct(62);
+      await Promise.race([world.compile(), new Promise((r) => setTimeout(r, 6000))]);
+      setPct(80);
+      await new Promise((r) => requestAnimationFrame(r));
+      world.warm();
+      setPct(92);
+    } catch (err) {
+      console.error('[3D] failed to start, using the lightweight mode', err);
+      world?.dispose?.(); world = null;
+      lite = await startLite('nogl');
+    }
   }
 
   if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1800))]);
   world?.remeasure();
   world?.start();
+  lite?.start();
   if (world) setupPerfHud(world);
   setupReveals();
   setupMarquee();
   setupPlayground();
   setupPip();
   ScrollTrigger.refresh();
-  world?.remeasure();
-  addEventListener('load', () => { ScrollTrigger.refresh(); world?.remeasure(); });
-  new ResizeObserver(() => world?.remeasure()).observe(document.body);
+  const remeasure = () => { layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
+  remeasure();
+  addEventListener('load', () => { ScrollTrigger.refresh(); remeasure(); });
+  new ResizeObserver(() => remeasure()).observe(document.body);
 
-  // QA hook: ?at=<keyframe> jumps straight to a chapter; ?intro=1 skips the opening animation
+  // QA hook: ?at=<keyframe> jumps straight to a chapter; ?intro=0 skips the opening animation
   const at = params.get('at');
   if (at) {
     const el = document.querySelector(`[data-kf="${at}"]`);
-    if (el) { const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); }
+    if (el) scrollTo(0, window.__kfY(el));
   }
   if (params.get('intro') === '0') world?.setIntro(1);
 
   finishLoader();
-  setTimeout(() => revealIntro(params.get('intro') === '0' ? null : world), 250);
+  setTimeout(() => revealIntro(params.get('intro') === '0' || !world ? null : world), 250);
 }
 
 boot();

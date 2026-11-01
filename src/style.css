@@ -19,7 +19,7 @@ html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; background: var(--
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font-family: var(--f-display); font-stretch: 100%; font-weight: 400; line-height: 1.55;
-  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  -webkit-font-smoothing: antialiased; /* no overflow-x here: it would make body a scroll container and break position: sticky (html clips overflow-x instead) */
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
@@ -36,7 +36,7 @@ button { font: inherit; color: inherit; }
   background: radial-gradient(70% 60% at 70% 25%, rgba(255, 255, 255, 0.26), transparent 62%), var(--bg);
 }
 .back-title {
-  position: absolute; z-index: 0; top: 0; left: 0; right: 0; height: 100svh; min-height: 560px;
+  position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 100svh; min-height: 560px;
   display: flex; align-items: flex-end; padding: 0 var(--pad) clamp(190px, 31svh, 300px); pointer-events: none; overflow: hidden;
 }
 .bt-name { margin: 0; font-weight: 800; font-stretch: 125%; line-height: 0.8; letter-spacing: -0.04em; font-size: clamp(3.6rem, 8.4vw, 11rem); color: var(--ink); }
@@ -429,4 +429,124 @@ html[data-q='low'] .btn--ghost { background: transparent; }
   .xp li { margin-bottom: 3px; }
   .xp .mono-note { display: none; }
   .xp-meta { margin-bottom: 8px; font-size: 11px; }
+}
+
+/* ───────── the name is never hidden: it sits above the 3D canvas; toys pass behind it ───────── */
+.bt-name { text-shadow: 0 0 0.35em color-mix(in srgb, var(--bg) 70%, transparent); }
+
+/* ───────── shorter page ─────────
+   Chapters were a full screen each (30 screens). They are now just tall enough for their content, so the camera
+   keeps moving without long stretches of empty scrolling. */
+:root { --ch: 52svh; }
+@media (min-width: 721px) {
+  .chapter { min-height: var(--ch); padding-top: 60px; padding-bottom: 60px; }
+  .chapter.hero { min-height: 100svh; padding: 120px var(--pad) 28px; }
+  .chapter.dive { min-height: 58svh; }
+  .chapter.playground { min-height: 86svh; }
+  .chapter.contact { min-height: 88svh; padding-bottom: 60px; }
+  .chapter.archive, .chapter.edu, .chapter.profile { min-height: auto; }
+  .xp-step { min-height: 44svh; }
+  .xp-intro { min-height: 50svh; }
+}
+@media (max-width: 720px) {
+  .chapter { min-height: 68svh; }
+  .chapter.hero { min-height: 100svh; }
+  .chapter.dive { min-height: 60svh; }
+  .chapter.playground { min-height: 84svh; }
+  .chapter.contact { min-height: 86svh; }
+  .xp-step { min-height: 58svh; }
+  .xp-intro { min-height: 56svh; }
+  .marquee { margin: 6px 0; padding: 14px 0; }
+}
+
+/* ───────── quick-jump dots (desktop) ───────── */
+.dots { position: fixed; z-index: 45; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 14px; }
+.dots a { position: relative; display: block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink); background: transparent; text-decoration: none; transition: transform 0.3s var(--ease), background 0.25s; }
+.dots a:hover, .dots a:focus-visible { transform: scale(1.25); }
+.dots a.is-on { background: var(--ink); }
+.dots a span { position: absolute; right: 26px; top: 50%; transform: translate(8px, -50%); padding: 5px 11px; border-radius: 999px; background: var(--ink); color: var(--bg); font: 500 11px var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.3s var(--ease); }
+.dots a:hover span, .dots a:focus-visible span { opacity: 1; transform: translate(0, -50%); }
+@media (max-width: 960px) { .dots { display: none; } }
+
+/* ───────── lightweight mode (no GPU needed): posters instead of live WebGL ───────── */
+.lite-stage { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.lite-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.25s linear; will-change: opacity; }
+html.lite #world, html.lite .grain, html.lite #playBtn, html.lite #pipBtn { display: none; }
+html.lite .panel, html.lite .wide, html.lite .dive-copy, html.lite .contact-inner, html.lite .btn--ghost, html.lite .menu-btn, html.lite .play-copy .lede { backdrop-filter: none; -webkit-backdrop-filter: none; }
+html.lite .panel, html.lite .wide { background: color-mix(in srgb, var(--bg) 90%, transparent); }
+html.lite .playground { cursor: default; }
+.no-webgl { max-width: calc(100vw - 24px); text-align: center; transition: opacity 0.6s; }
+.no-webgl .banner-link { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+.no-webgl.is-quiet { opacity: 0.35; } .no-webgl.is-quiet:hover, .no-webgl.is-quiet:focus-within { opacity: 1; }
+
+/* tooling: render the 3D alone on a transparent page (tools/make-posters.mjs) */
+html.poster, html.poster body { background: transparent !important; }
+html.poster .atmos, html.poster .back-title, html.poster .grain, html.poster .skip-link { display: none !important; }
+html.poster main, html.poster main *, html.poster .head, html.poster .rail, html.poster .dots, html.poster .foot, html.poster .menu, html.poster .no-webgl, html.poster .marquee { visibility: hidden !important; } /* keep layout so the camera markers stay valid */
+
+/* ───────── virtual scrolling: a group pins in place and steps through its chapters ─────────
+   (applies only once JS has built the stage, so the page still reads top to bottom without JS) */
+.stepper.is-live { position: relative; }
+.stepper.is-live > .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.stepper.is-live .chapter { position: absolute; inset: 0; min-height: 0; opacity: 0; visibility: hidden; transform: translateY(16px); transition: opacity 0.4s ease, transform 0.6s var(--ease), visibility 0s linear 0.4s; }
+.stepper.is-live .chapter.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.step-pips { position: absolute; z-index: 6; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 10px; padding: 8px 12px; border-radius: 999px; background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.step-pips button { position: relative; width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 1.5px solid var(--ink); background: transparent; cursor: pointer; transition: transform 0.25s var(--ease), background 0.25s; }
+.step-pips button::after { content: ''; position: absolute; inset: -9px; }
+.step-pips button[aria-current='true'] { background: var(--ink); transform: scale(1.35); }
+.step-pips button:hover { transform: scale(1.3); }
+@media (max-width: 720px) { .step-pips { bottom: auto; top: 74px; gap: 9px; padding: 7px 11px; } }
+html.lite .step-pips { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+@media (max-width: 720px) {
+  /* the profile card is the longest on a phone: keep the lede and the first paragraph, the rest lives in Experience */
+  .profile .panel > p:nth-of-type(4) { display: none; }
+  .profile .readout li:nth-child(n+3) { display: none; }
+}
+
+/* ───────── critique v3: small screens, steppers, hero, type ───────── */
+.step-pips { transition: opacity 0.3s ease; }
+.step-pips.is-away { opacity: 0; pointer-events: none; }
+.step-pips button[aria-current='true'] { background: var(--ink); box-shadow: 0 0 0 3px var(--ac); }
+.step-count { display: none; font: 500 11px var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); white-space: pre; max-width: 52vw; overflow: hidden; text-overflow: ellipsis; align-self: center; }
+
+/* surname: a stroke you can read at any size */
+.bt-line:nth-child(2) { -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; }
+
+@media (max-width: 1100px) and (orientation: portrait) {
+  /* the pips live in a pill under the card, so they never sit on the 3D object */
+  .step-pips { top: auto; bottom: 12px; gap: 11px; padding: 6px 14px; max-width: calc(100vw - 24px); }
+  .step-count { display: block; margin-right: 4px; }
+  .step-pips button { width: 12px; height: 12px; }
+  .step-pips button::after { inset: -10px -4px; }
+  .stepper.is-live .chapter { padding-bottom: 68px; }
+  /* hero: the eyebrow and statement sit on a soft plate so toys never muddy them */
+  .hero-top { align-self: flex-start; background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 12px 16px 14px; border-radius: 20px; }
+  .hero-statement { font-size: clamp(1.7rem, 7.2vw, 2.7rem); max-width: 15ch; }
+}
+
+/* contact and profile on a phone: the object band stays visible above the card */
+@media (max-width: 720px) {
+  .chapter.contact { align-items: flex-end; padding-bottom: 28px; }
+  .contact-inner { padding: 22px 20px; border-radius: 28px; }
+  .contact .display--xxl { font-size: clamp(2rem, 10vw, 3rem); }
+  .contact-links, .foot { font-size: 12.5px; }
+}
+
+/* desktop type: body copy and tags a size up */
+@media (min-width: 961px) {
+  .panel p, .xp ul { font-size: 15.5px; line-height: 1.55; }
+  .tags li { font-size: 12px; }
+  .eyebrow { font-size: 11.5px; letter-spacing: 0.1em; }
+}
+
+/* marquee wears the chapter's accent colour instead of near-black */
+.marquee { background: var(--ac); border-color: var(--ac); color: var(--bg); }
+.marquee span:nth-child(even) { -webkit-text-stroke-color: var(--bg); }
+.marquee i { color: var(--ink); }
+
+@media (max-width: 720px) {
+  .profile .panel > p:nth-of-type(3) { display: none; }
+  .contact-meta { display: none; }
+  .contact .eyebrow { margin-bottom: 12px; font-size: 10.5px; }
 }

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { gotoReady, trackErrors } from './helpers.js';
+import { gotoReady, trackErrors, goKf } from './helpers.js';
 
 const ORIGIN = /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//;
 
@@ -80,6 +80,7 @@ test.describe('house style: no em dashes anywhere', () => {
   test('case-study modals contain no em dash either', async ({ page }) => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
     for (const id of ['great', 'loopguard']) {
+      await goKf(page, id === 'great' ? 'great3' : 'w1');
       await page.locator(`[data-modal="${id}"]`).first().click();
       const t = await page.locator('#caseModal').innerText();
       expect(t.includes(EM)).toBe(false);
@@ -121,7 +122,7 @@ test.describe('chapter props: every chapter shows an object about its own topic'
     const map = await kfs(page);
     for (const [kf, prop] of Object.entries(map)) {
       if (!prop) continue;
-      await page.evaluate((id) => { const el = document.querySelector(`[data-kf="${id}"]`); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); }, kf);
+      await page.evaluate((id) => { const el = document.querySelector(`[data-kf="${id}"]`); scrollTo(0, window.__kfY(el)); window.__world.snap(); }, kf);
       await page.waitForFunction((n) => (window.__world.propWeights.get(n) || 0) > 0.95 && window.__world.props.has(n), prop, { timeout: 30_000 });
       const visible = await page.evaluate((n) => window.__world.props.entry(n).wrap.visible, prop);
       expect(visible, `${kf} -> ${prop}`).toBe(true);
@@ -131,7 +132,7 @@ test.describe('chapter props: every chapter shows an object about its own topic'
 
   test('assembly is scroll-driven and reversible', async ({ page }) => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
-    const at = (id) => page.evaluate((k) => { const el = document.querySelector(`[data-kf="${k}"]`); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); }, id);
+    const at = (id) => page.evaluate((k) => { const el = document.querySelector(`[data-kf="${k}"]`); scrollTo(0, window.__kfY(el)); window.__world.snap(); }, id);
     const weight = () => page.evaluate(() => window.__world.propWeights.get('laptop') || 0);
     await at('hero'); await page.waitForTimeout(900);
     expect(await weight()).toBeLessThan(0.05);
@@ -171,8 +172,7 @@ test.describe('animated menu', () => {
 test.describe('bright colour worlds & playground', () => {
   const goto = (page, id) => page.evaluate((k) => {
     const el = document.querySelector(`[data-kf="${k}"]`);
-    const r = el.getBoundingClientRect();
-    scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+    scrollTo(0, window.__kfY(el));
     window.__world.snap();
     return getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase();
   }, id);
@@ -239,7 +239,7 @@ test.describe('Pip - the Blender-authored agent', () => {
   test('perceive → decide → act: head follows the cursor, click makes the right arm rise', async ({ page }) => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 2000 });
     await page.waitForFunction(() => window.__world.agentLoaded, null, { timeout: 30_000 });
-    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); });
+    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); scrollTo(0, window.__kfY(el)); window.__world.snap(); });
     await page.waitForTimeout(1200);
     const read = () => page.evaluate(() => { let head; let arm; window.__world.scene.traverse((o) => { if (o.name === 'head') head = o; if (o.name === 'arm_R') arm = o; }); return { yaw: head.rotation.y, armZ: arm.rotation.z }; });
     await page.mouse.move(100, 450); await page.waitForTimeout(900);
@@ -264,7 +264,7 @@ test.describe('Pip - the Blender-authored agent', () => {
       return v;
     });
     expect(visible).toBe(false);
-    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); });
+    await page.evaluate(() => { const el = document.querySelector('[data-kf="meet"]'); scrollTo(0, window.__kfY(el)); window.__world.snap(); });
     await page.waitForTimeout(1500);
     const shown = await page.evaluate(() => {
       const scene = window.__world.scene; let v = false;
@@ -288,8 +288,7 @@ test.describe('experience, navigation, reversibility', () => {
     await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
     const snapAt = (kf) => page.evaluate(async (id) => {
       const el = document.querySelector(`[data-kf="${id}"]`);
-      const r = el.getBoundingClientRect();
-      scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2);
+      scrollTo(0, window.__kfY(el));
       window.__world.snap();
       // the camera transform is applied in the next frames
       await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(res))));
@@ -334,5 +333,131 @@ test.describe('experience, navigation, reversibility', () => {
     await page.locator('.chip[data-filter="systems"]').click();
     await expect(page.locator('#arcList li:not([hidden])')).toHaveCount(await page.locator('#arcList li[data-cat="systems"]').count());
     expect(errors).toEqual([]);
+  });
+});
+
+test.describe('shorter page, virtual steps, quick navigation', () => {
+  test('page is short: at most 20 screens on desktop and 21 on a phone (was 30)', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    const screens = () => page.evaluate(() => document.documentElement.scrollHeight / innerHeight);
+    expect(await screens()).toBeLessThan(20);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(600);
+    expect(await screens()).toBeLessThan(21);
+  });
+
+  test('pinned groups step through their chapters: exactly one step is active per group, and it follows the scroll', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    for (const [group, kf] of [['#capabilities', 'cap4'], ['#great', 'great2'], ['#works .stepper', 'w5'], ['#experience', 'xp6']]) {
+      await goKf(page, kf, 1100);
+      const active = await page.evaluate((g) => [...document.querySelectorAll(`${g} .chapter.is-active`)].map((c) => c.dataset.kf), group);
+      expect(active, group).toEqual([kf]);
+      const visible = await page.evaluate((g) => [...document.querySelectorAll(`${g} .chapter`)].filter((c) => getComputedStyle(c).visibility === 'visible' && +getComputedStyle(c).opacity > 0.9).length, group);
+      expect(visible, `${group} visible steps`).toBe(1);
+    }
+  });
+
+  test('step pips jump between steps (keyboard accessible)', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    await goKf(page, 'w1', 800);
+    const pips = page.locator('#works .step-pips button');
+    await expect(pips).toHaveCount(6);
+    await pips.nth(3).focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.evaluate(() => document.querySelector('#works .chapter.is-active')?.dataset.kf), { timeout: 15_000 }).toBe('w4');
+    await expect(pips.nth(3)).toHaveAttribute('aria-current', 'true');
+  });
+
+  test('quick-jump dots: six of them, and the Contact dot takes you to the contact chapter', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1500 });
+    const dots = page.locator('#dots a');
+    await expect(dots).toHaveCount(6);
+    await dots.nth(5).click();
+    await page.waitForTimeout(600);
+    expect(await page.evaluate(() => document.querySelector('#contact').getBoundingClientRect().top < window.innerHeight)).toBe(true);
+    await expect.poll(() => page.evaluate(() => document.querySelector('#dots a.is-on')?.getAttribute('href')), { timeout: 5000 }).toBe('#contact');
+  });
+
+  test('no horizontal overflow on phones (sticky stages must not break the layout)', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  });
+});
+
+test.describe('the name is never hidden', () => {
+  test('the name layer sits above the 3D canvas, so toys can only pass behind it', async ({ page }) => {
+    await gotoReady(page, '?intro=0', { settle: 2500 });
+    const z = await page.evaluate(() => ({ name: +getComputedStyle(document.querySelector('.back-title')).zIndex, canvas: +getComputedStyle(document.getElementById('world')).zIndex }));
+    expect(z.name).toBeGreaterThan(z.canvas);
+    await expect(page.locator('.bt-line').first()).toBeVisible();
+  });
+});
+
+test.describe('lightweight mode (no GPU needed)', () => {
+  test('?lite=1: no WebGL, posters cross-fade, the colour flood and all content still work, no errors, no third-party requests', async ({ page }) => {
+    const errors = trackErrors(page);
+    const external = [];
+    page.on('request', (r) => { if (/^https?:/.test(r.url()) && !ORIGIN.test(r.url())) external.push(r.url()); });
+    await page.goto('/?intro=0&lite=1', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
+    await page.waitForTimeout(1200);
+    expect(await page.evaluate(() => document.documentElement.classList.contains('lite'))).toBe(true);
+    expect(await page.evaluate(() => !!window.__world)).toBe(false);
+    expect(await page.evaluate(() => getComputedStyle(document.getElementById('world')).display)).toBe('none');
+    await expect(page.locator('#noWebgl')).toContainText('Lightweight mode');
+    await expect(page.locator('#noWebgl a')).toHaveAttribute('href', '?lite=0');
+    const bgs = [];
+    for (const kf of ['hero', 'dive', 'cap1', 'w2']) {
+      await goKf(page, kf, 1400);
+      bgs.push(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase()));
+      const shown = await page.evaluate(() => [...document.querySelectorAll('.lite-img')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src')));
+      expect(shown.join(), kf).toContain(`-${kf}.webp`);
+      expect(await page.evaluate(() => [...document.querySelectorAll('.lite-img')].every((i) => !i.getAttribute('src') || i.complete))).toBe(true);
+    }
+    expect(new Set(bgs).size).toBe(4); // the page still floods from colour to colour
+    await expect(page.locator('.hero-statement, .bt-line').first()).toBeAttached();
+    expect(external).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+
+  test('a phone gets the portrait posters', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/?intro=0&lite=1', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
+    await page.waitForTimeout(1200);
+    expect(await page.evaluate(() => document.querySelector('.lite-img').getAttribute('src'))).toContain('/posters/p-hero.webp');
+  });
+
+  test('every poster exists and is a reasonable size', async ({ request }) => {
+    const names = ['hero', 'profile', 'meet', 'dive', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'play', 'great1', 'great2', 'great3', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6', 'xp0', 'xp1', 'xp2', 'xp3', 'xp4', 'xp5', 'xp6', 'xp7', 'arc', 'edu', 'contact'];
+    for (const kind of ['l', 'p']) {
+      for (const n of names) {
+        const res = await request.get(`/posters/${kind}-${n}.webp`);
+        expect(res.ok(), `${kind}-${n}`).toBe(true);
+        expect((await res.body()).length, `${kind}-${n} size`).toBeLessThan(160 * 1024);
+      }
+    }
+  });
+
+  test('a software renderer (no GPU) is detected and gets the lightweight mode automatically', async ({ page }) => {
+    test.skip(process.env.GPU === '1', 'this run has a real GPU; software rendering is only present in the default run');
+    await page.goto('/?intro=0', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
+    expect(await page.evaluate(() => document.documentElement.classList.contains('lite'))).toBe(true);
+  });
+
+  test('a GPU machine that cannot hold a playable frame rate falls back to the lightweight mode by itself', async ({ page }) => {
+    test.skip(process.env.GPU !== '1', 'needs a real GPU run (CPU throttling is applied on top of it)');
+    test.setTimeout(150_000);
+    const cdp = await page.context().newCDPSession(page);
+    await page.goto('/?intro=0&lite=0', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 60 });
+    await page.waitForFunction(() => document.documentElement.classList.contains('lite'), null, { timeout: 120_000, polling: 1500 });
+    expect(await page.evaluate(() => getComputedStyle(document.getElementById('world')).display)).toBe('none');
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    await page.waitForTimeout(800);
+    expect(await page.evaluate(() => document.querySelectorAll('.lite-img').length)).toBe(2);
   });
 });

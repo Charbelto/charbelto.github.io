@@ -75,13 +75,13 @@ def library():
         cube('books', cols[i % len(cols)], (x + w / 2, 0, -1.05 + h / 2), (w, 1.6, h), rot=(0, 0.04 * sin(i), 0), bevel=0.06)
         cube('books', 'cream', (x + w / 2, -0.82, -1.05 + h / 2), (w * 0.8, 0.04, h * 0.85))
         x += w + 0.07
-    cyl('funnel', 'yellow', (4.6, 0, 2.2), 0.35, 1.8, r2=1.5, seg=36, bevel=0.03)
-    torus('funnel', 'orange', (4.6, 0, 3.1), 1.5, 0.1, seg=40)
+    cyl('funnel', 'yellow', (0.4, 0, 3.7), 0.4, 2.0, r2=2.0, seg=36, bevel=0.03)
+    torus('funnel', 'orange', (0.4, 0, 4.7), 2.0, 0.12, seg=40)
     for i, c in enumerate(['pink', 'mint', 'lilac', 'cream', 'coral']):
         a = i * 1.3
-        cube('bob_chunks', c, (4.6 + cos(a) * 0.9, sin(a) * 0.9, 4.0 + 0.35 * i), (0.5, 0.5, 0.5), rot=(a, a * 0.7, a * 0.3), bevel=0.08)
+        cube('bob_chunks', c, (0.4 + cos(a) * 0.7, sin(a) * 0.35, 1.6 + 0.55 * i), (0.5, 0.5, 0.5), rot=(a, a * 0.7, a * 0.3), bevel=0.08)
     with front():
-        magnifier('bob_lens', (-2.6, -3.0, 2.2), R=1.3)
+        magnifier('bob_lens', (-2.4, 0.3, 2.7), R=1.35)
 
 
 # ═════════ cap3: tools / MCP = a plug meeting a socket, with a wrench and a gear ═════════
@@ -157,19 +157,26 @@ def call():
     ball('bob_headset', 'coral', (-2.55, -2.2, -1.45), 0.2)
     with front():
         phone('phone', (3.7, 0.2, 0.0), 2.7, 5.0, 0.34, body='navy', screen='cream')
-        cyl('phone', 'green', (3.7, -1.5, 0.3), 0.5, 0.08, seg=28)
-        cyl('phone', 'mint', (3.7, 1.0, 0.25), 0.7, 0.06, seg=28)
-        cube('phone', 'navy', (3.7, 1.0, 0.3), (0.9, 0.12, 0.05))
+        # call screen: caller avatar, name line, voice waveform, red hang-up button
+        cyl('phone', 'blue', (3.7, 1.55, 0.3), 0.55, 0.1, seg=28)
+        cyl('phone', 'cream', (3.7, 1.68, 0.37), 0.2, 0.06, seg=20)
+        cyl('phone', 'cream', (3.7, 1.28, 0.37), 0.36, 0.06, seg=24, r2=0.3)
+        cube('phone', 'navy', (3.7, 0.7, 0.3), (1.2, 0.12, 0.05), bevel=0.02)
+        cube('phone', 'coral', (3.7, 0.45, 0.3), (0.7, 0.08, 0.05))
+        for i, hgt in enumerate((0.3, 0.6, 0.95, 0.5, 1.15, 0.7, 0.4, 0.85, 0.35)):
+            cube('phone', 'blue' if i % 2 == 0 else 'coral', (2.95 + i * 0.19, -0.35, 0.3), (0.1, hgt, 0.06), bevel=0.03)
+        cyl('phone', 'red', (3.7, -1.65, 0.3), 0.45, 0.08, seg=28)
+        cube('phone', 'white', (3.7, -1.65, 0.37), (0.55, 0.14, 0.04), rot=(0, 0, 0.45), bevel=0.02)
         for i in range(3):
             torus(f'pulse_wave{i}', 'coral', (3.7, 0.2, 0.0), 2.2 + i * 0.7, 0.06, seg=48, scale=(1, 1.5, 1))
         for i, (c, p) in enumerate([('mint', (-1.0, 3.6, 1.2)), ('yellow', (1.4, 3.9, 0.4)), ('pink', (-3.6, 3.2, 0.4))]):
             cube(f'bob_bubble{i}', c, p, (1.9, 1.15, 0.4), bevel=0.3, seg=4)
             cyl(f'bob_bubble{i}', c, (p[0] - 0.5, p[1] - 0.8, p[2]), 0.35, 0.4, r2=0.02, rot=(0, 0, 0.6), seg=3)
-        cube('score', 'cream', (-0.6, -3.3, 0.5), (4.4, 1.7, 0.2), bevel=0.14)
+        cube('score', 'navy', (-0.6, -3.3, 0.5), (4.4, 1.7, 0.2), bevel=0.14)
         for i in range(5):
-            star('score', 'yellow', (-2.2 + i * 0.7, -3.15, 0.7), 0.3, 0.1)
+            star('score', 'yellow', (-2.2 + i * 0.7, -3.15, 0.72), 0.32, 0.12)
         for i, h in enumerate((0.3, 0.55, 0.85)):
-            cube('score', 'green', (1.0 + i * 0.45, -3.75 + h / 2, 0.68), (0.28, h, 0.1))
+            cube('score', 'mint', (1.0 + i * 0.45, -3.75 + h / 2, 0.68), (0.28, h, 0.1))
 
 
 # ═════════ w1 LoopGuard: a chain that loops forever, a tripped breaker, a stop sign ═════════
@@ -195,8 +202,8 @@ def loopguard():
 # ═════════ w2 DermSense: a skin cross-section, a lesion, a heat ring and a dermatoscope ═════════
 def derm():
     cube('skin', 'skin', (0, 0, 1.0), (7.6, 4.8, 0.55), bevel=0.18, seg=4)
-    cube('skin', 'skin2', (0, 0, 0.3), (7.6, 4.8, 1.0), bevel=0.14)
-    cube('skin', 'fat', (0, 0, -0.75), (7.6, 4.8, 1.1), bevel=0.14)
+    cube('skin', 'pink', (0, 0, 0.3), (7.6, 4.8, 1.0), bevel=0.14)
+    cube('skin', 'yellow', (0, 0, -0.75), (7.6, 4.8, 1.1), bevel=0.14)
     cube('skin', 'red', (-2.4, -2.42, 0.3), (0.12, 0.05, 0.9))
     cube('skin', 'red', (1.9, -2.42, 0.3), (0.12, 0.05, 0.9))
     blob('lesion', 'brown', (0.4, -0.2, 1.5), 0.95, (1.15, 0.9, 0.6), amp=0.5, freq=1.1, seed=3)
@@ -278,9 +285,8 @@ def tower():
     for i in range(3):
         a = i * 2 * PI / 3 + 0.5
         cube('panels', 'cream', (cos(a) * 0.95, sin(a) * 0.95, 7.0), (0.25, 0.8, 1.4), rot=(0, 0, a + PI / 2), bevel=0.06)
-    cyl('dish', 'yellow', (0.9, -1.5, 5.4), 0.1, 0.5, r2=0.75, rot=(PI / 2 + 0.2, 0, 0.3), seg=28)
     for i, r in enumerate((1.7, 2.9, 4.1)):
-        torus(f'pulse_wave{i}', 'coral', (0, 0, 7.0), r, 0.07, seg=64)
+        torus(f'pulse_wave{i}', 'glowcoral', (0, 0, 7.0), r, 0.13, seg=64)
     with front():
         phone('bob_phone', (5.6, 0.4, 3.0), 2.3, 4.2, 0.3, body='navy', screen='cream')
         for i in range(4):
@@ -339,9 +345,10 @@ def nyc():
 # ═════════ xp2 Chehab Lab: a brain and the stack of MRI slices a model has to choose from ═════════
 def brain():
     for sx in (-1, 1):
-        blob('brain', 'pink', (sx * 0.62, 0, 0.5), 1.0, (0.92, 1.35, 1.0), amp=0.6, freq=1.4, seed=2 + sx, seg=44)
-    blob('brain', 'lilac', (0, 0.85, -0.7), 0.7, (1.0, 0.7, 0.55), amp=0.3, seed=9)
-    cyl('brain', 'skin2', (0, 0.2, -1.5), 0.32, 1.0, seg=20)
+        blob('brain', 'pink', (sx * 0.8, 0, 0.9), 1.0, (0.92, 1.35, 0.98), amp=0.5, freq=2.2, seed=2 + sx, seg=60)
+    cube('brain', 'skin2', (0, 0, 0.9), (0.3, 2.5, 1.7), bevel=0.1)
+    blob('brain', 'lilac', (0, 1.0, -0.35), 0.62, (1.2, 0.7, 0.5), amp=0.5, freq=3.0, seed=9, seg=36)
+    cyl('brain', 'skin2', (0, 0.5, -0.6), 0.26, 0.9, r2=0.16, rot=(0.3, 0, 0), seg=20)
     for i in range(7):
         z = -1.6 + i * 0.55
         k = sin(PI * (i + 0.8) / 8.4)
@@ -352,7 +359,7 @@ def brain():
     for sx in (-1, 1):
         for sy in (-1, 1):
             rod('frame', 'navy', (5.2 + sx * 1.55, sy * 1.55, -1.9), (5.2 + sx * 1.55, sy * 1.55, 2.5), 0.05)
-    cube('base', 'cream', (2.6, 0, -2.2), (10, 4, 0.3), bevel=0.1)
+    cube('base', 'cream', (2.4, 0, -2.2), (8.6, 4, 0.3), bevel=0.1)
     magnifier_world = [(-3.4, -2.6, 1.8)]
 
 
@@ -390,29 +397,29 @@ def heart():
         y = 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)
         pts.append((x / 7.2, y / 7.2 + 0.1))
     with front():
-        cube('paper', 'cream', (0, 0, -0.9), (11.4, 6.8, 0.2), bevel=0.1)
-        for i in range(23):
-            cube('grid', 'pink', (-5.5 + i * 0.5, 0, -0.76), (0.025 if i % 5 else 0.06, 6.6, 0.02))
-        for j in range(14):
-            cube('grid', 'pink', (0, -3.2 + j * 0.5, -0.76), (11.0, 0.025 if j % 5 else 0.06, 0.02))
-        poly('pulse_heart', 'red', pts, 1.3, loc=(0, 0.1, 0), bevel=0.32, seg=4)
+        cube('paper', 'cream', (0, 0, -0.9), (9.8, 6.4, 0.2), bevel=0.1)
+        for i in range(20):
+            cube('grid', 'pink', (-4.75 + i * 0.5, 0, -0.76), (0.025 if i % 5 else 0.06, 6.2, 0.02))
+        for j in range(13):
+            cube('grid', 'pink', (0, -3.0 + j * 0.5, -0.76), (9.4, 0.025 if j % 5 else 0.06, 0.02))
+        poly('pulse_heart', 'red', pts, 1.7, loc=(0, 0.1, 0), bevel=0.55, seg=8)
         ecg = [(-5.4, -0.2), (-3.6, -0.2), (-3.1, 0.2), (-2.6, -0.2), (-1.8, -0.2), (-1.4, -0.9), (-0.8, 2.6), (-0.3, -1.6), (0.1, -0.2),
                (1.0, -0.2), (1.6, 0.5), (2.3, -0.2), (3.2, -0.2), (3.6, 0.3), (4.0, -0.2), (5.4, -0.2)]
-        tube('ecg', 'blue', [(x, y, 1.1) for x, y in ecg], 0.11)
-        ball('pulse_dot', 'lime', (-0.8, 2.6, 1.15), 0.2, seg=14)
-        for i, p in enumerate([(-3.2, -2.4), (3.0, -2.5), (0.0, -3.0)]):
-            ball('leads', 'chrome', (p[0], p[1], 0.3), 0.26, seg=14)
-            tube('leads', 'navy', [(p[0], p[1], 0.3), (p[0] * 0.6, p[1] * 0.5 - 0.2, 0.4), (p[0] * 0.2, -0.9, 0.5)], 0.045)
+        tube('ecg', 'blue', [(x * 0.88, y, 1.3) for x, y in ecg], 0.12)
+        ball('pulse_dot', 'lime', (-0.8 * 0.88, 2.6, 1.35), 0.22, seg=14)
 
 
 # ═════════ xp5 BMB Group x PepsiCo: a soda can, a phone running the app and an offline database ═════════
 def can():
-    cyl('can', 'blue', (-2.6, 0, 1.9), 1.15, 3.8, seg=40, bevel=0.04)
-    cyl('can', 'cream', (-2.6, 0, 2.4), 1.17, 0.5, seg=40)
-    cyl('can', 'red', (-2.6, 0, 1.9), 1.17, 0.5, seg=40)
-    cyl('can', 'chrome', (-2.6, 0, 3.85), 1.1, 0.14, seg=40, r2=0.95)
-    torus('can', 'chrome', (-2.6, 0, 3.92), 0.8, 0.05, seg=36)
-    cube('can', 'chrome', (-2.9, 0, 3.98), (0.4, 0.3, 0.05), bevel=0.02)
+    cx = -2.6
+    cyl('can', 'blue', (cx, 0, 1.6), 1.15, 3.0, seg=48)
+    cyl('can', 'blue', (cx, 0, 3.45), 1.15, 0.7, r2=0.92, seg=48)
+    cyl('can', 'chrome', (cx, 0, 3.86), 0.95, 0.16, seg=48, r2=0.98)
+    cyl('can', 'chrome', (cx, 0, 0.0), 1.2, 0.16, seg=48, r2=1.12)
+    for k, (m, dz, r) in enumerate([('red', 0.0, 0.14), ('cream', 0.34, 0.1), ('red', 0.62, 0.07)]):
+        tube('can', m, [(cx + 1.17 * cos(2 * PI * i / 56), 1.17 * sin(2 * PI * i / 56), 1.5 + dz + 0.4 * sin(2 * 2 * PI * i / 56)) for i in range(56)], r, seg=8, closed=True)
+    torus('can', 'chrome', (cx + 0.3, 0, 3.97), 0.28, 0.05, rot=(0.15, 0, 0), seg=28)
+    cube('can', 'chrome', (cx - 0.25, 0, 3.97), (0.55, 0.32, 0.05), bevel=0.02)
     with front():
         phone('phone', (3.6, 0, 1.0), 2.9, 5.4, 0.36, body='navy', screen='cream')
         tiles = ['coral', 'yellow', 'mint', 'blue', 'pink', 'lilac', 'orange', 'sky', 'green']
@@ -516,10 +523,10 @@ def archive():
         cube('drawers', 'cream', (-1.2, -1.4, z - 0.25), (1.2, 0.05, 0.3))
     for i in range(5):
         cube('papers', 'cream', (-1.2 + (i - 2) * 0.1, 0.1, 2.55 + i * 0.05), (2.4, 1.8, 0.05), rot=(0, 0, 0.12 * (i - 2)))
-    for i, (c, p, a) in enumerate([('lilac', (3.1, -0.4, 1.8), 0.2), ('pink', (3.5, 0.2, 0.1), -0.15), ('sky', (3.0, -0.2, -1.7), 0.1)]):
+    for i, (c, p, a) in enumerate([('lilac', (-4.9, -0.4, 1.8), -0.2), ('pink', (-5.2, 0.2, 0.1), 0.15), ('sky', (-4.8, -0.2, -1.7), -0.1)]):
         g = f'bob_folder{i}'
         cube(g, c, p, (2.5, 0.14, 1.8), rot=(0.05, 0, a), bevel=0.05)
-        cube(g, c, (p[0] - 0.7, p[1], p[2] + 1.0), (1.0, 0.14, 0.3), rot=(0.05, 0, a), bevel=0.04)
+        cube(g, c, (p[0] + 0.7, p[1], p[2] + 1.0), (1.0, 0.14, 0.3), rot=(0.05, 0, a), bevel=0.04)
         cube(g, 'cream', (p[0], p[1] - 0.1, p[2] - 0.05), (2.2, 0.04, 1.4), rot=(0.05, 0, a))
 
 

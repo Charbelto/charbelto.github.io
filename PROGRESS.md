@@ -42,3 +42,33 @@ Research (`3D_REFERENCES.md`), QA (tests and first critique), Performance audit,
 2. Optional: a fresh independent critique of this version, and pruning the dead swarm formations.
 3. Decide on endorsements and the "< 4 h" claim.
 4. When approved: merge, set Pages source to GitHub Actions (workflow already in `.github/`). Do not publish before then.
+
+---
+
+# Round 4: short page, no-GPU mode, small screens (2026-11-01)
+
+| Commit | What |
+|---|---|
+| this round's commit (see `git log`) | Name layer above the 3D, virtual steppers, lightweight no-GPU mode with posters, band-fit camera for phones, critique v3 fixes |
+
+## Done in this round
+- **The name is never hidden:** the name layer sits above the canvas, so toys can only pass behind it (test: `the name layer sits above the 3D canvas`).
+- **Page is about 18 screens, was 30:** four pinned groups (systems, GREAT, projects, experience) step through their chapters (about 0.3 of a screen per step) with pips, a "3 / 8 + name" pill on phones, and six labelled quick-jump dots on desktop. Pips fade when their group is not on screen.
+- **Lightweight mode for CPU-only machines:** posters instead of WebGL, chosen automatically (no WebGL, software renderer, or live fallback below about 11 fps). 60 posters, 2.56 MB, regenerated this round after the colour and camera changes. Not measured on real weak hardware.
+- **Independent critique v3** (`qa/CRITIQUE-v3.md`, 7.3 / 10). Fixes made:
+  - Phones and tablets: the camera now fits each object into the free band between the header and the card (centred, whole object visible, never cropped by the width); pips moved out of the 3D into a pill under the card.
+  - Hero on portrait: eyebrow and statement on a soft plate, larger statement; surname outline thickened to 3 px.
+  - Profile and contact on phones: shorter copy, so the object stays visible above the card.
+  - GREAT: real call screen on the phone (avatar, waveform, red hang-up), solid gold stars on a dark score card, great3 shifted right.
+  - Objects rebuilt: library (lens in front, funnel fed by chunks), DermSense (three saturated layers), tower (three thick signal rings, no dish), brain (fissure, no pedestal), heart (puffy glossy, no spider wires), can (shoulder, rim, tab, wave band), archive (folders on the open side).
+  - Colour: w1 marigold, w2 and xp4 stronger blues, archive periwinkle; the marquee uses the chapter accent, no black wedge.
+  - Desktop: w1, w4, xp2, xp4 pulled away from the screen edges and the cards; card body 15.5 px, tags 12 px.
+- **Tests:** 68 pass on GPU (1 skipped), 24 core pass on software WebGL, production build OK.
+- Review frames: `docs/screenshots/desktop-v4.jpg`, `phone390-v4.jpg`, `phone360-v4.jpg`, `tablet-v4.jpg`.
+
+## Open gaps (honest)
+1. Not re-reviewed by a fresh critic after these fixes; judged from stills. Motion, scroll feel and lite-mode feel need your eyes on real devices.
+2. Phones: objects are smaller on GREAT and profile because those cards are tall; a "more" toggle on cards would give the object more room.
+3. Text over the swarm in dive and play is improved earlier but not re-measured; the ghost numerals and nav contrast items from the critique are not changed.
+4. Lite-mode thresholds are reasoned, not tuned on real low-end hardware. No Lighthouse or Core Web Vitals numbers.
+5. Open decisions for you: endorsement quotes (hidden), the "< 4 h" response claim, whether analytics should ever return.

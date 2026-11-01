@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { trackErrors, gotoReady, REPO_LINKS } from './helpers.js';
+import { trackErrors, gotoReady, REPO_LINKS, goKf } from './helpers.js';
 
 const MAIL = 'mailto:charbeltoumieh1@gmail.com';
 
@@ -135,7 +135,7 @@ test.describe('keyboard & a11y', () => {
   test('case modal opens/closes with Escape and returns focus', async ({ page }) => {
     await gotoReady(page, '?intro=0&q=low', { settle: 500 });
     const opener = page.locator('button[data-modal="great"]');
-    await opener.scrollIntoViewIfNeeded();
+    await goKf(page, 'great3');
     await opener.focus();
     await page.keyboard.press('Enter');
     await expect(page.locator('#caseModal')).toBeVisible();
@@ -149,7 +149,7 @@ test.describe('keyboard & a11y', () => {
   test('modal traps focus (Tab stays inside while open)', async ({ page }) => {
     await gotoReady(page, '?intro=0&q=low', { settle: 500 });
     const opener = page.locator('button[data-modal="loopguard"]');
-    await opener.scrollIntoViewIfNeeded();
+    await goKf(page, 'w1');
     await opener.click();
     for (let i = 0; i < 4; i++) await page.keyboard.press('Tab');
     const inside = await page.evaluate(() => !!document.activeElement?.closest('#caseModal'));

@@ -31,7 +31,7 @@ for (const name of SIZES) {
           const el = id === 'archive' ? document.querySelector('.archive') : document.querySelector(`[data-kf="${id}"]`);
           const r = el.getBoundingClientRect();
           // archive is taller than a screen: show its top
-          const y = id === 'archive' ? r.top + scrollY - 90 : r.top + scrollY + r.height / 2 - innerHeight / 2; // (archive: show the top of the list)
+          const y = id === 'archive' ? r.top + scrollY - 90 : window.__kfY(el); // (archive: show the top of the list)
           scrollTo(0, y);
           window.__world?.snap();
         }, kf);

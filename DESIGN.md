@@ -49,6 +49,15 @@ Skip link, landmarks, visible `:focus-visible` (accent), `aria-expanded` menu wi
 ## Chapter objects
 Every chapter that has a subject shows a Blender-authored object about it (`3D_ART_DIRECTION.md` has the full table). Keyframes name the object with `prop`; `obj()` in `src/scene/keyframes.js` is the shortcut. Scroll assembles it part by part (reversible); confetti is reduced to about a quarter and shrinks near the lens. Object colours are chosen against each chapter's background (for example skin tones on light blue, a blue can on lemon).
 
+## Short page, virtual steps
+The page is about 18 screens (it was 30). Four groups (the five systems chapters, GREAT, the six projects, experience) are **pinned steppers**: the group sticks to the screen and steps through its chapters as you scroll, using only about 0.3 of a screen per step. Each step still has its own camera move and its own object assembling; pips under the stage (top on phones) and six quick-jump dots (desktop right edge) let you jump around. Built in `setupSteppers()` in `src/main.js`; every step gets a virtual camera marker (`data-vc`) shared by the 3D director and the lightweight director; `window.__kfY(el)` gives the scroll position of any chapter. Important: `body` must not set `overflow-x`, or `position: sticky` stops working (`html` clips instead).
+
+## The name is never hidden
+The name layer (`.back-title`) sits above the 3D canvas (z-index 2 over 1), so toys can only pass behind it.
+
+## Lightweight mode (no GPU needed)
+`src/lite.js` replaces WebGL with pre-rendered **posters** of each chapter's object (`public/posters`, 60 files, about 2.5 MB total, about 40 KB each, loaded as you approach them) cross-fading as you scroll; the full-page colour flood, all content, the menu, the steppers and the marquee are unchanged. Chosen automatically when WebGL is missing, when the renderer is software (SwiftShader, llvmpipe, WARP), or when a GPU machine stays below about 11 fps at the lowest resolution (decided live within about five seconds). `?lite=1` forces it, `?lite=0` forces 3D. A small banner offers "Try full 3D". Posters are regenerated from the real scene with `tools/make-posters.mjs` + `tools/posters-to-webp.py`.
+
 ## Menu
 The menu button is shown at every width. Opening grows a full-screen colour wipe from the button (accent layer first, background layer 100 ms behind), then the links rise in one by one; closing reverses it. The closed menu is `visibility: hidden` and `inert`, so it is never focusable.
 
