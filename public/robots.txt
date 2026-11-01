@@ -1,4 +1,4 @@
-# robots.txt for Charbel Toumieh — Portfolio
+# robots.txt for Charbel Toumieh - Portfolio
 User-agent: *
 Allow: /
 

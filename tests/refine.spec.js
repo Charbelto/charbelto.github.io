@@ -50,6 +50,124 @@ test.describe('privacy & content decisions', () => {
   }
 });
 
+const EM = String.fromCharCode(0x2014); // the em dash, written as a code point so this file stays clean
+test.describe('house style: no em dashes anywhere', () => {
+  test('no em dash in any source, doc or page file (legacy archive and the résumé PDF excluded)', async () => {
+    const fs = await import('node:fs'); const path = await import('node:path');
+    const skip = new Set(['node_modules', 'legacy', '.git', 'dist', 'package-lock.json', 'screenshots', 'test-output']);
+    const hits = [];
+    const walk = (d) => {
+      for (const n of fs.readdirSync(d)) {
+        if (skip.has(n) || n.startsWith('dist-') || n.startsWith('review')) continue;
+        const p = path.join(d, n); const st = fs.statSync(p);
+        if (st.isDirectory()) walk(p);
+        else if (/\.(html|js|mjs|css|md|py|txt|json|yml)$/.test(n) && fs.readFileSync(p, 'utf8').includes(EM)) hits.push(p);
+      }
+    };
+    walk(process.cwd());
+    expect(hits, 'files containing an em dash').toEqual([]);
+  });
+
+  for (const route of ['/?intro=0&qa=1', '/privacy.html', '/terms.html', '/404.html', '/thank-you.html']) {
+    test(`no em dash in the rendered page, title or meta: ${route}`, async ({ page }) => {
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      if (route.startsWith('/?')) await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
+      const text = await page.evaluate(() => [document.title, document.body.innerText, ...[...document.querySelectorAll('meta[content], [aria-label], [alt]')].map((e) => e.getAttribute('content') || e.getAttribute('aria-label') || e.getAttribute('alt'))].join('\n'));
+      expect(text.includes(EM)).toBe(false);
+    });
+  }
+
+  test('case-study modals contain no em dash either', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
+    for (const id of ['great', 'loopguard']) {
+      await page.locator(`[data-modal="${id}"]`).first().click();
+      const t = await page.locator('#caseModal').innerText();
+      expect(t.includes(EM)).toBe(false);
+      await page.keyboard.press('Escape');
+    }
+  });
+});
+
+test.describe('chapter props: every chapter shows an object about its own topic', () => {
+  const kfs = (page) => page.evaluate(async () => {
+    const { KF } = await import('/src/scene/keyframes.js');
+    return Object.fromEntries(Object.entries(KF).map(([k, v]) => [k, v.prop || null]));
+  });
+
+  test('keyframe map: projects and roles each get a different object; all objects ship as small valid GLBs', async ({ page, request }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 800 });
+    const map = await kfs(page);
+    const projects = ['w1', 'w2', 'w3', 'w4', 'w5', 'w6'].map((k) => map[k]);
+    const roles = ['xp1', 'xp2', 'xp3', 'xp4', 'xp5', 'xp6', 'xp7'].map((k) => map[k]);
+    expect(projects.every(Boolean)).toBe(true);
+    expect(new Set(projects).size).toBe(6);
+    expect(roles.every(Boolean)).toBe(true);
+    expect(new Set(roles).size).toBe(7);
+    for (const k of ['cap1', 'cap2', 'cap3', 'cap4', 'cap5']) expect(map[k], k).toBeTruthy();
+    expect(new Set(['cap1', 'cap2', 'cap3', 'cap4', 'cap5'].map((k) => map[k])).size).toBe(5);
+    for (const name of new Set(Object.values(map).filter(Boolean))) {
+      const res = await request.get(`/models/props/${name}.glb`);
+      expect(res.ok(), name).toBe(true);
+      const buf = await res.body();
+      expect(buf.subarray(0, 4).toString(), name).toBe('glTF');
+      expect(buf.length, `${name} size`).toBeLessThan(120 * 1024);
+    }
+  });
+
+  test('every prop chapter assembles its object on scroll (no load errors)', async ({ page }) => {
+    test.setTimeout(240_000);
+    const errors = trackErrors(page);
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
+    const map = await kfs(page);
+    for (const [kf, prop] of Object.entries(map)) {
+      if (!prop) continue;
+      await page.evaluate((id) => { const el = document.querySelector(`[data-kf="${id}"]`); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); }, kf);
+      await page.waitForFunction((n) => (window.__world.propWeights.get(n) || 0) > 0.95 && window.__world.props.has(n), prop, { timeout: 30_000 });
+      const visible = await page.evaluate((n) => window.__world.props.entry(n).wrap.visible, prop);
+      expect(visible, `${kf} -> ${prop}`).toBe(true);
+    }
+    expect(errors).toEqual([]);
+  });
+
+  test('assembly is scroll-driven and reversible', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
+    const at = (id) => page.evaluate((k) => { const el = document.querySelector(`[data-kf="${k}"]`); const r = el.getBoundingClientRect(); scrollTo(0, r.top + scrollY + r.height / 2 - innerHeight / 2); window.__world.snap(); }, id);
+    const weight = () => page.evaluate(() => window.__world.propWeights.get('laptop') || 0);
+    await at('hero'); await page.waitForTimeout(900);
+    expect(await weight()).toBeLessThan(0.05);
+    await at('profile'); await page.waitForFunction(() => (window.__world.propWeights.get('laptop') || 0) > 0.95, null, { timeout: 30_000 });
+    await at('hero'); await page.waitForTimeout(1600);
+    expect(await weight()).toBeLessThan(0.05); // disassembled again on the way back up
+  });
+});
+
+test.describe('animated menu', () => {
+  test('opens as a growing wipe (not a snap), links stagger in, closes smoothly, ends inert', async ({ page }) => {
+    await gotoReady(page, '?intro=0&qa=1', { settle: 1200 });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const radius = () => page.evaluate(() => parseFloat((getComputedStyle(document.querySelector('.menu-wipe--a')).clipPath.match(/circle\(([\d.]+)px/) || [0, 0])[1]));
+    expect(await radius()).toBe(0);
+    await page.click('#menuBtn');
+    await page.waitForTimeout(120);
+    const early = await radius();
+    await page.waitForTimeout(1100);
+    const late = await radius();
+    expect(early).toBeGreaterThan(0);
+    expect(early).toBeLessThan(late * 0.6); // mid-animation, not already at full size
+    expect(late).toBeGreaterThan(900); // reaches the far corner
+    const first = await page.evaluate(() => getComputedStyle(document.querySelector('.menu li a')).opacity);
+    expect(+first).toBeGreaterThan(0.95);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(250);
+    const closing = await radius();
+    expect(closing).toBeGreaterThan(0);
+    expect(closing).toBeLessThan(late); // shrinking, not hidden instantly
+    await page.waitForTimeout(1000);
+    expect(await page.evaluate(() => getComputedStyle(document.getElementById('menu')).visibility)).toBe('hidden');
+    expect(await page.evaluate(() => document.getElementById('menu').inert)).toBe(true);
+  });
+});
+
 test.describe('bright colour worlds & playground', () => {
   const goto = (page, id) => page.evaluate((k) => {
     const el = document.querySelector(`[data-kf="${k}"]`);
@@ -100,7 +218,7 @@ test.describe('bright colour worlds & playground', () => {
   });
 });
 
-test.describe('Pip — the Blender-authored agent', () => {
+test.describe('Pip - the Blender-authored agent', () => {
   test('model loads (real glTF with the expected named nodes) and no errors', async ({ page }) => {
     const errors = trackErrors(page);
     await gotoReady(page, '?intro=0&qa=1', { settle: 2500 });

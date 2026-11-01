@@ -1,4 +1,4 @@
-# Design system (v2 — bright, full-colour)
+# Design system (v2 - bright, full-colour)
 
 ## Principles
 1. **Colour is the interface.** Each chapter owns a full-bleed colour world; the page background, type colour, buttons, rules and cards all re-theme continuously with scroll (`--bg`, `--ink`, `--ac` are written by the 3D director every frame).
@@ -6,7 +6,7 @@
 3. **One camera, one swarm.** Every `[data-kf="name"]` element owns a keyframe (`src/scene/keyframes.js`): camera, formation index, background/accent colour. Scroll interpolates keyframes; damping keeps motion fluid and fully reversible.
 4. **Type first.** Huge wide grotesk, an italic serif accent, mono labels. Cards are only used where dense copy sits next to 3D; they are tinted with the live background colour (`--glass`) so they feel part of the world.
 
-## Tokens (`src/style.css`) — driven by the director
+## Tokens (`src/style.css`) - driven by the director
 | Token | Role |
 |---|---|
 | `--bg` | page colour (lime, lilac, electric blue, coral, sky, yellow, mint, pink, violet, cream, peach, lemon, paper…) |
@@ -17,7 +17,7 @@
 Palette of the swarm: `#2433FF #FF4F3D #FFD21F #3DF2B0 #FF6FB5 #F5F1E8 #14141F #B9A6FF`.
 
 ## Type
-**Archivo** (variable width + weight, self-hosted) for display (width 112–125 %, weight 700–800) and body; **Instrument Serif italic** for accent words, project subtitles and quotes; **JetBrains Mono** for labels, indices, tags. Fonts load from this origin (`@fontsource`) — no third-party requests.
+**Archivo** (variable width + weight, self-hosted) for display (width 112–125 %, weight 700–800) and body; **Instrument Serif italic** for accent words, project subtitles and quotes; **JetBrains Mono** for labels, indices, tags. Fonts load from this origin (`@fontsource`) - no third-party requests.
 
 ## Chapter patterns
 - **Hero:** the name sits *behind* the transparent canvas (8.4 vw desktop, ~15 vw phones) in solid + outline; the chrome sun and cloud sit right of it. Buttons and proof points stack in the left column on desktop. Portrait screens get extra camera distance (`pd`) and a lifted subject.
@@ -41,10 +41,19 @@ Intro: swarm flies in from far while the name resolves from blur; blue loader wi
 Desktop: subject opposite the copy. ≤ 960 px: nav collapses to a menu. Portrait (phone/tablet): panels anchor to the bottom, the camera lifts the swarm into the upper half, the name is re-sized to fit. Quality tiers: `high` 360 toys · `mid` 240 · `low` 150 (lower DPR, fewer segments, no pointer effects).
 
 ## Privacy stance
-No analytics, no cookies, no local/session storage, no third-party requests — verified by Playwright. The endorsement quotes from the previous site stay in the markup but `hidden` until their attribution is verified.
+No analytics, no cookies, no local/session storage, no third-party requests - verified by Playwright. The endorsement quotes from the previous site stay in the markup but `hidden` until their attribution is verified.
 
 ## Accessibility
 Skip link, landmarks, visible `:focus-visible` (accent), `aria-expanded` menu with Esc + focus move, `role="dialog"` modal with focus trap and inert background, `details/summary` FAQ, canvas `aria-hidden`, readable content without JS/WebGL (`.no-gl`), auto-contrast ink, reduced-motion support. Not yet audited with axe-core or a screen reader.
+
+## Chapter objects
+Every chapter that has a subject shows a Blender-authored object about it (`3D_ART_DIRECTION.md` has the full table). Keyframes name the object with `prop`; `obj()` in `src/scene/keyframes.js` is the shortcut. Scroll assembles it part by part (reversible); confetti is reduced to about a quarter and shrinks near the lens. Object colours are chosen against each chapter's background (for example skin tones on light blue, a blue can on lemon).
+
+## Menu
+The menu button is shown at every width. Opening grows a full-screen colour wipe from the button (accent layer first, background layer 100 ms behind), then the links rise in one by one; closing reverses it. The closed menu is `visibility: hidden` and `inert`, so it is never focusable.
+
+## House style
+No em dashes anywhere (copy, code comments, docs). Enforced by a test that scans the repository and the rendered pages.
 
 ## Authored assets
 ssets/blender/build_agent.py builds public/models/agent.glb headlessly (see ssets/README.md). Everything else is generated in code.

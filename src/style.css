@@ -74,17 +74,27 @@ main { position: relative; z-index: 5; }
 .head-nav a:hover { color: var(--ink); }
 .head-nav .head-cta { color: var(--bg); background: var(--ink); padding: 9px 16px; border-radius: 999px; font-weight: 500; transition: background 0.25s, transform 0.25s var(--ease); }
 .head-nav .head-cta:hover { background: var(--ac); color: var(--bg); transform: translateY(-1px); }
-.menu-btn { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 50%, transparent); backdrop-filter: blur(10px); cursor: pointer; position: relative; }
+.menu-btn { display: block; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 50%, transparent); backdrop-filter: blur(10px); cursor: pointer; position: relative; }
 .menu-btn span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: var(--ink); transition: transform 0.4s var(--ease); }
 .menu-btn span:nth-child(1) { top: 18px; } .menu-btn span:nth-child(2) { top: 25px; }
 .menu-btn[aria-expanded='true'] span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
 .menu-btn[aria-expanded='true'] span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
-.menu { position: fixed; inset: 0; z-index: 55; background: color-mix(in srgb, var(--bg) 96%, white); backdrop-filter: blur(22px); display: flex; flex-direction: column; justify-content: center; padding: 100px var(--pad) 40px; }
-.menu[hidden] { display: none; }
+/* the menu is a full-screen colour wipe that grows from the button (two layers, the accent layer leads), then the links rise in one by one */
+.menu { position: fixed; inset: 0; z-index: 55; display: flex; flex-direction: column; justify-content: center; padding: 100px var(--pad) 40px; visibility: hidden; transition: visibility 0s linear 0.85s; }
+.menu.is-open { visibility: visible; transition-delay: 0s; }
+.menu-wipe { position: absolute; inset: 0; z-index: -1; pointer-events: none; clip-path: circle(0px at var(--mx, 92%) var(--my, 40px)); }
+.menu-wipe--a { background: var(--ac); transition: clip-path 0.65s var(--ease) 0s; }
+.menu-wipe--b { background: color-mix(in srgb, var(--bg) 96%, white); transition: clip-path 0.8s var(--ease) 0.1s; }
+.menu.is-open .menu-wipe { clip-path: circle(var(--r, 150vmax) at var(--mx, 92%) var(--my, 40px)); }
+.menu:not(.is-open) .menu-wipe--a { transition-delay: 0.12s; }
+.menu:not(.is-open) .menu-wipe--b { transition-delay: 0s; transition-duration: 0.7s; }
+.menu li a, .menu-foot { opacity: 0; transform: translateY(46px); transition: opacity 0.25s ease, transform 0.25s ease; }
+.menu.is-open li a, .menu.is-open .menu-foot { opacity: 1; transform: none; transition: opacity 0.6s var(--ease) calc(0.28s + var(--i, 0) * 60ms), transform 0.8s var(--ease) calc(0.28s + var(--i, 0) * 60ms), color 0.25s; }
+.menu.is-open .menu-foot { --i: 8; }
 .menu ol { list-style: none; margin: 0; padding: 0; }
-.menu li a { display: flex; align-items: baseline; gap: 18px; font-size: clamp(2rem, 6vw, 4.6rem); font-weight: 700; font-stretch: 110%; letter-spacing: -0.02em; text-decoration: none; line-height: 1.15; transition: color 0.25s, transform 0.4s var(--ease); }
+.menu li a { display: flex; align-items: baseline; gap: 18px; font-size: clamp(2rem, 6vw, 4.6rem); font-weight: 700; font-stretch: 110%; letter-spacing: -0.02em; text-decoration: none; line-height: 1.15; }
 .menu li a i { font: 400 12px var(--f-mono); color: var(--ac); }
-.menu li a:hover { color: var(--ac); transform: translateX(10px); }
+.menu.is-open li a:hover { color: var(--ac); transform: translateX(10px); transition-delay: 0s; transition-duration: 0.35s; }
 .menu-foot { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 36px; font-family: var(--f-mono); font-size: 13px; color: var(--mute); }
 .menu-foot a { text-decoration: none; } .menu-foot a:hover { color: var(--ink); }
 
@@ -130,7 +140,7 @@ p { margin: 0 0 1em; }
 .panel strong { color: var(--ink); font-weight: 600; }
 .wide { width: min(1200px, calc(100vw - 2 * var(--pad))); margin: 0 auto; padding: clamp(24px, 3.4vw, 56px); background: var(--glass); backdrop-filter: blur(16px); border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); border-radius: 26px; }
 
-/* ring chapters (desktop): open type instead of a box — ghost numeral, per-ring accent, soft scrim */
+/* ring chapters (desktop): open type instead of a box - ghost numeral, per-ring accent, soft scrim */
 #capabilities { counter-reset: ring; }
 .cap { counter-increment: ring; }
 .cap .idx b { color: var(--ac); }
@@ -163,7 +173,7 @@ p { margin: 0 0 1em; }
   .hero-stats dd { font-size: clamp(1.8rem, 2.4vw, 2.6rem); }
 }
 
-/* profile — compact so the card clears the fixed header on 900px-tall screens */
+/* profile - compact so the card clears the fixed header on 900px-tall screens */
 .profile .panel { padding: 22px 28px; width: min(560px, calc(100vw - 2 * var(--pad))); }
 .profile .panel p { font-size: 14.5px; line-height: 1.5; margin-bottom: 0.8em; }
 .profile .panel .lede { font-size: 1.12rem; }
@@ -305,7 +315,6 @@ html.js .bt-line { opacity: 0; }
 @media (max-width: 960px) {
   .wide--col { width: auto; margin: 0 var(--pad); }
   .head-nav a:not(.head-cta) { display: none; }
-  .menu-btn { display: block; }
   .head-nav { margin-left: auto; }
   .rail { display: none; }
   .split { grid-template-columns: 1fr; }
@@ -391,7 +400,7 @@ html[data-q='low'] .btn--ghost { background: transparent; }
 
 @media (max-width: 720px) { .profile-id img { display: none; } .profile .panel p { font-size: 13.5px; } }
 
-/* dive: no blur — type sits straight on the blue with the toys passing in front of and behind it */
+/* dive: no blur - type sits straight on the blue with the toys passing in front of and behind it */
 .dive-copy { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; text-shadow: 0 2px 22px rgba(8, 18, 140, 0.55); }
 .dive .lede { font-weight: 500; }
 
@@ -399,7 +408,7 @@ html[data-q='low'] .btn--ghost { background: transparent; }
 .playground .display em { color: #fff; text-shadow: 0 3px 24px rgba(10, 20, 80, 0.4); }
 .play-copy .lede { background: var(--bg); backdrop-filter: none; border-radius: 999px; padding: 10px 22px; display: inline-block; }
 
-/* contact (desktop): copy on the left, the rainbow ball sharp on the right — no frosted tile over the 3D */
+/* contact (desktop): copy on the left, the rainbow ball sharp on the right - no frosted tile over the 3D */
 @media (min-width: 961px) {
   .contact { justify-content: flex-start; text-align: left; }
   .contact-inner { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; margin: 0 0 0 var(--pad); padding: 40px 0; max-width: min(760px, 56vw); }
@@ -411,3 +420,13 @@ html[data-q='low'] .btn--ghost { background: transparent; }
 
 /* stat tiles in the hero / GREAT read as bold colour chips on the bright field */
 .hero-stats dd { letter-spacing: -0.04em; }
+
+@media (max-width: 720px) {
+  .xp.panel { padding: 14px 16px; }
+  .xp h3 { font-size: 1.12rem; margin-bottom: 8px; }
+  .xp h3 i { font-size: 1.05em; }
+  .xp ul { font-size: 12.5px; line-height: 1.38; padding-left: 1em; }
+  .xp li { margin-bottom: 3px; }
+  .xp .mono-note { display: none; }
+  .xp-meta { margin-bottom: 8px; font-size: 11px; }
+}

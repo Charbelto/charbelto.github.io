@@ -3,7 +3,7 @@
 _Last updated: 2026-11-01 · branch `redesign/3d-universe` · nothing pushed, merged or deployed_
 
 ## Status in one paragraph
-Direction v2 — **bright, full-colour "Swarm"** — replaced the dark ring machine after the owner said it looked ugly and wanted bright colours, full-screen animation and more signature 3D stories. A single swarm of ~360 glossy toys morphs into a different formation in every chapter (with its own colour story), the whole page floods from one colour world to the next as you scroll, and there is a full-screen interactive Playground. 43 Playwright tests pass; two independent critiques have been run (v1 dark: 6.8/10; v2 bright: 6.5/10 before fixes). **It is not finished** — see *Open creative gaps*.
+Direction v2 - **bright, full-colour "Swarm"** - replaced the dark ring machine after the owner said it looked ugly and wanted bright colours, full-screen animation and more signature 3D stories. A single swarm of ~360 glossy toys morphs into a different formation in every chapter (with its own colour story), the whole page floods from one colour world to the next as you scroll, and there is a full-screen interactive Playground. 43 Playwright tests pass; two independent critiques have been run (v1 dark: 6.8/10; v2 bright: 6.5/10 before fixes). **It is not finished** - see *Open creative gaps*.
 
 ## Commits
 | Hash | What |

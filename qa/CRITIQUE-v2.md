@@ -1,4 +1,4 @@
-# CRITIQUE v2 — independent creative-director review
+# CRITIQUE v2 - independent creative-director review
 
 Reviewed from stills in `qa/review-final/` (desktop1440/1280, tablet768, mobile390/360). I looked at roughly 45 frames and all contact sheets. I did not read the repo.
 

@@ -1,6 +1,6 @@
-# Charbel Toumieh — Portfolio v4 · real-time 3D
+# Charbel Toumieh - Portfolio v4 · real-time 3D
 
-An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. One Blender-authored model (Pip) plus code-generated geometry — all geometry, materials and the studio environment are generated in code.
+An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects that morphs into a new formation for every chapter (agent network, funnel, histogram, evaluation layers, a silhouette for each project…), a page that floods from one colour world to the next as you scroll, and an interactive playground. Built with **Three.js + GSAP + Vite**. One Blender-authored model (Pip) plus code-generated geometry - all geometry, materials and the studio environment are generated in code.
 
 > Branch `redesign/3d-universe`. The previous hand-built site is preserved on `main` (and its source in `legacy/`). Nothing here has been pushed or deployed.
 
@@ -9,7 +9,7 @@ An immersive, full-colour WebGL portfolio: a swarm of ~360 glossy toy objects th
 npm install
 npm run dev        # http://127.0.0.1:5173
 ```
-Useful query params: `?intro=0` (skip opening), `?at=great2` (jump to a chapter), `?q=low|mid|high` (force quality tier), `?gov=0` (disable the adaptive-resolution governor), `?perf=1` (FPS / frame-time / draw-call HUD — or press **P**), `?qa=1` (skip reveals and snap the camera; used by screenshot tests).
+Useful query params: `?intro=0` (skip opening), `?at=great2` (jump to a chapter), `?q=low|mid|high` (force quality tier), `?gov=0` (disable the adaptive-resolution governor), `?perf=1` (FPS / frame-time / draw-call HUD - or press **P**), `?qa=1` (skip reveals and snap the camera; used by screenshot tests).
 
 ## Tests & screenshots
 ```bash
@@ -30,7 +30,7 @@ npm run build      # outputs dist/
 npm run preview    # http://127.0.0.1:4173
 ```
 
-## Deploy (GitHub Pages) — not done automatically
+## Deploy (GitHub Pages) - not done automatically
 The site is now a Vite app, so Pages must serve the **built** `dist/`, not the repo root. `.github/workflows/deploy.yml` builds and publishes via GitHub Actions. To go live: merge this branch, then in the repo settings choose **Pages → Source: GitHub Actions**. Until then the existing deployment is untouched.
 
 ## Structure

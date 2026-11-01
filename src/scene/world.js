@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { buildSwarm, FORMS } from './swarm.js';
 import { KF } from './keyframes.js';
 import { loadAgent } from './agent.js';
+import { createProps } from './props.js';
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -79,6 +80,10 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   let agent = null;
   loadAgent(`${import.meta.env.BASE_URL}models/agent.glb`).then((a) => { agent = a; scene.add(a.rig); }).catch((e) => console.warn('[agent] not loaded', e));
 
+  const props = createProps(scene, import.meta.env.BASE_URL);
+  const propW = new Map(); // damped assembly weight per prop
+  let blend = { a: null, b: null, t: 0, upcoming: [] };
+
   /* ───── director ───── */
   const keys = Object.keys(KF.hero).filter((k) => typeof KF.hero[k] === 'number');
   const cur = { ...KF.hero };
@@ -122,6 +127,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     t = reducedMotion ? (t > 0.5 ? 1 : 0) : smooth(clamp((t - 0.1) / 0.8, 0, 1));
     const A = KF[a.name]; const B = KF[b.name];
     for (const k of keys) tgt[k] = lerp(A[k], B[k], t);
+    blend = { a: A.prop || null, b: B.prop || null, t, upcoming: [marks[i + 2], marks[i + 3]].filter(Boolean).map((mk) => KF[mk.name].prop) };
   }
 
   let lastW = 0; let lastH = 0;
@@ -170,6 +176,16 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     solveTarget();
     const k = reducedMotion ? 1 : 1 - Math.exp(-dt * 3.4);
     for (const key of keys) cur[key] = lerp(cur[key], tgt[key], key === 'fov' ? Math.min(1, k * 1.2) : key.startsWith('bg') || key.startsWith('ac') ? Math.min(1, k * 1.5) : k);
+    // which authored objects are on stage, and how assembled each is (scroll-scrubbed, damped, fully reversible)
+    const want = new Map();
+    if (blend.a) want.set(blend.a, (want.get(blend.a) || 0) + (1 - blend.t));
+    if (blend.b) want.set(blend.b, (want.get(blend.b) || 0) + blend.t);
+    for (const n of [blend.a, blend.b, ...blend.upcoming]) if (n) props.ensure(n);
+    const kp = reducedMotion ? 1 : 1 - Math.exp(-dt * 5);
+    for (const n of new Set([...propW.keys(), ...want.keys()])) {
+      const v = lerp(propW.get(n) || 0, want.get(n) || 0, kp);
+      if (v < 0.002 && !want.get(n)) propW.delete(n); else propW.set(n, v);
+    }
     publishColours();
     fogColor.setRGB(cur.bgr, cur.bgg, cur.bgb, THREE.SRGBColorSpace);
 
@@ -192,7 +208,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     right.set(Math.cos(az), 0, -Math.sin(az));
     const shift = cur.sx * vh * aspect * portrait * ie;
     // portrait: lift the subject into the upper half, above the bottom-anchored text panel
-    const lift = (1 - portrait) * 0.42 * vh;
+    const lift = (1 - portrait) * (0.42 + 0.2 * cur.nf) * vh; // object chapters sit a little higher: their cards are taller
     lookAt.set(cur.cx, cur.cy - lift, cur.cz).addScaledVector(right, -shift);
     camPos.set(cur.cx, cur.cy - lift, cur.cz).add(sph).addScaledVector(right, -shift);
     camera.position.copy(camPos);
@@ -217,8 +233,10 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
       pointerWorld: pointer.tx === 0 && pointer.ty === 0 && !pointerSeen ? new THREE.Vector3(999, 999, 999) : pointerWorld,
       kick: kickAmt, still: reducedMotion,
       sizeBoost: lerp(1.5, 1, portrait), // on tall screens the camera sits further back, so toys grow to stay chunky
+      amount: cur.swarm, nearFade: cur.nf, camDist: d, camPos,
     });
     agent?.update({ time, dt, amount: cur.agent * ie, pointer, still: reducedMotion });
+    props.update({ time, weights: propW, pointer, still: reducedMotion });
     key.position.set(6, 10, 8).applyAxisAngle(upv, az * 0.6);
 
     renderer.render(scene, camera);
@@ -273,6 +291,8 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     get intro() { return intro; },
     kick(v = 3) { if (!reducedMotion) kickAmt = Math.min(8, kickAmt + v); },
     recolor: (n) => swarm.recolor(n),
+    props,
+    propWeights: propW,
     wave() { agent?.wave(); },
     get agentLoaded() { return !!agent; },
     remeasure: measure,

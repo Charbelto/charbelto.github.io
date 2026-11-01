@@ -1,5 +1,5 @@
 """
-Pip — the portfolio's toy "agent" character, modelled procedurally in Blender and exported to glTF.
+Pip - the portfolio's toy "agent" character, modelled procedurally in Blender and exported to glTF.
 
 Run headless (no network, no add-ons):
     "C:/Program Files/Blender Foundation/Blender 5.1/blender.exe" --background --factory-startup \

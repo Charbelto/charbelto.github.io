@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 /**
- * Pip — the interactive "agent" character (modelled in Blender: assets/blender/build_agent.py → public/models/agent.glb).
+ * Pip - the interactive "agent" character (modelled in Blender: assets/blender/build_agent.py → public/models/agent.glb).
  * It runs the same loop as every agent I build: PERCEIVE (it watches the cursor) → DECIDE (it turns to look,
  * blinks, banks into the movement) → ACT (click it to make it wave and hop).
  */

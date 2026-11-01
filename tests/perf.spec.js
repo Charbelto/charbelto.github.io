@@ -2,8 +2,8 @@ import { test } from '@playwright/test';
 import { gotoReady } from './helpers.js';
 
 // Frame-rate probe per chapter. Run on a real GPU:  GPU=1 npx playwright test tests/perf.spec.js
-// Output is printed (and attached) — nothing here asserts a number, because FPS depends on the machine.
-const KFS = ['hero', 'meet', 'dive', 'cap1', 'cap3', 'cap5', 'play', 'great1', 'w3', 'w5', 'xp2', 'contact'];
+// Output is printed (and attached) - nothing here asserts a number, because FPS depends on the machine.
+const KFS = ['hero', 'meet', 'profile', 'cap1', 'cap3', 'play', 'great1', 'w2', 'w4', 'w6', 'xp3', 'xp7', 'contact'];
 
 test('frame-rate probe', async ({ page }) => {
   test.setTimeout(300_000);

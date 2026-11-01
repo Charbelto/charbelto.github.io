@@ -155,29 +155,47 @@ function setupRail() {
 function setupMenu() {
   const btn = $('#menuBtn');
   const menu = $('#menu');
-  const set = (open) => {
+  $$('.menu li').forEach((li, i) => li.style.setProperty('--i', String(i)));
+  let open = false;
+  const set = (next, { restoreFocus = false } = {}) => {
+    if (next === open) return;
+    open = next;
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    menu.hidden = !open;
-    document.body.style.overflow = open ? 'hidden' : '';
-    if (open) $('a', menu)?.focus();
+    if (open) {
+      // grow the wipe from the centre of the button, far enough to cover the farthest corner
+      const r = btn.getBoundingClientRect();
+      const cx = r.left + r.width / 2; const cy = r.top + r.height / 2;
+      menu.style.setProperty('--mx', cx + 'px'); menu.style.setProperty('--my', cy + 'px');
+      menu.style.setProperty('--r', Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)) * 1.05 + 'px');
+      menu.inert = false;
+      menu.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      void menu.offsetWidth; // visibility must be applied before the first link can take focus
+      $('a', menu)?.focus({ preventScroll: true });
+    } else {
+      menu.classList.remove('is-open');
+      menu.inert = true;
+      document.body.style.overflow = '';
+      if (restoreFocus) btn.focus();
+    }
   };
-  btn.addEventListener('click', () => set(menu.hidden));
+  btn.addEventListener('click', () => set(!open));
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { set(false); btn.focus(); } });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) set(false, { restoreFocus: true }); });
 }
 
 /* ───────── case modals ───────── */
 const CASES = {
   great: {
-    title: 'GREAT — Multi-Agent Evaluation & Analytics Platform',
-    sub: 'Gabriel & Co. · New York, NY (Remote) · 2024 — Present',
+    title: 'GREAT: Multi-Agent Evaluation & Analytics Platform',
+    sub: 'Gabriel & Co. · New York, NY (Remote) · 2024 to Present',
     body: `<h4>The Challenge</h4><p>Evaluating customer interactions across 34+ agents and 3 communication channels manually was slow, inconsistent, and unscalable.</p>
       <h4>Architecture &amp; Solution</h4><p>Architected an automated multi-agent evaluation pipeline using custom LLM judge prompts, RAG context validation, and automated scoring metrics. Integrated with company telephony and CRM systems.</p>
       <h4>Key Outcomes</h4><p>• <strong>-90% Reduction in Manual QA Effort</strong>: Automated 100% of routine call reviews.<br/>• <strong>34+ Agents Monitored</strong>: Real-time scoring and sentiment analytics.<br/>• <strong>Actionable Insights</strong>: Instant compliance flagging and coaching recommendations.</p>`,
   },
   loopguard: {
-    title: 'LoopGuard — Agentic Circuit Breaker & Safety Harness',
+    title: 'LoopGuard: Agentic Circuit Breaker & Safety Harness',
     sub: 'Open Source AI Safety Framework · 2025',
     body: `<h4>The Challenge</h4><p>Autonomous LLM agents can easily enter infinite execution loops, consuming tokens rapidly and performing unintended actions.</p>
       <h4>Architecture &amp; Solution</h4><p>Designed a lightweight Python circuit-breaker decorator that tracks execution graphs, detects state cycles via graph hashing, and halts rogue agents automatically.</p>
@@ -227,7 +245,7 @@ function setupMisc() {
     window.__world?.remeasure();
     window.__world?.kick(5); // the swarm answers the filter: it bursts outward, then settles
   }));
-  // hovering an archive row nudges the rings a little — the list is wired into the same world
+  // hovering an archive row nudges the rings a little, the list is wired into the same world
   $$('#arcList a').forEach((a) => a.addEventListener('pointerenter', () => window.__world?.kick(1.4)));
   const copy = $('#copyMail');
   copy?.addEventListener('click', async () => {
@@ -238,7 +256,7 @@ function setupMisc() {
   $('#year').textContent = String(new Date().getFullYear());
 }
 
-/* ───────── perf overlay (?perf=1 or press P) — for measuring on real hardware ───────── */
+/* ───────── perf overlay (?perf=1 or press P), for measuring on real hardware ───────── */
 function setupPerfHud(world) {
   let el = null; let raf = 0; let frames = 0; let t0 = performance.now(); let worst = 0; let lastF = t0;
   const loop = (now) => {

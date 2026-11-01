@@ -2,17 +2,17 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 /**
- * THE SWARM — one set of glossy "toy" objects that morphs between a formation for every chapter
+ * THE SWARM - one set of glossy "toy" objects that morphs between a formation for every chapter
  * (a cloud around a chrome sun, a tunnel, an agent network, a funnel, a socket lattice, a histogram,
  * a shield, exploded evaluation layers, then a silhouette for each project, a helix, and finally a tidy ball).
- * Every formation is plain maths — no external assets.
+ * Every formation is plain maths - no external assets.
  */
 const TAU = Math.PI * 2;
 export const PALETTE = ['#2433FF', '#FF4F3D', '#FFD21F', '#3DF2B0', '#FF6FB5', '#F5F1E8', '#14141F', '#B9A6FF'];
 const WEIGHTS = [3, 3, 3, 2, 2, 2, 1, 2];
-export const FORMS = 20;
+export const FORMS = 21;
 // toy size per formation: structures (network, lattice, layers, project shapes) use smaller toys so the SHAPE reads
-const SIZE_MUL = [0.9, 0.8, 0.7, 0.95, 0.62, 0.62, 0.6, 0.7, 0.66, 1.0, 0.6, 0.58, 0.62, 0.6, 0.6, 0.62, 0.62, 0.7, 0.8, 0.66];
+const SIZE_MUL = [0.9, 0.8, 0.7, 0.95, 0.62, 0.62, 0.6, 0.7, 0.66, 1.0, 0.6, 0.58, 0.62, 0.6, 0.6, 0.62, 0.62, 0.7, 0.8, 0.66, 0.95];
 
 function rng(seed) {
   let a = seed >>> 0;
@@ -63,7 +63,7 @@ function buildFormations(N, colorIdx) {
     (i, r) => { const t = i / N; const ang = t * 34 + r() * 0.3; const rad = 0.5 + 5.8 * Math.pow(1 - t, 1.3); return [Math.cos(ang) * rad, 4.5 - t * 9, Math.sin(ang) * rad, 0.7 + (1 - t) * 0.5, [0, 7, 5, 4, 1, 2][Math.min(5, Math.floor(t * 6))]]; },
     // 6 tools: a socket lattice (two layers)
     (i) => { const layer = i % 2; const idx = Math.floor(i / 2); const m = Math.ceil(N / 2); const cols = Math.ceil(Math.sqrt(m * 1.15)); const rows = Math.ceil(m / cols); return [((idx % cols) - (cols - 1) / 2) * 1.05, (Math.floor(idx / cols) - (rows - 1) / 2) * 1.05, layer * 1.7 - 0.85, 0.95, ((idx % cols) + Math.floor(idx / cols)) % 2 ? 0 : 5]; },
-    // 7 evaluation: a distribution — instances stack into columns by colour
+    // 7 evaluation: a distribution - instances stack into columns by colour
     (i, r) => [(colorIdx[i] - 3.5) * 1.3, -4.2 + stack[i] * 0.72, (r() - 0.5) * 0.4, 1.0],
     // 8 reliability: a protective shell
     (i) => { const ph = Math.acos(1 - (2 * (i + 0.5)) / N); const th = Math.PI * (1 + Math.sqrt(5)) * i; const R = 4.7; return [R * Math.sin(ph) * Math.cos(th), R * Math.cos(ph), R * Math.sin(ph) * Math.sin(th), 1.05]; },
@@ -84,7 +84,7 @@ function buildFormations(N, colorIdx) {
       if (k < 5) { const a = ((i % per) / per) * TAU; const R = [3.7, 3.3, 2.8, 2.3, 1.8][k]; return [Math.cos(a) * R, (2 - k) * 1.75, Math.sin(a) * R, 0.9, [1, 2, 3, 4, 0][k]]; }
       return dust(r);
     },
-    // 13 OULAD: a cohort of trajectories — bands separate, some drop out
+    // 13 OULAD: a cohort of trajectories - bands separate, some drop out
     (i) => {
       const p = Math.floor(i / 12); const b = i % 12; const s = b / 11;
       const band = [1.7, 0, -1.7][p % 3]; const h = Math.sin(p * 12.9898) * 43758.5453; const jit = (h - Math.floor(h)) - 0.5;
@@ -139,6 +139,9 @@ function buildFormations(N, colorIdx) {
     (i, r) => { const rad = 5 + Math.pow(r(), 0.8) * 6; const th = r() * TAU; const y = (r() - 0.5) * 7; return [Math.cos(th) * rad, y, Math.sin(th) * rad, 0.75]; },
     // 19 contact: a tidy ball of everything
     (i) => { const sh = i % 4; const n = Math.ceil(N / 4); const idx = Math.floor(i / 4); const R = [2.0, 2.9, 3.8, 4.7][sh]; const ph = Math.acos(1 - (2 * (idx + 0.5)) / n); const th = Math.PI * (1 + Math.sqrt(5)) * idx; return [R * Math.sin(ph) * Math.cos(th), R * Math.cos(ph), R * Math.sin(ph) * Math.sin(th), 1.0, Math.min(7, Math.floor((ph / Math.PI) * 8))]; },
+    // 20 confetti: a wide, calm shell of toys around the stage. Prop chapters use it so the object is the subject
+    // and the toys only frame it (they also shrink when they would pass between the lens and the object).
+    (i, r) => { const rad = 6.8 + r() * 4.6; const th = r() * TAU; const ph = Math.acos(2 * r() - 1); return [rad * Math.sin(ph) * Math.cos(th), rad * Math.cos(ph) * 0.62, rad * Math.sin(ph) * Math.sin(th), 0.6 + r() * 0.4]; },
   ];
 
   defs.forEach((fn, f) => {
@@ -215,11 +218,12 @@ export function buildSwarm(quality, mats) {
 
   const d = new THREE.Object3D();
   const tmp = new THREE.Color();
+  const camLocal = new THREE.Vector3();
   const PCOL = PALETTE.map((h) => new THREE.Color(h));
   const local = new THREE.Vector3();
   const P = new THREE.Vector3();
 
-  function update({ time, dt, form, spread, sunAmt, intro, pointerWorld, pointerR, kick, still, sizeBoost = 1 }) {
+  function update({ time, dt, form, spread, sunAmt, intro, pointerWorld, pointerR, kick, still, sizeBoost = 1, amount = 1, nearFade = 0, camDist = 15, camPos = null }) {
     const fa = Math.min(FORMS - 1, Math.max(0, Math.floor(form)));
     const fb = Math.min(FORMS - 1, fa + 1);
     let t = form - fa; t = t * t * (3 - 2 * t);
@@ -228,6 +232,7 @@ export function buildSwarm(quality, mats) {
     const yMul = 1 + (spread - 1) * w9;
     const ie = intro;
     const sizeMul = (SIZE_MUL[fa] + (SIZE_MUL[fb] - SIZE_MUL[fa]) * t) * sizeBoost;
+    if (camPos) { camLocal.copy(camPos); group.worldToLocal(camLocal); }
     // pointer in the group's local space
     local.copy(pointerWorld); group.worldToLocal(local);
     const R = pointerR; const decay = Math.exp(-dt * 3.2);
@@ -235,13 +240,23 @@ export function buildSwarm(quality, mats) {
 
     for (let m = 0; m < 5; m++) {
       const mesh = meshes[m]; const list = ids[m];
-      for (let j = 0; j < list.length; j++) {
+      // only the toys that are actually visible are drawn (ids are in global order, so the first mount fraction)
+      const shown = amount >= 0.999 ? list.length : Math.min(list.length, Math.ceil(amount * list.length) + 2);
+      mesh.count = shown;
+      for (let j = 0; j < shown; j++) {
         const i = list[j]; const o = i * 4;
         let x = A[o] + (B[o] - A[o]) * t;
         let y = (A[o + 1] + (B[o + 1] - A[o + 1]) * t) * yMul;
         let z = A[o + 2] + (B[o + 2] - A[o + 2]) * t;
         let s = (A[o + 3] + (B[o + 3] - A[o + 3]) * t) * sizeMul;
         if (!still) { y += Math.sin(time * 0.7 + phase[i]) * 0.14; x += Math.cos(time * 0.5 + phase[i] * 1.3) * 0.08; }
+        if (nearFade > 0.001 && camPos) {
+          const dx2 = x - camLocal.x; const dy2 = y - camLocal.y; const dz2 = z - camLocal.z;
+          const dd = Math.sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
+          const f = Math.min(1, Math.max(0, (dd - camDist * 0.55) / (camDist * 0.28)));
+          s *= 1 + (f * f * (3 - 2 * f) - 1) * nearFade;
+        }
+        if (amount < 0.999) s *= Math.min(1, Math.max(0, (amount - i / N) * 8));
         // intro: everything flies in from far away
         const spreadIn = 1 + (1 - ie) * 2.4; x *= spreadIn; y *= spreadIn; z *= spreadIn; s *= ie;
 

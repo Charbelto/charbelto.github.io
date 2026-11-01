@@ -342,9 +342,9 @@ The `low` tier is chosen for touch devices narrower than 820 px. Today it still 
 
 ---
 
-# Addendum — refinement phase (2026-11-01)
+# Addendum - refinement phase (2026-11-01)
 
-## A. Real-GPU measurements (new) — what they are and are not
+## A. Real-GPU measurements (new) - what they are and are not
 The in-app browser pane of this session runs Chromium on a **real GPU**: `ANGLE (NVIDIA GeForce RTX 4070 Laptop GPU, Direct3D11)`. Using the new `?perf=1` HUD and a small in-page sampler (2.5 s per scene, camera snapped to each chapter) at an emulated **1920×1080 viewport, devicePixelRatio 1.25** (drawing buffer ≈ 2400×1350, `high` tier, dev server, resolution governor on):
 
 | Scene | fps | avg frame | worst frame | draw calls | triangles |
@@ -359,7 +359,7 @@ The in-app browser pane of this session runs Chromium on a **real GPU**: `ANGLE 
 | experience step (xp2) | 144 | 7 ms | 8 ms | 71 | 114k |
 | contact | 143 | 7 ms | 14 ms | 69 | 114k |
 
-**Reading this honestly:** every scene sat at the display's refresh rate (~144 Hz, vsync-capped), so the GPU frame time is *below* ~7 ms — but the cap hides how far below. This proves the experience holds a full refresh rate on a high-end laptop GPU at a large, high-DPI viewport. It does **not** say anything about integrated GPUs, phones, or other browsers. The governor never stepped down (0 steps). Measured on the Vite **dev** server (unbundled) in one session; single run per scene.
+**Reading this honestly:** every scene sat at the display's refresh rate (~144 Hz, vsync-capped), so the GPU frame time is *below* ~7 ms - but the cap hides how far below. This proves the experience holds a full refresh rate on a high-end laptop GPU at a large, high-DPI viewport. It does **not** say anything about integrated GPUs, phones, or other browsers. The governor never stepped down (0 steps). Measured on the Vite **dev** server (unbundled) in one session; single run per scene.
 
 **Not measured, so not claimed:** Lighthouse score, LCP, INP, CLS, GPU memory, battery/thermals, real phones/tablets, Safari/Firefox. Software-GL numbers from earlier in this document remain meaningless for FPS.
 
@@ -386,7 +386,7 @@ Bundle after changes (gzip): `main` ≈ 49 KB, lazy `world` (three.js) ≈ 142 K
 1. `npm run build && npm run preview`, open **http://127.0.0.1:4173/?perf=1** in Chrome at your normal window size. (Press **P** to toggle the HUD any time.) The HUD shows fps, average and worst frame time, draw calls, triangles, programs, **current pixel ratio** and how many governor steps have occurred.
 2. Scroll through the whole page slowly, then quickly, then back up. Watch for the *worst* frame figure and for the governor stepping (a step means your GPU/CPU couldn't hold ~40 fps at the previous resolution).
 3. **Stress test:** DevTools → Performance → ⚙ → *CPU: 6× slowdown*; or use `?q=mid` / `?q=low` to preview weaker tiers; compare `?gov=0` vs default.
-4. **Lighthouse (lab):** DevTools → Lighthouse → *Navigation*, *Mobile*, categories Performance + Accessibility + Best Practices + SEO → *Analyze*. Run it 3× and take the median; run against the **preview build**, not the dev server. Expect Lighthouse's mobile throttling to be harsh on WebGL pages — treat TBT/LCP as a relative signal.
+4. **Lighthouse (lab):** DevTools → Lighthouse → *Navigation*, *Mobile*, categories Performance + Accessibility + Best Practices + SEO → *Analyze*. Run it 3× and take the median; run against the **preview build**, not the dev server. Expect Lighthouse's mobile throttling to be harsh on WebGL pages - treat TBT/LCP as a relative signal.
 5. **Core Web Vitals in your own browser (no tracking added):** open DevTools → Console on the preview build and paste:
 ```js
 new PerformanceObserver(l => console.log('LCP', l.getEntries().at(-1).startTime|0, 'ms')).observe({type:'largest-contentful-paint', buffered:true});
@@ -399,7 +399,7 @@ let cls = 0; new PerformanceObserver(l => { for (const e of l.getEntries()) if (
 
 ---
 
-# Addendum 2 — bright "Swarm" rebuild (2026-11-01)
+# Addendum 2 - bright "Swarm" rebuild (2026-11-01)
 
 The ring "engine" was replaced by an instanced toy swarm (`src/scene/swarm.js`). Sections 2–3 and §A–C above describe the *old* scene's counts; the numbers below are for the new one.
 
@@ -412,15 +412,42 @@ The ring "engine" was replaced by an instanced toy swarm (`src/scene/swarm.js`).
 | Per-frame CPU | `renderer.render` ≈ 0.4 ms, `swarm.update` ≈ 0.16 ms (measured in-page) | 360 matrix + colour writes |
 | Instances by tier | 360 / 240 / 150 | `?q=high|mid|low` |
 
-## Frame rate — what was and was not measured
+## Frame rate - what was and was not measured
 `GPU=1 npx playwright test tests/perf.spec.js` (headless Chromium on the **RTX 4070 Laptop GPU** via ANGLE/D3D11, 1920×1080, resolution governor off, 3 s per chapter): **60 fps, 16.6 ms average, 17 ms worst frame in all 11 chapters probed** (hero, dive, cap1, cap3, cap5, playground, great1, w3, w5, xp2, contact). Headless rAF is vsync-capped at 60 Hz, so this shows the page *holds* 60 fps at this size on this GPU; it does **not** show how much headroom there is, nor anything about other GPUs, phones, Safari or Firefox.
 
 **A caveat I hit and should be honest about:** the in-app browser pane in this session reported 1–11 fps for the *same* page at the same moment (and stayed ~2 fps even with `renderer.render` replaced by a no-op and with the canvas/`main`/grain hidden, while a plain HTML page in the same pane ran at 139 fps and the JS side of every frame cost < 1 ms). That pattern points at the pane's own throttling, not the scene, but I could not prove it. If you see low frame rates on your machine, press **P** for the HUD and tell me the numbers.
 
 ## Not measured (so not claimed)
-Lighthouse, LCP, INP, CLS, GPU memory, battery/thermals, real phones/tablets, other browsers. Use §C above — the steps still apply (`?perf=1`, press **P**).
+Lighthouse, LCP, INP, CLS, GPU memory, battery/thermals, real phones/tablets, other browsers. Use §C above - the steps still apply (`?perf=1`, press **P**).
 
 ## Cost drivers to watch
 - Triangles scale with instances × shape detail; the `low` tier uses 150 instances and ~60 % segment counts.
-- `backdrop-filter` tiles (dive, contact, cards) sit over a transparent WebGL canvas — they are disabled on the `low` tier.
+- `backdrop-filter` tiles (dive, contact, cards) sit over a transparent WebGL canvas - they are disabled on the `low` tier.
 - Per-frame CSS-variable writes (`--bg`, `--ink`, `--ac`) restyle the page only while a colour is actually changing (guarded by a string compare).
+
+
+---
+
+# Addendum 3: Blender props (2026-11-01)
+
+Chapters now show authored objects instead of swarm formations (see `3D_ART_DIRECTION.md`). Measured with `GPU=1 npx playwright test tests/perf.spec.js` (headless Chromium, RTX 4070 Laptop GPU, 1920x1080, governor off, 3 s per chapter), after drawing only the visible confetti:
+
+| Chapter | fps | worst frame | draw calls | triangles |
+|---|---:|---:|---:|---:|
+| hero (swarm + sun) | 60 | 17 ms | 7 | 406k |
+| meet (Pip + swarm) | 60 | 17 ms | 25 | 426k |
+| profile (laptop) | 60 | 17 ms | 24 | 136k |
+| orchestration | 60 | 17 ms | 38 | 126k |
+| tools | 60 | 17 ms | 20 | 123k |
+| playground | 60 | 17 ms | 5 | 398k |
+| GREAT | 60 | 17 ms | 21 | 128k |
+| DermSense | 60 | 17 ms | 20 | 127k |
+| microservices | 60 | 17 ms | 18 | 120k |
+| supermarket | 60 | 17 ms | 25 | 138k |
+| CMA CGM ship | 60 | 17 ms | 18 | 126k |
+| eMcREY gears | 60 | 17 ms | 18 | 137k |
+| contact | 60 | 17 ms | 16 | 195k |
+
+- Prop chapters render about 125k triangles (down from about 410k when hidden confetti was still being drawn at zero size: `mesh.count` is now cut to the visible fraction).
+- Assets: 24 props, 945 KB total after Draco, 20 to 80 KB each, loaded lazily (the current, previous and next two props). The Draco WASM decoder is served from this origin (`public/draco`, about 340 KB), so there is still no third-party request.
+- Headless rAF is vsync-capped at 60 Hz: this proves the page holds 60 fps at this size on this GPU, not how much headroom there is. Other GPUs, phones, Safari and Firefox are untested. Lighthouse, LCP, INP, CLS not measured.

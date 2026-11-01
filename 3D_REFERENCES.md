@@ -138,7 +138,7 @@ URLs: `dribbble.com/shots/25860515-...` and `.../25914349-Case-study-...`
 
 ## Addendum (2026-11-01): first-hand observations from a real browser
 
-The earlier sections were written without being able to see the sites render. These notes come from opening the sites in the in-app Chromium (real GPU) and taking screenshots. They are observations of a few frames at a few scroll positions — not a full audit.
+The earlier sections were written without being able to see the sites render. These notes come from opening the sites in the in-app Chromium (real GPU) and taking screenshots. They are observations of a few frames at a few scroll positions - not a full audit.
 
 | Site | What I actually saw | Takeaway used in this project |
 |---|---|---|
