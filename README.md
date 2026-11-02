@@ -78,3 +78,6 @@ Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbe
 
 ## Keeping the project small
 The tracked project is about 24 MB; everything else on disk is regenerable. `npm run clean` removes test output, QA screenshots and `dist/`; `npm run pack` writes a clean zip of only the tracked files to `../My-Website-clean.zip` (commit first). `node_modules` never needs to be zipped (`npm ci` restores it). A test (`tests/hybrid.spec.js`) fails if `public/` grows past 9 MB or any file in it passes 600 KB.
+
+## Samples and techniques
+See `docs/SAMPLES_AND_TECHNIQUES.md` for the "Try a sample" panels (what is real, what is an illustration, feasibility and licensing notes) and for which visual and motion techniques were used or skipped. Rebuild the sample data with `python tools/make-lab-data.py`.

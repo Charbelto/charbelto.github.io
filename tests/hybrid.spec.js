@@ -87,3 +87,52 @@ test('shipped files stay small: size budget for public/ and the tracked repo', a
   const bytes = tracked.reduce((s, f) => { try { return s + fs.statSync(f).size; } catch { return s; } }, 0);
   expect(bytes / 1e6, `tracked files are ${(bytes / 1e6).toFixed(1)} MB`).toBeLessThan(30);
 });
+
+test.describe('desktop polish: blue scrollbar, kinetic type, pointer ring, smooth wheel', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  test('scrollbar is the blue sliding bar; headings are split into words that reveal; cursor ring and magnetic buttons exist', async ({ page }) => {
+    await gotoReady(page, '?intro=0&gov=0', { settle: 1200 });
+    const r = await page.evaluate(() => ({
+      bar: getComputedStyle(document.documentElement, '::-webkit-scrollbar').width,
+      thumb: getComputedStyle(document.documentElement, '::-webkit-scrollbar-thumb').borderRadius,
+      words: document.querySelectorAll('.is-split .sw').length,
+      ring: !!document.querySelector('.cursor-ring'),
+      magnet: document.querySelectorAll('.is-magnet').length,
+    }));
+    expect(r.bar).toBe('14px');
+    expect(r.words, 'split words').toBeGreaterThan(20);
+    expect(r.ring).toBe(true);
+    expect(r.magnet).toBeGreaterThan(3);
+    // a heading reveals when it scrolls into view
+    await page.evaluate(() => scrollTo(0, window.__kfY(document.querySelector('[data-kf="contact"]'))));
+    await page.waitForTimeout(1600);
+    expect(await page.evaluate(() => document.querySelectorAll('.is-split.sw-in').length)).toBeGreaterThan(0);
+  });
+
+  test('wheel scrolling is smoothed (Lenis): one wheel notch glides instead of jumping', async ({ page }) => {
+    await page.goto('/?intro=0&lite=1&gov=0&smooth=1', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
+    await page.waitForTimeout(1500);
+    expect(await page.evaluate(() => !!window.__lenis)).toBe(true);
+    await page.mouse.move(700, 400);
+    // sample the scroll position on every frame while one wheel notch is applied
+    await page.evaluate(() => { window.__ys = []; const f = () => { window.__ys.push(scrollY); if (window.__ys.length < 200) requestAnimationFrame(f); }; requestAnimationFrame(f); });
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(2200);
+    const ys = await page.evaluate(() => window.__ys);
+    const deltas = ys.slice(1).map((y, i) => y - ys[i]);
+    const total = ys[ys.length - 1] - ys[0];
+    expect(total, 'it arrives about where the wheel asked').toBeGreaterThan(450);
+    expect(Math.max(...deltas), 'no single frame carries the whole notch').toBeLessThan(total * 0.5);
+    expect(deltas.filter((d) => d > 6).length, 'it glides over many frames').toBeGreaterThan(8);
+  });
+
+  test('reduced motion: no word splitting, no cursor ring, no smooth-wheel library', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/?intro=0&lite=0&gov=0', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
+    await page.waitForTimeout(1000);
+    const r = await page.evaluate(() => ({ words: document.querySelectorAll('.sw').length, ring: !!document.querySelector('.cursor-ring'), lenis: !!window.__lenis }));
+    expect(r).toEqual({ words: 0, ring: false, lenis: false });
+  });
+});

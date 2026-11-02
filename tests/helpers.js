@@ -21,6 +21,7 @@ export function trackErrors(page) {
 /** Navigate and wait for the loader to be gone + a few frames. */
 export async function gotoReady(page, qs = '?intro=0&q=low&gov=0', { settle = 3000 } = {}) {
   if (!/[?&]lite=/.test(qs)) qs += (qs.includes('?') ? '&' : '?') + 'lite=0';
+  if (!/[?&]smooth=/.test(qs)) qs += '&smooth=0'; // deterministic scrolling for tests (the smooth-wheel test turns it on)
   await page.goto('/' + qs, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
   await page.waitForTimeout(settle);

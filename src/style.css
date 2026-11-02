@@ -627,3 +627,104 @@ html.poster .hud, html.poster .hud-grain, html.poster .hud-progress { display: n
   50% { transform: translate3d(0, 9px, 0) rotate(0.8deg) scale(1.018); }
 }
 @media (prefers-reduced-motion: reduce) { .lite-img { animation: none; } }
+
+/* ───────── the right-hand scrollbar: a blue sliding bar ───────── */
+html::-webkit-scrollbar { width: 14px; }
+html::-webkit-scrollbar-track { background: color-mix(in srgb, var(--bg) 82%, #2433ff); border-left: 1px solid color-mix(in srgb, #2433ff 22%, transparent); }
+html::-webkit-scrollbar-thumb { min-height: 64px; border-radius: 999px; border: 3px solid transparent; background: linear-gradient(180deg, #6b7bff, #2433ff 60%, #1a24c9) padding-box; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5); }
+html::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #8a97ff, #3a49ff 60%, #2433ff) padding-box; }
+@supports (-moz-appearance: none) { html { scrollbar-width: thin; scrollbar-color: #2433ff color-mix(in srgb, var(--bg) 82%, #2433ff); } }
+
+/* ───────── kinetic type: words rise out of their own masks ───────── */
+.sw { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0.1em 0.06em 0.16em; margin: -0.1em -0.06em -0.16em; }
+.sw > i { display: inline-block; font-style: inherit; }
+.is-split .sw > i { transform: translate3d(0, 112%, 0); transition: transform 0.9s var(--ease) calc(var(--w, 0) * 55ms + 60ms); will-change: transform; }
+.is-split.sw-in .sw > i, .chapter.is-active .is-split .sw > i { transform: none; }
+.stepper .chapter:not(.is-active) .is-split .sw > i { transition-duration: 0.01s; transition-delay: 0s; }
+html.poster .is-split .sw > i { transform: none !important; }
+
+/* ───────── desktop pointer polish ───────── */
+.is-magnet { transition: transform 0.28s var(--ease), background 0.25s, color 0.25s; }
+.cursor-ring { position: fixed; z-index: 300; left: 0; top: 0; width: 36px; height: 36px; margin: 0; border-radius: 50%; border: 1.5px solid #2433ff; pointer-events: none; opacity: 0; transition: opacity 0.25s, scale 0.3s var(--ease), background 0.25s; will-change: transform; }
+.cursor-ring.is-on { opacity: 0.85; }
+.cursor-ring.is-hot { scale: 1.7; background: color-mix(in srgb, #2433ff 18%, transparent); }
+@media (hover: none), (pointer: coarse) { .cursor-ring { display: none; } }
+
+/* smooth-wheel scrolling (Lenis) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+
+/* ───────── halftone sun: a static dot field in the chapter accent, behind everything ───────── */
+.hud-halftone { position: absolute; right: -8vmin; top: -10vmin; width: 74vmin; aspect-ratio: 1; border-radius: 50%; opacity: 0.17; color: var(--ac);
+  background: radial-gradient(circle, currentColor 34%, transparent 37%) 0 0 / 13px 13px;
+  -webkit-mask-image: radial-gradient(circle at 38% 62%, #000 0, transparent 68%); mask-image: radial-gradient(circle at 38% 62%, #000 0, transparent 68%); }
+@media (max-width: 960px) { .hud-halftone { width: 90vmin; top: -4vmin; right: -22vmin; background-size: 11px 11px; } }
+html.poster .hud-halftone { display: none; }
+
+/* ───────── "Try a sample" panels ───────── */
+.lab { width: min(1040px, calc(100vw - 24px)); max-height: calc(100svh - 24px); padding: 0; border: 2px solid var(--ink); border-radius: 26px; background: color-mix(in srgb, var(--bg) 94%, white); color: var(--ink); box-shadow: 8px 8px 0 var(--ink); overflow: hidden; }
+.lab::backdrop { background: rgba(10, 12, 40, 0.5); }
+.lab[open] { display: flex; flex-direction: column; animation: lab-in 0.45s var(--ease); }
+@keyframes lab-in { from { opacity: 0; transform: translateY(24px) scale(0.98); } }
+.lab-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 22px 26px 14px; border-bottom: 1.5px solid var(--line); }
+.lab-head h2 { margin: 4px 0 0; font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 700; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
+.lab-kind { margin: 0; font: 500 0.7rem var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: #2433ff; }
+.lab-close { flex: none; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: 500 0.72rem var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.lab-close:hover { background: var(--ink); color: var(--bg); }
+.lab-body { padding: 16px 26px 24px; overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 14px; align-content: start; }
+.lab-body p { margin: 0; line-height: 1.5; }
+.lab-blurb { color: var(--ink2, inherit); }
+.lab-fine { font-size: 0.78rem; opacity: 0.72; line-height: 1.45; }
+.lab-disclaimer { padding: 10px 14px; border-radius: 12px; border: 1.5px dashed var(--ink); font-size: 0.8rem; }
+.lab-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.lab-tab { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: 500 0.78rem var(--f-mono); letter-spacing: 0.04em; cursor: pointer; transition: background 0.2s, color 0.2s, transform 0.2s var(--ease); }
+.lab-tab:hover { transform: translateY(-1px); }
+.lab-tab[aria-selected='true'] { background: #2433ff; border-color: #2433ff; color: #fff; }
+.lab-ctrl { display: flex; flex-wrap: wrap; gap: 10px; }
+.lab-slider { display: flex; align-items: center; gap: 12px; font: 500 0.78rem var(--f-mono); flex-wrap: wrap; }
+.lab-slider input[type='range'] { flex: 1 1 180px; accent-color: #2433ff; }
+.lab input[type='text'], .lab select { padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--bg) 70%, white); color: var(--ink); font: inherit; min-width: 0; }
+
+/* loopguard */
+.lg-custom { display: grid; grid-template-columns: auto 1.4fr 1fr auto; gap: 8px; }
+.lg-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lg-step { display: grid; grid-template-columns: 28px 96px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px; border: 1.5px solid var(--line); background: color-mix(in srgb, var(--bg) 60%, white); animation: lg-in 0.4s var(--ease); }
+@keyframes lg-in { from { opacity: 0; transform: translateY(10px); } }
+.lg-step.is-trip { border-color: #e5484d; box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.25); }
+.lg-n { font: 700 0.8rem var(--f-mono); opacity: 0.6; }
+.lg-act { font: 500 0.72rem var(--f-mono); padding: 3px 8px; border-radius: 8px; background: var(--ink); color: var(--bg); justify-self: start; }
+.lg-text { display: grid; gap: 2px; min-width: 0; } .lg-text i { font-style: normal; font-weight: 600; overflow-wrap: anywhere; } .lg-text small { opacity: 0.65; }
+.lg-state { font: 700 0.78rem var(--f-mono); color: #fff; background: var(--c); padding: 4px 10px; border-radius: 999px; white-space: nowrap; } .lg-state small { font-weight: 400; opacity: 0.9; }
+.lg-verdict { padding: 14px 16px; border-radius: 14px; border: 1.5px solid var(--line); line-height: 1.5; }
+.lg-verdict.is-trip { background: rgba(229, 72, 77, 0.12); border-color: #e5484d; } .lg-verdict.is-ok { background: rgba(18, 183, 106, 0.14); border-color: #12b76a; }
+
+/* dermsense */
+.derm-row { display: grid; grid-template-columns: minmax(200px, 300px) 1fr; gap: 20px; align-items: start; } .derm-row > div { display: grid; gap: 12px; }
+.derm-img { width: 100%; max-width: 300px; aspect-ratio: 1; border-radius: 16px; border: 1.5px solid var(--ink); image-rendering: auto; }
+.derm-small { width: 128px; height: 128px; border-radius: 10px; border: 1.5px solid var(--ink); image-rendering: pixelated; }
+.derm-hist { width: 100%; max-width: 320px; border-radius: 12px; border: 1.5px solid var(--ink); background: #fff; }
+.derm-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .derm-card { padding: 14px 16px; border-radius: 16px; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--bg) 60%, white); } .derm-card h4 { margin: 0 0 8px; } .derm-card ul { margin: 0; padding-left: 1.1em; line-height: 1.5; font-size: 0.9rem; }
+.derm-classes { display: flex; flex-wrap: wrap; gap: 8px; } .derm-chip { padding: 6px 12px; border-radius: 999px; font: 500 0.78rem var(--f-mono); border: 1.5px solid var(--ink); } .derm-chip b { font-weight: 700; }
+.derm-chip.is-malignant { background: #ffd8d3; } .derm-chip.is-precancerous { background: #ffe9b3; } .derm-chip.is-benign { background: #d9f7e6; }
+
+/* oulad */
+.oulad-fig { margin: 0; display: grid; gap: 10px; } .oulad-fig img { width: 100%; max-height: 52svh; object-fit: contain; border-radius: 14px; border: 1.5px solid var(--ink); background: #fff; } .oulad-fig figcaption { font-size: 0.9rem; line-height: 1.5; }
+
+/* supermarket */
+.mk-wrap { display: grid; grid-template-columns: minmax(260px, 1.2fr) 1fr; gap: 18px; align-items: start; }
+.mk-svg { width: 100%; height: auto; max-height: 56svh; color: var(--ink); } .mk-node { cursor: pointer; outline: none; } .mk-node:focus-visible circle { stroke: #2433ff; stroke-width: 4; } .mk-node text { pointer-events: none; font-family: var(--f-mono); }
+.mk-side { display: grid; gap: 10px; align-content: start; } .mk-side h4 { margin: 0; font-size: 1.4rem; text-transform: capitalize; }
+.mk-rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; } .mk-rank li { display: grid; grid-template-columns: 1fr 90px 40px; gap: 8px; align-items: center; font-size: 0.88rem; text-transform: capitalize; } .mk-rank i { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #2433ff var(--w), color-mix(in srgb, var(--ink) 12%, transparent) var(--w)); } .mk-rank b { font-family: var(--f-mono); text-align: right; }
+
+/* cell analyzer */
+.cell-cv { width: 100%; height: auto; border-radius: 14px; border: 1.5px solid var(--ink); background: color-mix(in srgb, var(--bg) 40%, white); } .cell-read { font: 500 1.05rem var(--f-mono); } .cell-read small { opacity: 0.6; font-size: 0.75rem; }
+
+@media (max-width: 720px) {
+  .lab { width: 100vw; max-width: 100vw; height: 100svh; max-height: 100svh; margin: 0; border-radius: 0; border-width: 0; box-shadow: none; }
+  .lab-head { padding: 16px 16px 10px; } .lab-body { padding: 12px 16px 20px; }
+  .lg-custom { grid-template-columns: 1fr; } .lg-step { grid-template-columns: 24px 1fr auto; } .lg-act { grid-column: 2; } .lg-text { grid-column: 1 / -1; }
+  .derm-row, .derm-cards, .mk-wrap { grid-template-columns: 1fr; } .derm-img { max-width: 100%; }
+}
+html.lab-open { overflow: hidden; }
+.lab [hidden] { display: none !important; }

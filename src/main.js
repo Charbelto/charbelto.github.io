@@ -26,7 +26,9 @@ function chooseMode() {
   if (forced === '1') return { lite: true, reason: 'forced' };
   if (forced === '0') return { lite: false };
   // phones and small tablets: pre-rendered, looping scenes (sharp, cool, smooth). Live WebGL there is blurry (low pixel ratio) and laggy.
-  if (matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 820) return { lite: true, reason: 'phone' };
+  // Chosen by window width, not by touch: a narrow or zoomed-in desktop window is a "phone" too (live WebGL there is drawn at a low
+  // pixel ratio, which is what looked blurry).
+  if (innerWidth < 820 || (matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 820)) return { lite: true, reason: 'phone' };
   try {
     // a context that fails with failIfMajorPerformanceCaveat is a software rasteriser (SwiftShader, llvmpipe, WARP...)
     const c = document.createElement('canvas');
@@ -72,7 +74,9 @@ function revealIntro(world) {
   const state = { v: 0 };
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
   if (world) tl.to(state, { v: 1, duration: 3.4, ease: 'power3.inOut', onUpdate: () => world.setIntro(state.v) }, 0);
-  tl.fromTo(lines, { yPercent: 40, opacity: 0, filter: 'blur(14px)' }, { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.8, stagger: 0.16 }, 0.9);
+  // a blur filter animating over big type is heavy on phones: small screens get the plain rise
+  const small = innerWidth < 820;
+  tl.fromTo(lines, small ? { yPercent: 40, opacity: 0 } : { yPercent: 40, opacity: 0, filter: 'blur(14px)' }, small ? { yPercent: 0, opacity: 1, duration: 1.4, stagger: 0.14 } : { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.8, stagger: 0.16 }, small ? 0.5 : 0.9);
   tl.fromTo(items, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, 1.9);
 }
 
@@ -158,6 +162,75 @@ function setupPip() {
   const wave = () => { window.__world?.wave(); window.__world?.kick(1.5); };
   $('#pipBtn')?.addEventListener('click', (e) => { e.stopPropagation(); wave(); });
   sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
+}
+
+/* ───────── kinetic type: headings reveal word by word, each word rising out of its own mask ─────────
+   Transform-only (compositor), so it is as cheap on a phone as on a desktop. Stepper chapters replay it every time
+   a step becomes active; everything else plays once as it scrolls into view. */
+function setupSplit() {
+  if (reducedMotion) return;
+  const targets = $$('.display, .xp h3, .panel h3').filter((h) => !h.closest('.hero'));
+  const once = [];
+  targets.forEach((h) => {
+    let n = 0;
+    const walk = (node) => {
+      for (const c of [...node.childNodes]) {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.append(part); return; }
+            const w = document.createElement('span'); w.className = 'sw';
+            const i = document.createElement('i'); i.textContent = part; i.style.setProperty('--w', String(Math.min(n++, 14)));
+            w.append(i); frag.append(w);
+          });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1 && !c.classList.contains('sw')) walk(c);
+      }
+    };
+    walk(h); h.classList.add('is-split');
+    if (!h.closest('.stepper')) once.push(h);
+  });
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('sw-in'); io.unobserve(e.target); }
+  }, { rootMargin: '0px 0px -8% 0px' });
+  once.forEach((h) => io.observe(h));
+}
+
+/* ───────── desktop pointer polish: magnetic buttons and a cursor ring (fine pointers only) ───────── */
+function setupPointerPolish() {
+  if (reducedMotion || !matchMedia('(hover: hover) and (pointer: fine)').matches || innerWidth < 960) return;
+  $$('.btn, .head-cta, .menu-btn').forEach((el) => {
+    el.classList.add('is-magnet');
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      el.style.transform = `translate(${(((e.clientX - r.left) / r.width) - 0.5) * 12}px, ${(((e.clientY - r.top) / r.height) - 0.5) * 9}px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+  const ring = document.createElement('div');
+  ring.className = 'cursor-ring'; ring.setAttribute('aria-hidden', 'true');
+  document.body.append(ring);
+  let x = -100; let y = -100; let tx = -100; let ty = -100; let raf = 0;
+  const loop = () => {
+    x += (tx - x) * 0.22; y += (ty - y) * 0.22;
+    ring.style.transform = `translate3d(${x - 18}px, ${y - 18}px, 0)`;
+    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; ring.classList.add('is-on'); if (!raf) raf = requestAnimationFrame(loop); }, { passive: true });
+  document.addEventListener('pointerleave', () => ring.classList.remove('is-on'));
+  document.addEventListener('pointerover', (e) => ring.classList.toggle('is-hot', !!e.target.closest('a, button, .btn, summary, [data-lab]')), { passive: true });
+}
+
+/* ───────── smooth wheel scrolling (desktop mouse only; phones keep native momentum) ───────── */
+async function setupSmoothScroll() {
+  if (reducedMotion || params.get('smooth') === '0' || innerWidth < 960 || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const { default: Lenis } = await import('lenis');
+  const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 0.95, anchors: { duration: 1.1 } });
+  root.classList.add('lenis', 'lenis-smooth');
+  window.__lenis = lenis;
+  const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
 }
 
 /* ───────── hybrid HUD: progress bar + live coordinates (one rAF-batched write per scroll burst) ───────── */
@@ -456,6 +529,23 @@ function showLiteBanner(reason) {
   if (reason !== 'forced') setTimeout(() => el.classList.add('is-quiet'), 9000);
 }
 
+/** ?perf=1 on the pre-rendered scenes: a tiny frame-rate readout, so a real phone can report what it measures */
+function liteFps() {
+  const el = document.createElement('pre');
+  el.className = 'perf-hud';
+  document.body.append(el);
+  let n = 0; let t0 = performance.now(); let worst = 0; let last = t0;
+  const tick = (now) => {
+    n++; worst = Math.max(worst, now - last); last = now;
+    if (now - t0 >= 1000) { el.textContent = `scenes (pre-rendered)
+fps ${n}
+worst frame ${worst.toFixed(0)} ms
+${innerWidth}x${innerHeight} @${devicePixelRatio}x`; n = 0; worst = 0; t0 = now; }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
 async function startLite(reason) {
   root.classList.add('lite');
   if (reason === 'nogl') root.classList.add('no-gl');
@@ -463,6 +553,7 @@ async function startLite(reason) {
   const { createLite } = await import('./lite.js');
   const lite = createLite({ baseUrl: import.meta.env.BASE_URL, reducedMotion });
   window.__lite = lite;
+  if (params.get('perf') === '1') liteFps();
   showLiteBanner(reason);
   return lite;
 }
@@ -495,6 +586,7 @@ async function boot() {
   if (params.get('poster') === '1') root.classList.add('poster'); // tooling: render the 3D alone on a transparent page
   setupMenu();
   setupHud();
+  setupSplit();
   setupModal();
   setupMisc();
   setupRail();
@@ -549,6 +641,9 @@ async function boot() {
   setupMarquee();
   setupPlayground();
   setupPip();
+  setupPointerPolish();
+  setupSmoothScroll();
+  (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(() => import('./lab.js').then((m) => m.initLab())); // the sample panels: a small separate chunk
   const remeasure = () => { fitHero(); layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
   remeasure();
   addEventListener('load', () => remeasure());

@@ -95,3 +95,12 @@ Profiled a scripted full-page scroll and fixed what the profile showed: page-wid
 - **Size:** the 661 MB was QA scratch; project is 146 MB on disk including `node_modules` (80 MB), tracked files 24 MB. `npm run pack` makes a clean zip.
 - Tests: 103 GPU (1 skipped by design), 24 core software-GL, build OK.
 - Open: not tried on a real phone; the pre-rendered scenes loop gently but are not turntables (a true 360 spin per object would need image sequences, roughly 20x the poster weight).
+
+## Round 8: phone version by width, blue scrollbar, technique pass, project samples
+- **Phone version chosen by window width** (under 820 px, any pointer): a zoomed-in or narrow desktop window was getting live 3D at a low pixel ratio, which is what looked blurry. Now it gets the pre-rendered, looping, scrubbed scenes. Small screens also skip the blur filter in the opening animation. `?perf=1` shows a frame-rate readout in this mode.
+- **Right sidebar = the browser scrollbar:** now a blue sliding bar (thumb gradient with a light edge so it shows on every colour world; Firefox gets the thin blue equivalent).
+- **Technique pass** (what and why in `docs/SAMPLES_AND_TECHNIQUES.md`): kinetic word-by-word headings, halftone sun, magnetic buttons and cursor ring (desktop), Lenis smooth wheel scrolling (desktop mouse only). Everything is off under reduced motion; none of it touches phones except the headings and the halftone.
+- **"Try a sample" panels** for LoopGuard, DermSense, OULAD, Supermarket graph and Cell Analyzer, built from your real figures and aggregates where they exist and clearly labelled illustrations where they do not (DermSense shows no prediction: the repository has no trained weights). Feasibility verdicts, licensing notes and what is not done yet are in the same doc.
+- Data: `python tools/make-lab-data.py` (public repos via `gh`). New small chunk `lab` (10 KB gzip) loads when the browser is idle; Lenis is a separate 4 KB chunk loaded only on desktop mice.
+- Tests: 112 GPU (1 skipped by design), 24 core software-GL, build OK. New: `tests/lab.spec.js` (all five panels, phone layout), polish tests in `tests/hybrid.spec.js`.
+- Open: no real-phone measurement yet (ask for `?perf=1` numbers); Commerce Microservices and GREAT samples not built; real DermSense predictions need the trained weights; OULAD README says 23 features but the figure says 32.
