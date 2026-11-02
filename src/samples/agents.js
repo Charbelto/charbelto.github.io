@@ -209,3 +209,46 @@ export function microDemo(root, ctx) {
   draw();
   return () => { L.dead = true; };
 }
+
+
+/* ───────── GREAT architecture: Judge, Ground, Score, Report ───────── */
+export function greatArchDemo(root, ctx) {
+  const L = life();
+  const STAGES = [['Judge', 'An LLM judge scores the interaction against the rubric'], ['Ground', 'RAG validation checks every claim against the knowledge base'], ['Score', 'Structured output, prompt picked by A/B testing'], ['Report', 'Written to the CRM, dashboard updated']];
+  const DATA = {
+    inbound: ['Inbound call', ['{ "greeting": 18, "empathy": 16, "resolution": 17,\n  "compliance": 20, "closing": 15 }', '3 claims found, 3 supported by the knowledge base', 'total 86 / 100 · prompt B (A/B winner)', 'CRM note written · dashboard updated\nno human review needed']],
+    outbound: ['Outbound call', ['{ "greeting": 17, "empathy": 12, "resolution": 14,\n  "compliance": 11, "closing": 17 }', '4 claims found, 1 unsupported (“free upgrade”)', 'total 71 / 100 · prompt B (A/B winner)', 'CRM note written · flagged for human review\nreason: unsupported claim']],
+    email: ['Email thread', ['{ "greeting": 19, "empathy": 18, "resolution": 18,\n  "compliance": 19, "closing": 17 }', '4 claims found, 4 supported', 'total 91 / 100 · prompt A (A/B winner)', 'CRM note written · dashboard updated\nno human review needed']],
+  };
+  let ch = 'inbound'; let at = 0; let done = -1;
+  const track = h('ol', { class: 'sx-track' }, STAGES.map(([n], i) => h('li', {}, h('button', { type: 'button', class: 'sx-chip', 'data-i': i, on: { click: () => { show(i); ctx.touched(); } } }, `${i + 1} ${n}`))));
+  const sub = h('p', { class: 'sx-sub' }); const term = h('pre', { class: 'sx-term' });
+  const show = (i) => { at = i; track.querySelectorAll('.sx-chip').forEach((b, k) => { b.classList.toggle('is-on', k === i); b.classList.toggle('is-done', k <= done && k !== i); }); sub.textContent = STAGES[i][1]; term.textContent = DATA[ch][1][i]; };
+  const run = async () => { const id = L.next(); ctx.touched(); done = -1; for (let i = 0; i < STAGES.length; i++) { if (!L.ok(id)) return; show(i); await sleep(1100); done = i; } if (L.ok(id)) show(STAGES.length - 1); };
+  const chips = tabs(Object.entries(DATA).map(([k, v]) => [k, v[0]]), (k, u) => { ch = k; done = -1; show(at); if (u) ctx.touched(); });
+  root.append(chips, track, h('div', { class: 'sx-card' }, sub, term), h('div', { class: 'sx-row' }, h('button', { class: 'btn btn--solid', type: 'button', on: { click: run } }, 'Run the pipeline'), h('span', { class: 'sx-fine' }, 'Or tap a stage to inspect it.')), h('p', { class: 'sx-fine' }, 'Simulated example outputs, pre-saved for this sample. No real customer data.'));
+  show(0);
+  return () => { L.dead = true; };
+}
+
+/* ───────── GREAT outcomes: the published results, plus an illustrative calculator ───────── */
+export function greatOutcomeDemo(root, ctx) {
+  const FACTS = {
+    effort: ['−90%', 'QA effort', 'Manual call review replaced by an automated, rubric-based pipeline.'],
+    quality: ['+65%', 'Evaluation quality', 'Measured on GREAT after adding structured outputs and A/B prompt testing.'],
+    reps: ['80s → 90s', 'Rep quality scores', 'Scores for the customer-service reps moved from the 80s to the 90s.'],
+    agents: ['34+', 'Agents · 3 channels', 'Agents scored across inbound calls, outbound calls and email.'],
+  };
+  let calls = 1500; let mins = 6;
+  const fact = h('div', { class: 'sx-card' }); const tiles = h('div', { class: 'sx-tiles sx-tiles--4' });
+  const showFact = (k) => { const [v, l, d] = FACTS[k]; tiles.querySelectorAll('button').forEach((b) => b.classList.toggle('is-on', b.dataset.k === k)); fact.replaceChildren(h('b', { class: 'sx-big' }, `${v} `, h('small', {}, l)), h('p', { class: 'sx-sub' }, d)); };
+  Object.entries(FACTS).forEach(([k, [v, l]]) => tiles.append(h('button', { type: 'button', class: 'sx-tile', 'data-k': k, on: { click: () => { showFact(k); ctx.touched(); } } }, h('b', {}, v), h('small', {}, l))));
+  const before = h('i', { style: '--w:100%' }); const after = h('i', { style: '--w:10%' }); const bTxt = h('b', {}); const aTxt = h('b', {}); const saved = h('p', { class: 'sx-verdict is-pass', 'aria-live': 'polite' });
+  const calc = () => { const b = (calls * mins) / 60; const a = b * 0.1; before.style.setProperty('--w', '100%'); after.style.setProperty('--w', '10%'); bTxt.textContent = `${Math.round(b).toLocaleString()} h`; aTxt.textContent = `${Math.round(a).toLocaleString()} h`; saved.textContent = `${Math.round(b - a).toLocaleString()} review hours saved each week at these settings.`; };
+  const sl = (label, min, max, val, step, on, fmt) => { const out = h('span', {}, fmt(val)); const i = h('input', { type: 'range', min, max, step, value: val, 'aria-label': label, on: { input: () => { on(+i.value); out.textContent = fmt(+i.value); calc(); ctx.touched(); } } }); return h('label', { class: 'lab-slider' }, label, ' ', out, i); };
+  root.append(tiles, fact, h('p', { class: 'sx-sub' }, h('b', {}, 'What −90% means in hours.'), ' Move the sliders.'),
+    sl('Calls reviewed per week', 200, 5000, calls, 100, (v) => { calls = v; }, (v) => v.toLocaleString()), sl('Minutes per manual review', 2, 12, mins, 1, (v) => { mins = v; }, (v) => `${v} min`),
+    h('div', { class: 'sx-rubric' }, h('div', { class: 'sx-rb' }, h('span', {}, 'Manual'), before, bTxt), h('div', { class: 'sx-rb' }, h('span', {}, 'With GREAT'), after, aTxt)), saved,
+    h('p', { class: 'sx-fine' }, 'The four results above are the published figures. The hours calculator is illustrative: it applies the −90% to the call volume and review time you choose, which are assumptions, not measurements.'));
+  showFact('effort'); calc();
+}

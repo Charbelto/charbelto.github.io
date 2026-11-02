@@ -15,7 +15,9 @@ Every chapter below shows its own interactive sample **in the scene while you sc
 | Tool calling and MCP | The server lists three tools; pick one to see the JSON-RPC call, the result and the answer typed out | Pre-saved calls (MCP-style messages) |
 | Evaluation | A judge scores four answers on a four-part rubric; run a 24-case regression for prompt v1 against v2 | Pre-saved scores |
 | Reliability | A dashboard with a live-looking latency line; inject a timeout, prompt injection or malformed output and watch it handled | Simulated incidents |
-| GREAT | Pick a call (billing, upset customer, sales): rubric bars fill, flagged for review or not | Made-up conversations; no real customer data |
+| GREAT (case study) | Pick a call (billing, upset customer, sales): rubric bars fill, flagged for review or not | Made-up conversations; no real customer data |
+| GREAT architecture | The pipeline stage by stage (Judge, Ground, Score, Report): pick a channel (inbound call, outbound call, email), run it, or tap a stage to inspect its output | Pre-saved example outputs, labelled simulated |
+| GREAT outcomes | The four published results as tiles, plus a calculator: review hours before and after at the call volume and review time you choose | The four figures are the published ones; the hours are illustrative (the volume and minutes per review are assumptions, stated on the page) |
 | LoopGuard | Feed an agent trace step by step, or type your own | The detection runs for real in the browser (TF-IDF cosine, state mapping, cycle detection); example traces are written for the demo |
 | DermSense | Input, features (real HOG and colour histogram of the picture), models, **a clickable simulated prediction** (SVM+HOG against EfficientNet-B0, seven classes), explain | Generated images; the probabilities are pre-saved and simulated, labelled as such. Not a diagnosis |
 | OULAD | The three real result figures | Your own figures from the repository (CC BY 4.0 dataset) |

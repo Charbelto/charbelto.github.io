@@ -113,3 +113,8 @@ Profiled a scripted full-page scroll and fixed what the profile showed: page-wid
 - **Performance, found and fixed during the work** (see `docs/PERFORMANCE.md` Addendum 7): inactive pinned steps now skip layout (about half the frame time on a phone scroll), split-text is no longer permanent, `compileAsync` replaced by `compile`.
 - Tests: 113 GPU (1 skipped by design), 24 core software-GL, build OK. New: samples spec for every chapter on desktop and phone, layout checks that no sample overlaps its text card.
 - Open: not measured on a real phone; real DermSense predictions need the trained weights; GREAT only has the call-scoring sample (architecture and outcomes steps keep the 3D object).
+
+## Round 9b: GREAT architecture and outcomes samples
+- Added the two missing GREAT steps: a runnable **pipeline** (Judge, Ground, Score, Report across three channels) and an **outcomes** panel (the published results as tiles plus an hours calculator; the −90% is the published figure, the call volume and minutes per review are stated assumptions). All 16 sample windows are now in; tests cover them all on desktop and phone.
+- Sample windows now keep their own light surface and dark ink on every colour world (the dark GREAT colours made the labels hard to read), buttons restyled for contrast, and GREAT's cards are compacted on phones so the sample above has room.
+- Known: `tests/refine.spec.js` "animated menu" samples an animation at a fixed 120 ms and can flake when the machine is busy (passes alone).

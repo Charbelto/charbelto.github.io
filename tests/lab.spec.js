@@ -10,7 +10,7 @@ const toChapter = async (page, kf) => {
   }
   return page.locator(`.sample[data-demo="${kf}"]`);
 };
-const KFS = ['profile', 'meet', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'great1', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6'];
+const KFS = ['profile', 'meet', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'great1', 'great2', 'great3', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6'];
 
 test.describe('inline samples on desktop', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
@@ -69,6 +69,17 @@ test.describe('inline samples on desktop', () => {
     w = await toChapter(page, 'great1');
     await w.getByRole('tab', { name: 'Upset customer' }).click();
     await expect(w.locator('.sx-verdict')).toContainText('flagged');
+    w = await toChapter(page, 'great2');
+    await w.getByRole('tab', { name: 'Outbound call' }).click();
+    await w.getByRole('button', { name: 'Run the pipeline' }).click();
+    await expect.poll(() => w.locator('.sx-chip.is-done').count(), { timeout: 9000 }).toBeGreaterThanOrEqual(3);
+    await expect(w.locator('.sx-term')).toContainText('flagged for human review');
+    w = await toChapter(page, 'great3');
+    await expect(w.locator('.sx-big')).toContainText('−90%');
+    await w.getByRole('button', { name: /Rep quality scores/ }).click();
+    await expect(w.locator('.sx-big')).toContainText('80s');
+    await w.locator('.lab-slider input').first().fill('3000');
+    await expect(w.locator('.sx-verdict')).toContainText('review hours saved');
   });
 
   test('projects: LoopGuard, DermSense prediction, OULAD, microservices, cell analyzer, supermarket', async ({ page }) => {
@@ -120,7 +131,7 @@ test.describe('inline samples on a phone', () => {
     await page.goto('/?intro=0', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
     await page.waitForTimeout(2200);
-    for (const kf of ['cap1', 'cap3', 'cap5', 'great1', 'w2', 'w6']) {
+    for (const kf of ['cap1', 'cap3', 'cap5', 'great1', 'great2', 'great3', 'w2', 'w6']) {
       const w = await toChapter(page, kf);
       await expect(w, kf).toBeVisible();
       const r = await page.evaluate((k) => { const a = document.querySelector(`.sample[data-demo="${k}"]`).getBoundingClientRect(); const p = document.querySelector(`[data-kf="${k}"] .panel`).getBoundingClientRect(); return { a, pTop: p.top, vw: innerWidth, over: document.documentElement.scrollWidth - innerWidth }; }, kf);

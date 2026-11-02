@@ -15,6 +15,8 @@ const REG = {
   cap4: { run: A.evaluationDemo, title: 'A judge scoring answers', hint: 'Tap an answer' },
   cap5: { run: A.productionDemo, title: 'Failures that never reach the user', hint: 'Inject a failure' },
   great1: { run: A.greatDemo, title: 'GREAT scoring a call', hint: 'Pick a call' },
+  great2: { run: A.greatArchDemo, title: 'The GREAT pipeline, stage by stage', hint: 'Press “Run the pipeline”' },
+  great3: { run: A.greatOutcomeDemo, title: 'What the results mean in hours', hint: 'Tap a result, move a slider' },
   w1: { run: OLD.loopguard, title: 'LoopGuard catching a loop', hint: 'Press “Next step”' },
   w2: { run: OLD.derm, title: 'DermSense, step by step', hint: 'Open “4 Predict”, then run it' },
   w3: { run: OLD.oulad, title: 'What the OULAD model found', hint: 'Flip through the figures' },
