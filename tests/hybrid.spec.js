@@ -37,17 +37,17 @@ test.describe('phones: pre-rendered, looping, sharp', () => {
     expect(errors).toEqual([]);
   });
 
-  test('scrolling a phone: posters cross-fade and scrub, the progress bar fills', async ({ page }) => {
+  test('scrolling a phone: scenes cross-fade and scrub, the progress bar fills', async ({ page }) => {
     await page.goto('/?intro=0&view=object', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
     await page.waitForTimeout(1200);
     await page.evaluate(() => scrollTo(0, window.__kfY(document.querySelector('[data-kf="cap2"]'))));
     await page.waitForTimeout(1200);
     const r = await page.evaluate(() => ({
-      src: [...document.querySelectorAll('.lite-img')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src')),
+      src: [...document.querySelectorAll('.lite-img, .lite-cv')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src') || i.dataset.seq),
       bar: document.getElementById('hudBar').style.transform,
     }));
-    expect(r.src.join()).toContain('/posters/p-cap2.webp');
+    expect(r.src.join()).toMatch(/\/posters\/p-cap2\.webp|full\/cap2/); // the still while the loop loads, then the frame loop
     expect(r.bar).toMatch(/scaleX\(0\.[1-9]/);
   });
 });
@@ -81,7 +81,7 @@ test('shipped files stay small: size budget for public/ and the tracked repo', a
   let total = 0; let biggest = { size: 0, file: '' };
   const walk = (d) => { for (const n of fs.readdirSync(d)) { const p = path.join(d, n); const st = fs.statSync(p); if (st.isDirectory()) walk(p); else { total += st.size; if (st.size > biggest.size) biggest = { size: st.size, file: p }; } } };
   walk('public');
-  expect(total / 1e6, `public/ is ${(total / 1e6).toFixed(1)} MB`).toBeLessThan(9);
+  expect(total / 1e6, `public/ is ${(total / 1e6).toFixed(1)} MB`).toBeLessThan(24); // posters + 46 short phone loops (about 0.4 MB each, fetched one scene at a time); desktop never downloads them
   expect(biggest.size / 1024, `largest public file ${biggest.file}`).toBeLessThan(600);
   const tracked = cp.execSync('git ls-files -z', { encoding: 'buffer', maxBuffer: 1 << 26 }).toString().split('\0').filter(Boolean);
   const bytes = tracked.reduce((s, f) => { try { return s + fs.statSync(f).size; } catch { return s; } }, 0);

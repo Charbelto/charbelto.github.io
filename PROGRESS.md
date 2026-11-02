@@ -131,3 +131,13 @@ Found and fixed:
 Tests: 28 phone and sample tests pass at five sizes; desktop suites unchanged (106 GPU, 24 software). Not measured on a real phone: please try it and tell me the model.
 
 - Deploy note: push `main` first (the branch second, or not at all): Cloudflare can skip the production build when the same commit arrives on two branches at once.
+
+## Round 11: phone scenes now move
+On phones the chapters with a sample window showed only a flat colour behind it, and the others a still poster with a gentle float. Now every portrait scene is a short looping clip of the real 3D scene:
+- `tools/make-frames.mjs` (needs a GPU and the dev server) renders 16 frames per scene at exact clock times (`window.__clock`, 0.15 s apart), "full" (object and toys) for all 30 scenes and "bare" (toys alone, what sits behind a sample window) for the 16 sampled chapters. `tools/frames-to-webp.py` converts to `public/frames/` (600 px wide, 720 frames, 16.8 MB in all, about 23 KB each, transparent so the colour flood shows through).
+- `src/lite.js` draws them to a canvas (the blend of two neighbouring frames fills in the motion). Scroll down plays forward, scroll up plays backward, stopping lets it loop gently (ping-pong, so there is no seam). Speed follows scroll speed and eases through zero when you reverse.
+- Cost control: only the scenes on screen stay decoded (about 30 MB each); the next scene is only warmed in the HTTP cache; decoding is a few frames at a time in idle gaps; a fast flick loads nothing (stills show, the landing scene loads once scrolling calms); a governor hands the scene back to the single stills if a window averages under about 22 fps twice.
+- Desktop (live 3D) is unchanged. Landscape screens and reduced motion keep the still poster. `?frames=0` forces the stills (QA).
+- Measured (same session, CPU-throttled stand-in, not a real phone): unthrottled phone emulation scrolls the whole page at a steady 60 fps (p95 16.8 ms); at 4x throttle both modes are slow, with the loops about 1.4 to 1.6 times the stills' frame time during a fast whole-page scroll (steady scrolling inside a scene: median 16.7 ms in both). That is what the governor is for.
+- Tests: `tests/phone-motion.spec.js` (loops move when idle, direction follows scroll, governor), plus size budget raised to 24 MB for `public/` (desktop never downloads the frames).
+

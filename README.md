@@ -26,6 +26,8 @@ Machines without a usable GPU get posters instead of live WebGL, automatically (
 ```bash
 node tools/make-posters.mjs        # needs a GPU and the dev server on :5173
 python tools/posters-to-webp.py
+node tools/make-frames.mjs         # phone loops: 16 frames per scene
+python tools/frames-to-webp.py
 ```
 
 ## Privacy

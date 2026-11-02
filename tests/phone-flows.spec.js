@@ -95,7 +95,7 @@ for (const [w, h] of SIZES) {
       const w = page.locator('.sample[data-demo="cap1"]');
       await w.locator('.sample-toggle').tap();
       await expect(page.locator('html')).toHaveAttribute('data-view', 'object');
-      await expect.poll(() => page.evaluate(() => [...document.querySelectorAll('.lite-img')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src') || '').join()), { timeout: 6000 }).toContain('cap1');
+      await expect.poll(() => page.evaluate(() => [...document.querySelectorAll('.lite-img, .lite-cv')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src') || i.dataset.seq || '').join()), { timeout: 6000 }).toContain('cap1');
       expect((await w.boundingBox()).height).toBeLessThan(80);
       await w.locator('.sample-toggle').tap();
       await expect(page.locator('html')).toHaveAttribute('data-view', 'sample');

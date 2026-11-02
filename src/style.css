@@ -627,6 +627,8 @@ html.poster .hud, html.poster .hud-grain, html.poster .hud-progress { display: n
   50% { transform: translate3d(0, 9px, 0) rotate(0.8deg) scale(1.018); }
 }
 @media (prefers-reduced-motion: reduce) { .lite-img { animation: none; } }
+/* portrait scenes: the looping frame sequence (drawn by src/lite.js) replaces the still once it has loaded */
+.lite-cv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.25s linear; will-change: opacity; }
 
 /* ───────── the right-hand scrollbar: a blue sliding bar ───────── */
 html::-webkit-scrollbar { width: 14px; }

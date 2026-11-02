@@ -183,7 +183,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     const rawDt = (now - last) / 1000; // true frame time (the governor must see slow frames; dt below is capped for the animation maths)
     const dt = Math.min(0.05, rawDt);
     last = now;
-    const time = now / 1000;
+    const time = window.__clock ?? now / 1000; // __clock: tooling hook (tools/make-frames.mjs renders the loop frames at exact times)
 
     solveTarget();
     const k = reducedMotion ? 1 : 1 - Math.exp(-dt * 3.4);

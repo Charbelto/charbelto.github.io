@@ -111,7 +111,7 @@ test.describe('inline samples on desktop', () => {
 
   test('the switch trades the sample for the 3D object and back', async ({ page }) => {
     const w = await toChapter(page, 'cap1');
-    const shown = () => page.evaluate(() => [...document.querySelectorAll('.lite-img')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src') || '').join());
+    const shown = () => page.evaluate(() => [...document.querySelectorAll('.lite-img, .lite-cv')].filter((i) => +i.style.opacity > 0.5).map((i) => i.getAttribute('src') || i.dataset.seq || '').join());
     await page.waitForTimeout(600);
     expect(await shown()).not.toContain('cap1');
     await w.getByRole('button', { name: 'See the 3D object' }).click();
