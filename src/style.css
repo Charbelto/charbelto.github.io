@@ -593,3 +593,37 @@ html { font-size: clamp(16px, calc(0.35vw + 9.3px), 30px); }
 
 /* the hero grows past the screen on very short windows (see fitHero) so the name never overlaps */
 .chapter.hero { min-height: max(100svh, var(--hero-need, 0px)); }
+
+/* ───────── hybrid HUD: framing guides, slow rotating rings, live coordinates, progress, static grain ─────────
+   Technique from the "still-hybrid" study (a CSS loop layer that keeps moving while the scroll drives the scenes),
+   drawn from scratch. Everything animates with transform or opacity only; the rings sit behind the 3D / posters. */
+.hud { position: fixed; inset: 0; z-index: 0; pointer-events: none; color: var(--ink); contain: strict; }
+.hud-guide { position: absolute; background: currentColor; opacity: 0.16; }
+.hud-guide--l { left: calc(var(--pad) - 16px); top: 0; bottom: 0; width: 1px; }
+.hud-guide--r { right: calc(var(--pad) - 16px); top: 0; bottom: 0; width: 1px; }
+.hud-guide--t { top: 76px; left: 0; right: 0; height: 1px; }
+.hud-guide--b { bottom: 26px; left: 0; right: 0; height: 1px; }
+.hud-plus { position: absolute; font: 400 0.8rem/1 var(--f-mono); opacity: 0.55; transform: translate(-50%, -50%); }
+.hud-plus--tl { left: calc(var(--pad) - 16px); top: 76px; } .hud-plus--tr { right: calc(var(--pad) - 16px); top: 76px; transform: translate(50%, -50%); }
+.hud-plus--bl { left: calc(var(--pad) - 16px); bottom: 26px; transform: translate(-50%, 50%); } .hud-plus--br { right: calc(var(--pad) - 16px); bottom: 26px; transform: translate(50%, 50%); }
+.hud-ring { position: absolute; left: 50%; top: 50%; width: min(118vh, 96vw); aspect-ratio: 1; opacity: 0.2; will-change: transform; transform: translate(-50%, -50%); animation: hud-spin 120s linear infinite; }
+.hud-ring--b { width: min(86vh, 70vw); opacity: 0.26; animation-duration: 70s; animation-direction: reverse; color: var(--ac); }
+@keyframes hud-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (orientation: portrait) and (max-width: 1100px) { .hud-ring { top: 36%; } }
+.hud-coord { position: absolute; left: 9px; top: 50%; writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg); font: 500 0.625rem/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; white-space: nowrap; }
+@media (max-width: 960px) { .hud-coord { display: none; } .hud-guide--t, .hud-guide--b { display: none; } .hud-plus { display: none; } }
+.hud-progress { position: fixed; z-index: 70; top: 0; left: 0; right: 0; height: 3px; pointer-events: none; }
+.hud-progress i { display: block; height: 100%; background: var(--ac); transform-origin: left; transform: scaleX(0); will-change: transform; }
+.hud-grain { display: none; position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0.075; background: url('/grain.png'); }
+@media (hover: hover) and (min-width: 961px) { .hud-grain { display: block; } }
+html.poster .hud, html.poster .hud-grain, html.poster .hud-progress { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .hud-ring { animation: none; } }
+
+/* lite scenes: scrubbed slot + a gentle looping float on the image itself (transform only, compositor-driven) */
+.lite-slot { position: absolute; inset: 0; will-change: transform; transform-origin: 50% 40%; }
+.lite-img { will-change: opacity, transform; animation: lite-float 9s ease-in-out infinite; }
+@keyframes lite-float {
+  0%, 100% { transform: translate3d(0, -7px, 0) rotate(-0.7deg) scale(1); }
+  50% { transform: translate3d(0, 9px, 0) rotate(0.8deg) scale(1.018); }
+}
+@media (prefers-reduced-motion: reduce) { .lite-img { animation: none; } }

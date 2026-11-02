@@ -1,9 +1,9 @@
 import { test } from '@playwright/test';
 import { gotoReady } from './helpers.js';
-test.use({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+test.use({ viewport: { width: Number(process.env.VW || 1440), height: Number(process.env.VH || 900) }, deviceScaleFactor: Number(process.env.DSF || 2) });
 test.setTimeout(300_000);
 test('profile scroll', async ({ page }) => {
-  await gotoReady(page, '?intro=0&gov=0', { settle: 2500 });
+  await gotoReady(page, '?intro=0&gov=0' + (process.env.QS || ''), { settle: 2500 });
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('Profiler.enable');
   await cdp.send('Profiler.setSamplingInterval', { interval: 200 });

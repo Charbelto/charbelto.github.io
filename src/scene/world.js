@@ -259,8 +259,9 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     key.position.set(6, 10, 8).applyAxisAngle(upv, az * 0.6);
 
     renderer.render(scene, camera);
-    if (governor && ie >= 1 && !disposed) adapt(Math.min(0.6, rawDt));
+    if (governor && ie >= 1 && !disposed) adapt(simSlow ? 0.12 : Math.min(0.6, rawDt));
   }
+  const simSlow = new URLSearchParams(location.search).get('slow') === '1'; // QA hook: pretend every frame takes 120 ms (tests the hand-over to lite mode)
   let pointerSeen = false;
   let disposed = false;
   let slowStrikes = 0;
@@ -285,8 +286,8 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     if (accN < 40 && !(accT >= 1.6 && accN >= 5)) return;
     const avg = accT / accN; accT = 0; accN = 0;
     stats.avgMs = +(avg * 1000).toFixed(1);
-    // a machine that cannot hold even ~11 fps at the lowest resolution twice in a row: hand over to the lightweight mode
-    slowStrikes = avg > 0.09 ? slowStrikes + 1 : 0;
+    // a machine that stays under about 15 fps twice in a row (it has already lowered the resolution once): hand over to the lightweight mode
+    slowStrikes = avg > 0.066 ? slowStrikes + 1 : 0;
     if (slowStrikes >= 2 && onSlow) { const cb = onSlow; onSlow = null; cb(); return; }
     const v = avg > 0.0185 ? -1 : avg < 0.0125 ? 1 : 0; // aim for about 55 fps or better, not just "playable"
     verdict = v === Math.sign(verdict) || verdict === 0 ? verdict + v : v;

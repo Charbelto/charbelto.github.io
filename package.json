@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "test:e2e": "playwright test tests/portfolio.spec.js tests/nogl.spec.js",
-    "test:shots": "playwright test tests/screenshots.spec.js"
+    "test:shots": "playwright test tests/screenshots.spec.js",
+    "clean": "git clean -fdXq qa test-results playwright-report dist",
+    "pack": "node tools/pack.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

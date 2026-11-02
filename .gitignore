@@ -60,3 +60,5 @@ qa/menu/
 qa/posters-raw/
 qa/step/
 qa/name-*.png
+
+*.zip

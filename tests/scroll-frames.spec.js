@@ -11,7 +11,7 @@ test.use({ viewport: { width: Number(process.env.VW || 1440), height: Number(pro
 test.setTimeout(400_000);
 for (const [name, css] of Object.entries(VARIANTS)) {
   test(`scroll smoothness ${name}`, async ({ page }) => {
-    await gotoReady(page, '?intro=0&gov=0', { settle: 2500 });
+    await gotoReady(page, '?intro=0&gov=0' + (process.env.QS || ''), { settle: 2500 });
     if (css) await page.addStyleTag({ content: css });
     const cdp = await page.context().newCDPSession(page); await cdp.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.THROTTLE || 1) });
     await page.evaluate(() => scrollTo(0, 0));

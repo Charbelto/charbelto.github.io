@@ -55,8 +55,13 @@ The page is about 18 screens (it was 30). Four groups (the five systems chapters
 ## The name is never hidden
 The name layer (`.back-title`) sits above the 3D canvas (z-index 2 over 1), so toys can only pass behind it.
 
-## Lightweight mode (no GPU needed)
-`src/lite.js` replaces WebGL with pre-rendered **posters** of each chapter's object (`public/posters`, 60 files, about 2.5 MB total, about 40 KB each, loaded as you approach them) cross-fading as you scroll; the full-page colour flood, all content, the menu, the steppers and the marquee are unchanged. Chosen automatically when WebGL is missing, when the renderer is software (SwiftShader, llvmpipe, WARP), or when a GPU machine stays below about 11 fps at the lowest resolution (decided live within about five seconds). `?lite=1` forces it, `?lite=0` forces 3D. A small banner offers "Try full 3D". Posters are regenerated from the real scene with `tools/make-posters.mjs` + `tools/posters-to-webp.py`.
+## Pre-rendered scenes (phones, and any device without a usable GPU)
+`src/lite.js` replaces live WebGL with pre-rendered **posters** of each chapter's object (`public/posters`, 60 WebP files, 2.9 MB in total; phone posters are 780 px wide, so sharp on 2x and 3x screens, landscape ones 1280 px; loaded as you approach them). They cross-fade as you scroll and are **scrubbed** (the scene you leave swells toward you, the next one settles in) while each image **loops on its own** (a slow CSS float), so the page keeps moving between scrolls. The colour flood, all content, the menu, the steppers and the marquee are unchanged.
+
+Chosen automatically on **phones and small touch tablets** (no banner: it is by design), when WebGL is missing, when the renderer is software (SwiftShader, llvmpipe, WARP), or when a GPU machine stays under about 15 fps twice in a row (decided live within a few seconds, after the resolution has been lowered once). `?lite=1` forces it, `?lite=0` forces live 3D. Posters are regenerated from the real scene with `tools/make-posters.mjs` + `tools/posters-to-webp.py`.
+
+## Hybrid layer (HUD)
+Technique borrowed from the "still-hybrid" study (a layer of CSS loops that keeps moving while scroll drives the scenes), drawn from scratch with no copied imagery: four hairline **guides** with corner crosses framing the page, two slowly **rotating rings** (one tinted with the chapter accent) behind the 3D or posters, a **live coordinate readout** on the left edge (scroll position, percent, chapter), a **progress bar** across the top, and a **static grain** on desktop. Everything animates with transform or opacity only; the grain does not blend and does not move (the old animated, blended grain was a measured cost).
 
 ## Menu
 The menu button is shown at every width. Opening grows a full-screen colour wipe from the button (accent layer first, background layer 100 ms behind), then the links rise in one by one; closing reverses it. The closed menu is `visibility: hidden` and `inert`, so it is never focusable.

@@ -75,3 +75,6 @@ Email charbeltoumieh1@gmail.com · [LinkedIn](https://www.linkedin.com/in/charbe
 ## Hosting notes
 - **charbelto.github.io** is built and deployed by `.github/workflows/deploy.yml` (Pages source: GitHub Actions).
 - **charbel.toumieh.com** is served by a separate **Cloudflare Pages** project (`charbelto-github-io`) that rebuilds on every push to `main`. This site needs a build step, so that project must use: framework preset **Vite** (or build command `npm run build`), build output directory **`dist`**, Node 22 (`.node-version` in the repo sets it). With an empty build command it serves the raw source and the page shows up unstyled.
+
+## Keeping the project small
+The tracked project is about 24 MB; everything else on disk is regenerable. `npm run clean` removes test output, QA screenshots and `dist/`; `npm run pack` writes a clean zip of only the tracked files to `../My-Website-clean.zip` (commit first). `node_modules` never needs to be zipped (`npm ci` restores it). A test (`tests/hybrid.spec.js`) fails if `public/` grows past 9 MB or any file in it passes 600 KB.

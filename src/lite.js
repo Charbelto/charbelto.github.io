@@ -20,7 +20,9 @@ export function createLite({ baseUrl, reducedMotion }) {
   const stage = document.createElement('div');
   stage.className = 'lite-stage';
   stage.setAttribute('aria-hidden', 'true');
-  const imgs = [0, 1].map(() => { const i = new Image(); i.className = 'lite-img'; i.alt = ''; i.decoding = 'async'; stage.append(i); return i; });
+  // each poster sits in a slot: the slot is scrubbed by scroll (zoom through the scene), the image inside loops on its own (CSS)
+  const slots = [0, 1].map((n) => { const slot = document.createElement('div'); slot.className = 'lite-slot'; const i = new Image(); i.className = 'lite-img'; i.alt = ''; i.decoding = 'async'; i.style.animationDelay = `${-4 * n}s`; slot.append(i); stage.append(slot); return slot; });
+  const imgs = slots.map((s) => s.firstChild);
   document.body.prepend(stage);
 
   const portrait = () => innerWidth / innerHeight < 1.1;
@@ -67,6 +69,9 @@ export function createLite({ baseUrl, reducedMotion }) {
     want.forEach((n, i) => {
       if (n !== names[i]) { names[i] = n; if (n) imgs[i].src = url(n); }
       imgs[i].style.opacity = n ? String(i === 0 ? (target.a === target.b ? 1 : 1 - target.t) : target.t) : '0';
+      // scrub: the scene you leave swells toward you, the one you arrive at settles in from slightly farther away
+      const z = reducedMotion || target.a === target.b ? 1 : (i === 0 ? 1 + target.t * 0.07 : 0.93 + target.t * 0.07);
+      slots[i].style.transform = `scale(${z.toFixed(4)})`;
     });
     raf = moving ? requestAnimationFrame(paint) : 0;
   }

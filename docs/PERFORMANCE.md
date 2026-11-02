@@ -482,3 +482,15 @@ Measured with `tests/scroll-frames.spec.js` (scripted scroll of the whole page i
 - Pinned stages use CSS containment.
 
 **Result (this machine):** CPU time in `scrollTo` fell from 3.6 s to 0.17 s per 9 s scroll; main thread idle went from 25% to 68%; at 4x CPU throttle the page runs about 3x faster than at 6x before (about 63 ms per frame to be compared with about 168 ms); at 2560x1440 DPR 2 it holds a steady 60 fps. Not measured: integrated GPUs, phones, thermals.
+
+
+---
+
+# Addendum 6: phones, sharpness and project size (2026-11-02)
+
+- **Why phones looked blurry and lagged:** on phones the live 3D ran in its "low" tier at pixel ratio 1 (a 3x screen was upscaled 3x), and the lightweight posters were only 460 px wide. Phones now default to the pre-rendered scenes, with 780 px wide posters (2.9 MB for all 60, WebP quality 78, alpha quality 80).
+- **Measured (real GPU machine, emulated 390x844 at 3x, scripted scroll of the whole page, `tests/scroll-frames.spec.js`):** pre-rendered scenes hold a flat 60 fps (540 frames, 0 slow frames). With the CPU slowed 4x the typical frame is still 16.7 ms (p50) with some spikes (p95 50 ms); live 3D on desktop under the same slowdown measured p95 67 ms. Profile of the lite scroll: 78% of the main thread idle, about 2 ms per frame of layout from the pinned stages.
+- **Not measured:** a real phone. These are emulation numbers on one fast machine; the 4x throttle is a stand-in.
+- **Governor:** hand-over to the pre-rendered scenes now happens under about 15 fps twice in a row (was 11 fps). The old CPU-throttle test no longer produces an unplayable page because live 3D got cheaper, so the hand-over is tested with `?slow=1` (a QA hook that makes the governor see 120 ms frames).
+- **HUD cost:** idle main thread 93% idle with or without the HUD (profile, 6 s idle, desktop).
+- **Size:** the 661 MB came from about 584 MB of untracked QA scratch (screenshots, traces, poster captures). Removed, and `npm run clean` / `npm run pack` added. Shipped `public/` is 4.9 MB (models 1.4 MB Draco, posters 2.9 MB, résumé 0.5 MB, grain 16 KB); tracked project 24 MB; `dist/` 6.4 MB. 3D models were already Draco-compressed and the posters are lossy WebP at high quality; nothing visible was given up.

@@ -7,7 +7,8 @@ import { mkdirSync } from 'node:fs';
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:5173';
 const OUT = 'qa/posters-raw';
 mkdirSync(OUT, { recursive: true });
-const KINDS = { l: { viewport: { width: 1280, height: 800 }, dpr: 1, mobile: false }, p: { viewport: { width: 390, height: 844 }, dpr: 1.5, mobile: true } };
+// captured sharp (portrait at 2x = 780 px wide, landscape at 1.5x = 1920 px wide); posters-to-webp.py sizes them for delivery
+const KINDS = { l: { viewport: { width: 1280, height: 800 }, dpr: 1.5, mobile: false }, p: { viewport: { width: 390, height: 844 }, dpr: 2, mobile: true } };
 
 const browser = await chromium.launch({ args: ['--enable-gpu', '--ignore-gpu-blocklist', '--use-angle=d3d11', '--enable-webgl'] });
 for (const [kind, cfg] of Object.entries(KINDS)) {

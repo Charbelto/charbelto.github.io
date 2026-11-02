@@ -448,20 +448,18 @@ test.describe('lightweight mode (no GPU needed)', () => {
   });
 
   test('a GPU machine that cannot hold a playable frame rate falls back to the lightweight mode by itself', async ({ page }) => {
-    test.skip(process.env.GPU !== '1', 'needs a real GPU run (CPU throttling is applied on top of it)');
-    test.setTimeout(150_000);
-    const cdp = await page.context().newCDPSession(page);
-    await page.goto('/?intro=0&lite=0', { waitUntil: 'domcontentloaded' });
+    // ?slow=1 makes the governor see 120 ms frames (about 8 fps). Live 3D is cheap enough now that CPU throttling alone no longer
+    // produces an unplayable page on a fast test machine, so the hand-over is exercised deterministically.
+    test.setTimeout(120_000);
+    await page.goto('/?intro=0&lite=0&slow=1', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 90_000 });
-    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 60 });
-    // poll from outside the page: under a 60x slowdown an in-page poller can starve behind the page's own work
-    let lite = false;
-    for (let i = 0; i < 30 && !lite; i++) { await page.waitForTimeout(3000); lite = await page.evaluate(() => document.documentElement.classList.contains('lite')).catch(() => false); }
-    expect(lite, 'the page fell back to the lightweight mode by itself').toBe(true);
+    await page.waitForFunction(() => document.documentElement.classList.contains('lite'), null, { timeout: 60_000 });
     expect(await page.evaluate(() => getComputedStyle(document.getElementById('world')).display)).toBe('none');
-    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    expect(await page.evaluate(() => !!window.__world)).toBe(false);
     await page.waitForTimeout(800);
     expect(await page.evaluate(() => document.querySelectorAll('.lite-img').length)).toBe(2);
+    // and the banner explains it and offers the way back
+    await expect(page.locator('#noWebgl .banner-link')).toHaveCount(1);
   });
 });
 

@@ -87,3 +87,11 @@ Profiled a scripted full-page scroll and fixed what the profile showed: page-wid
 - **Menu at any zoom:** the list is scrollable and centred only when there is room, the colour wipe is fixed to the window, link size follows window height as well as width. `tests/menu-zoom.spec.js` (7 window sizes from 480x240 to 5000x2400).
 - **Very large and very short windows:** type sized in rem now grows gently above 1920px wide (about 1.4x at 4K; unchanged at 1920 and below). On very short windows the hero shrinks the name and statement down to 0.62x and, if there is still no room, grows taller than the screen instead of overlapping. `tests/hero-fit.spec.js` covers 18 window shapes up to 5000x2400 and down to 480x240.
 - Throttled-fallback test now polls from outside the page (an in-page poller could starve under a 60x slowdown); the governor itself was verified to hand over to lite mode within about 10 s.
+
+## Round 7: hybrid layer, phones, size
+- Studied `Desktop/still-hybrid-website` (a sticky scroll-scrubbed stage of layered scenes plus CSS loops). Took the **technique**, not the content: its imagery comes from a reference video and its own README says it is not licensed, and it is unrelated to the portfolio, so none of it was used.
+- **Hybrid layer (HUD)** on every device: guides, rotating rings, live coordinates, progress bar, static grain (desktop). See `DESIGN.md`.
+- **Phones** default to pre-rendered, looping, scrubbed scenes (sharper posters, no live WebGL): no more blur or lag from a low-resolution canvas.
+- **Size:** the 661 MB was QA scratch; project is 146 MB on disk including `node_modules` (80 MB), tracked files 24 MB. `npm run pack` makes a clean zip.
+- Tests: 103 GPU (1 skipped by design), 24 core software-GL, build OK.
+- Open: not tried on a real phone; the pre-rendered scenes loop gently but are not turntables (a true 360 spin per object would need image sequences, roughly 20x the poster weight).

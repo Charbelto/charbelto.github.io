@@ -73,6 +73,14 @@
 
 <!-- fixed atmosphere (behind the 3D) -->
 <div class="atmos" aria-hidden="true"></div>
+<div class="hud" aria-hidden="true">
+  <i class="hud-guide hud-guide--l"></i><i class="hud-guide hud-guide--r"></i><i class="hud-guide hud-guide--t"></i><i class="hud-guide hud-guide--b"></i>
+  <svg class="hud-ring hud-ring--a" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="97" stroke-width="0.5"/><circle cx="100" cy="100" r="88" stroke-width="0.9" stroke-dasharray="1.5 7"/><path stroke-width="1.4" d="M100 1v13M100 186v13M1 100h13M186 100h13"/><path stroke-width="1" d="M31 31l7 7M162 162l7 7M169 31l-7 7M38 162l-7 7"/></svg><svg class="hud-ring hud-ring--b" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="97" stroke-width="0.6" stroke-dasharray="9 13"/><circle cx="100" cy="100" r="74" stroke-width="0.5"/><path stroke-width="1.6" d="M100 26v9M100 165v9"/></svg>
+  <span class="hud-plus hud-plus--tl">+</span><span class="hud-plus hud-plus--tr">+</span><span class="hud-plus hud-plus--bl">+</span><span class="hud-plus hud-plus--br">+</span>
+  <span class="hud-coord" id="hudCoord">Y 00000 / 000%</span>
+</div>
+<div class="hud-grain" aria-hidden="true"></div>
+<div class="hud-progress" aria-hidden="true"><i id="hudBar"></i></div>
 
 <!-- the name lives BEHIND the machine: the 3D canvas is transparent and occludes it -->
 <div class="back-title">
@@ -557,7 +565,7 @@
 </main>
 
 <footer class="foot">
-  <p>© <span id="year">2026</span> Charbel Toumieh · real-time WebGL, hand-built · <a href="#top">back to top ↑</a></p>
+  <p>© <span id="year">2026</span> Charbel Toumieh · hand-built, 3D scenes · <a href="#top">back to top ↑</a></p>
 </footer>
 
 <!-- case modal -->

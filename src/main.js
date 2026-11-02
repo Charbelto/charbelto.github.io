@@ -25,6 +25,8 @@ function chooseMode() {
   if (!hasWebGL()) return { lite: true, reason: 'nogl' };
   if (forced === '1') return { lite: true, reason: 'forced' };
   if (forced === '0') return { lite: false };
+  // phones and small tablets: pre-rendered, looping scenes (sharp, cool, smooth). Live WebGL there is blurry (low pixel ratio) and laggy.
+  if (matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 820) return { lite: true, reason: 'phone' };
   try {
     // a context that fails with failIfMajorPerformanceCaveat is a software rasteriser (SwiftShader, llvmpipe, WARP...)
     const c = document.createElement('canvas');
@@ -156,6 +158,28 @@ function setupPip() {
   const wave = () => { window.__world?.wave(); window.__world?.kick(1.5); };
   $('#pipBtn')?.addEventListener('click', (e) => { e.stopPropagation(); wave(); });
   sec.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button, .panel')) wave(); });
+}
+
+/* ───────── hybrid HUD: progress bar + live coordinates (one rAF-batched write per scroll burst) ───────── */
+function setupHud() {
+  const bar = $('#hudBar'); const coord = $('#hudCoord'); const label = $('#railLabel');
+  if (!bar) return;
+  const wide = matchMedia('(min-width: 961px)'); // the coordinate readout only exists on wide screens
+  let max = 1; let queued = false; let lastText = '';
+  const measure = () => { max = Math.max(1, document.documentElement.scrollHeight - innerHeight); };
+  const draw = () => {
+    queued = false;
+    const p = Math.min(1, Math.max(0, scrollY / max));
+    bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    if (coord && wide.matches) {
+      const t = `Y ${String(Math.round(scrollY)).padStart(5, '0')} / ${String(Math.round(p * 100)).padStart(3, '0')}% / ${label?.textContent || ''}`;
+      if (t !== lastText) { lastText = t; coord.textContent = t; }
+    }
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(draw); } }, { passive: true });
+  addEventListener('resize', measure, { passive: true });
+  new ResizeObserver(() => { measure(); draw(); }).observe(document.body);
+  measure(); draw();
 }
 
 /* ───────── hero fit: the name, the statement and the buttons never overlap, at any window shape ─────────
@@ -415,6 +439,7 @@ function setupPerfHud(world) {
 
 /* ───────── lightweight mode (no GPU needed) ───────── */
 function showLiteBanner(reason) {
+  if (reason === 'phone') return; // by design on phones: no banner
   const el = $('#noWebgl');
   el.replaceChildren();
   const span = document.createElement('span');
@@ -469,6 +494,7 @@ function setupDots() {
 async function boot() {
   if (params.get('poster') === '1') root.classList.add('poster'); // tooling: render the 3D alone on a transparent page
   setupMenu();
+  setupHud();
   setupModal();
   setupMisc();
   setupRail();
