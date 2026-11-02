@@ -129,3 +129,5 @@ Found and fixed:
 - **Landscape phones:** card and sample side by side (they overlapped at 844 px wide); menu list scrolls.
 - **Short phones (about 640 px and under):** leaner card, smaller diagrams.
 Tests: 28 phone and sample tests pass at five sizes; desktop suites unchanged (106 GPU, 24 software). Not measured on a real phone: please try it and tell me the model.
+
+- Deploy note: push `main` first (the branch second, or not at all): Cloudflare can skip the production build when the same commit arrives on two branches at once.
