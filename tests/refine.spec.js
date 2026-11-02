@@ -399,7 +399,7 @@ test.describe('lightweight mode (no GPU needed)', () => {
     const errors = trackErrors(page);
     const external = [];
     page.on('request', (r) => { if (/^https?:/.test(r.url()) && !ORIGIN.test(r.url())) external.push(r.url()); });
-    await page.goto('/?intro=0&lite=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('/?intro=0&lite=1&view=object', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
     await page.waitForTimeout(1200);
     expect(await page.evaluate(() => document.documentElement.classList.contains('lite'))).toBe(true);
@@ -423,7 +423,7 @@ test.describe('lightweight mode (no GPU needed)', () => {
 
   test('a phone gets the portrait posters', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/?intro=0&lite=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('/?intro=0&lite=1&view=object', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
     await page.waitForTimeout(1200);
     expect(await page.evaluate(() => document.querySelector('.lite-img').getAttribute('src'))).toContain('/posters/p-hero.webp');

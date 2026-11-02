@@ -5,9 +5,9 @@ import { createGuard, exactHashGuard, PRESETS } from './lab/loopguard.js';
  * browser: no live machine learning, no uploads, no network calls except two static files (a JSON and some figures).
  * Each panel says plainly what is real (your data, your figures) and what is an illustration.
  */
-const BASE = import.meta.env.BASE_URL;
+export const BASE = import.meta.env.BASE_URL;
 
-function h(tag, props = {}, ...kids) {
+export function h(tag, props = {}, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(props)) {
     if (v == null || v === false) continue;
@@ -16,17 +16,17 @@ function h(tag, props = {}, ...kids) {
   for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
   return el;
 }
-const rng = (seed) => () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-const tabs = (items, on, current) => {
+export const rng = (seed) => () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+export const tabs = (items, on, current, auto = true) => {
   const wrap = h('div', { class: 'lab-tabs', role: 'tablist' });
-  const set = (k) => { wrap.querySelectorAll('.lab-tab').forEach((b) => { const sel = b.dataset.k === k; b.setAttribute('aria-selected', String(sel)); b.tabIndex = sel ? 0 : -1; }); on(k); };
-  items.forEach(([k, label]) => wrap.append(h('button', { class: 'lab-tab', type: 'button', role: 'tab', 'data-k': k, on: { click: () => set(k) } }, label)));
-  set(current ?? items[0][0]);
+  const set = (k, user) => { wrap.querySelectorAll('.lab-tab').forEach((b) => { const sel = b.dataset.k === k; b.setAttribute('aria-selected', String(sel)); b.tabIndex = sel || !wrap.querySelector('[aria-selected="true"]') ? 0 : -1; }); on(k, user); };
+  items.forEach(([k, label]) => wrap.append(h('button', { class: 'lab-tab', type: 'button', role: 'tab', 'data-k': k, 'aria-selected': 'false', on: { click: () => set(k, true) } }, label)));
+  if (auto) set(current ?? items[0][0], false);
   return wrap;
 };
 
 /* ───────────────────────── LoopGuard ───────────────────────── */
-function loopguardDemo(root) {
+function loopguardDemo(root, ctx) {
   let key = 'rephrase'; let guard = createGuard(); let idx = 0; let timer = 0;
   const blurb = h('p', { class: 'lab-blurb' });
   const list = h('ol', { class: 'lg-steps' });
@@ -53,7 +53,7 @@ function loopguardDemo(root) {
       verdict.className = 'lg-verdict'; verdict.replaceChildren(guard.steps.length ? `Watching… ${guard.steps.length} step${guard.steps.length > 1 ? 's' : ''} so far, no loop yet.` : 'Press “Next step” to feed the agent’s steps to the guard one at a time.');
     }
   };
-  const next = () => { if (key === 'custom' || guard.tripped || idx >= PRESETS[key].steps.length) return; guard.add(PRESETS[key].steps[idx++]); render(); };
+  const next = () => { ctx?.touched?.(); if (key === 'custom' || guard.tripped || idx >= PRESETS[key].steps.length) return; guard.add(PRESETS[key].steps[idx++]); render(); };
   const reset = () => { stop(); guard = createGuard(); idx = 0; render(); };
   const nextBtn = h('button', { class: 'btn btn--solid', type: 'button', on: { click: next } }, 'Next step');
   const play = h('button', { class: 'btn btn--ghost', type: 'button', on: { click: () => { if (timer) { stop(); return; } if (key === 'custom') return; play.textContent = 'Pause'; next(); timer = setInterval(() => { next(); }, 950); } } }, 'Play');
@@ -97,7 +97,14 @@ function lesionCanvas(kind, size = 256) {
 }
 const jet = (v) => { const r = Math.min(1, Math.max(0, 1.5 - Math.abs(4 * v - 3))); const gr = Math.min(1, Math.max(0, 1.5 - Math.abs(4 * v - 2))); const b = Math.min(1, Math.max(0, 1.5 - Math.abs(4 * v - 1))); return [r * 255, gr * 255, b * 255]; };
 
-function dermDemo(root) {
+const PRED = { // pre-saved, SIMULATED outputs for the illustration (not from a real model)
+  regular: { svm: [['nv', 0.58], ['bkl', 0.18], ['df', 0.09], ['mel', 0.07], ['vasc', 0.04], ['bcc', 0.02], ['akiec', 0.02]], cnn: [['nv', 0.91], ['bkl', 0.04], ['df', 0.02], ['mel', 0.02], ['vasc', 0.005], ['bcc', 0.003], ['akiec', 0.002]] },
+  irregular: { svm: [['mel', 0.41], ['nv', 0.28], ['bkl', 0.14], ['akiec', 0.08], ['bcc', 0.05], ['df', 0.03], ['vasc', 0.01]], cnn: [['mel', 0.74], ['nv', 0.15], ['bkl', 0.05], ['akiec', 0.03], ['bcc', 0.02], ['df', 0.007], ['vasc', 0.003]] },
+  pearly: { svm: [['bcc', 0.39], ['akiec', 0.21], ['bkl', 0.15], ['nv', 0.12], ['mel', 0.07], ['vasc', 0.04], ['df', 0.02]], cnn: [['bcc', 0.68], ['akiec', 0.17], ['bkl', 0.07], ['nv', 0.04], ['mel', 0.02], ['vasc', 0.015], ['df', 0.005]] },
+};
+const MALIGNANT = new Set(['mel', 'bcc']); const PRECANCER = new Set(['akiec']);
+
+function dermDemo(root, ctx) {
   let kind = 'regular'; let step = 'look';
   const body = h('div', { class: 'derm-body' });
   const sample = { regular: 'Smooth, even border, one colour', irregular: 'Ragged border, several colours', pearly: 'Pale, pearly, visible small vessels' };
@@ -126,13 +133,22 @@ function dermDemo(root) {
       hc.className = 'derm-hist'; hogC.className = 'derm-img';
       body.append(h('div', { class: 'derm-row' }, h('div', {}, hogC, h('p', { class: 'lab-fine' }, 'HOG: orientations = 9, 16 px cells, computed here from this picture.')), h('div', {}, hc, h('p', { class: 'lab-fine' }, 'Colour histogram, 32 bins per channel (red, green, blue), computed from this picture.'),
         h('p', {}, h('b', {}, 'Step 2, handcrafted features. '), 'The baseline turns an image into numbers: how colours are distributed and which directions the edges point.'))));
+    } else if (step === 'predict') {
+      const col = (label, rows) => h('div', { class: 'derm-pred' }, h('h4', {}, label),
+        rows.map(([c, p], i) => h('div', { class: `derm-bar${i === 0 ? ' is-top' : ''}` }, h('span', {}, c), h('i', { style: '--w:0%', 'data-w': `${(p * 100).toFixed(0)}%` }), h('b', {}, `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`))));
+      const out = h('div', { class: 'derm-preds' });
+      const run = () => { out.replaceChildren(col('SVM + HOG', PRED[kind].svm), col('EfficientNet-B0', PRED[kind].cnn)); requestAnimationFrame(() => requestAnimationFrame(() => out.querySelectorAll('i').forEach((i) => { i.style.setProperty('--w', i.dataset.w); }))); };
+      const top = PRED[kind].cnn[0][0];
+      body.append(h('div', { class: 'derm-row' }, src, h('div', {}, h('p', {}, h('b', {}, 'Step 4, the prediction. '), 'Press the button to run the sample. The two models give a probability for each of the seven classes.'),
+        h('button', { class: 'btn btn--solid', type: 'button', on: { click: () => { run(); ctx?.touched?.(); } } }, 'Run the sample'),
+        h('p', { class: 'lab-fine' }, `The deep model's top class here is “${top}” (${MALIGNANT.has(top) ? 'malignant' : PRECANCER.has(top) ? 'pre-cancerous' : 'benign'} group). These probabilities are pre-saved and simulated for this illustration: not the output of a real model, and not a diagnosis.`))), out);
     } else if (step === 'models') {
       body.append(h('div', { class: 'derm-cards' },
         h('div', { class: 'derm-card' }, h('h4', {}, 'Baseline: SVM + HOG'), h('ul', {}, h('li', {}, 'Image resized to 128 × 128'), h('li', {}, 'Colour histograms (32 bins per channel) + HOG features'), h('li', {}, 'SVC, RBF kernel, C = 10, balanced class weights'))),
         h('div', { class: 'derm-card' }, h('h4', {}, 'Deep model: EfficientNet-B0'), h('ul', {}, h('li', {}, 'Pretrained on ImageNet, new head with dropout 0.3'), h('li', {}, 'Phase 1: frozen backbone, head only, 20 epochs, learning rate 1e-4'), h('li', {}, 'Phase 2: whole network, learning rate 5e-5, plateau scheduler, early stopping'), h('li', {}, 'Weighted random sampling for the class imbalance')))),
         h('p', {}, h('b', {}, 'Step 3, two models, one question. '), 'Seven classes from HAM10000 (10,015 dermatoscopic images):'),
         h('div', { class: 'derm-classes' }, [['akiec', 'pre-cancerous'], ['bcc', 'malignant'], ['bkl', 'benign'], ['df', 'benign'], ['mel', 'malignant'], ['nv', 'benign'], ['vasc', 'benign']].map(([c, t]) => h('span', { class: `derm-chip is-${t.replace('pre-', 'pre')}` }, h('b', {}, c), ` ${t}`))),
-        h('p', { class: 'lab-fine' }, 'This panel does not run a model and shows no prediction. Real predictions need the trained weights, which are not part of the public repository.'));
+        h('p', { class: 'lab-fine' }, 'Model settings as documented in the repository.'));
     } else {
       const N = 64; const t = document.createElement('canvas'); t.width = t.height = N; t.getContext('2d').drawImage(src, 0, 0, N, N); const d = t.getContext('2d').getImageData(0, 0, N, N).data;
       let s = new Float32Array(N * N); const lum = (i) => 0.3 * d[i * 4] + 0.59 * d[i * 4 + 1] + 0.11 * d[i * 4 + 2];
@@ -146,24 +162,24 @@ function dermDemo(root) {
       paint(0.7);
       const sl = h('input', { type: 'range', min: '0', max: '100', value: '70', 'aria-label': 'Heat overlay strength', on: { input: () => paint(sl.value / 100) } });
       body.append(h('div', { class: 'derm-row' }, out, h('div', {}, h('p', {}, h('b', {}, 'Step 4, explain it. '), 'Grad-CAM paints where a network looked. Doctors can then check that it looked at the lesion, not at a ruler or a hair.'), h('label', { class: 'lab-slider' }, 'Heat overlay ', sl),
-        h('p', { class: 'lab-fine' }, 'Illustration only: this heat is computed from edges and darkness in this picture. A real Grad-CAM uses the trained network’s gradients on its last convolutional layer.'))));
+        h('p', { class: 'lab-fine' }, 'Simulated: this heat is computed from edges and darkness in this picture. A real Grad-CAM uses the trained network’s gradients on its last convolutional layer.'))));
     }
   };
-  const kinds = tabs([['regular', 'Even lesion'], ['irregular', 'Irregular lesion'], ['pearly', 'Pearly lesion']], (k) => { kind = k; draw(); });
-  const steps = tabs([['look', '1 Input'], ['features', '2 Features'], ['models', '3 Models'], ['explain', '4 Explain']], (k) => { step = k; draw(); });
-  root.append(kinds, steps, body, h('p', { class: 'lab-disclaimer' }, 'Educational illustration of the pipeline with generated images. Not a diagnostic tool and not medical advice.'));
+  const kinds = tabs([['regular', 'Even lesion'], ['irregular', 'Irregular lesion'], ['pearly', 'Pearly lesion']], (k, u) => { kind = k; draw(); if (u) ctx?.touched?.(); });
+  const steps = tabs([['look', '1 Input'], ['features', '2 Features'], ['models', '3 Models'], ['predict', '4 Predict'], ['explain', '5 Explain']], (k, u) => { step = k; draw(); if (u) ctx?.touched?.(); });
+  root.append(kinds, steps, body, h('p', { class: 'lab-disclaimer' }, 'SIMULATED: generated images and pre-saved example outputs, labelled as such. Not a diagnostic tool and not medical advice.'));
 }
 
 /* ───────────────────────── OULAD ───────────────────────── */
-function ouladDemo(root) {
+function ouladDemo(root, ctx) {
   const figs = {
     importance: ['Which signals matter', 'oulad-importance.webp', 'Feature importance of the features RFECV kept, from the XGBoost classifier. How recently a student last touched the course, and how long their engagement lasted, dwarf everything else.', '990 × 590'],
     rfecv: ['How many features', 'oulad-rfecv.webp', 'Recursive feature elimination with cross-validation: recall climbs steeply up to about 7 features, then flattens. The best cross-validated recall is 0.9499 at 32 features.', '1189 × 590'],
     confusion: ['How it did', 'oulad-confusion.webp', 'Confusion matrix of the XGBoost classifier on held-out students (classes 0 and 1 as labelled in the notebook): about 2,800 and 3,300 correct, about 310 and 140 wrong.', '793 × 602'],
   };
   const stage = h('figure', { class: 'oulad-fig' }); const cap = h('figcaption', {});
-  const t = tabs(Object.entries(figs).map(([k, v]) => [k, v[0]]), (k) => {
-    const [, file, text] = figs[k];
+  const t = tabs(Object.entries(figs).map(([k, v]) => [k, v[0]]), (k, u) => {
+    const [, file, text] = figs[k]; if (u) ctx?.touched?.();
     stage.replaceChildren(h('img', { src: `${BASE}lab/${file}`, alt: text, loading: 'lazy' }), cap); cap.textContent = text;
   });
   root.append(t, stage, h('p', { class: 'lab-fine' }, 'Your own figures from the repository, shown as saved. Data: Open University Learning Analytics Dataset (32,593 students, 7 modules), Kuzilek, Hlosta, Zdrahal, 2017, CC BY 4.0. Nothing here is computed live.'));
@@ -176,7 +192,7 @@ function quicksort(a, key) { // the idea from the project: no built-in sort, des
   for (const x of a) { const k = key(x); (k > p ? lo : k < p ? hi : mid).push(x); }
   return [...quicksort(lo, key), ...mid, ...quicksort(hi, key)];
 }
-async function marketDemo(root) {
+async function marketDemo(root, ctx) {
   root.append(h('p', { class: 'lab-blurb' }, 'Loading the basket graph…'));
   const data = await (await fetch(`${BASE}lab/market.json`)).json();
   root.replaceChildren();
@@ -201,7 +217,7 @@ async function marketDemo(root) {
       const g = el('g', { tabindex: '0', role: 'button', 'aria-label': `${it.n}, bought in ${it.c} baskets`, class: 'mk-node' });
       g.append(el('circle', { cx: pos[i][0], cy: pos[i][1], r: (9 + Math.sqrt(it.c / maxC) * 15).toFixed(1), fill: depth[i] >= 0 ? fill[Math.min(depth[i], 2)] : 'currentColor', 'fill-opacity': depth[i] >= 0 ? 0.95 : 0.18, stroke: i === sel ? '#0b0b14' : 'none', 'stroke-width': 2.5 }));
       const lab = el('text', { x: pos[i][0], y: pos[i][1] + (pos[i][1] > 210 ? 36 : -30), 'text-anchor': 'middle', 'font-size': 11, fill: 'currentColor' }); lab.textContent = it.n; g.append(lab);
-      const go = () => { sel = i; render(); }; g.addEventListener('click', go); g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+      const go = () => { sel = i; render(); ctx?.touched?.(); }; g.addEventListener('click', go); g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
       svg.append(g);
     });
     const ranked = quicksort(adj[sel].map(([v, w]) => ({ v, w })), (x) => x.w);
@@ -220,14 +236,15 @@ async function marketDemo(root) {
 }
 
 /* ───────────────────────── Network Cell Analyzer ───────────────────────── */
-function cellDemo(root) {
+function cellDemo(root, ctx) {
   let dist = 35; let raf = 0; const r = rng(5); const samples = []; let n = 0; let last = 0;
   const cv = h('canvas', { class: 'cell-cv', width: 640, height: 260, role: 'img', 'aria-label': 'Simulated signal strength over time' });
   const g = cv.getContext('2d'); const read = h('div', { class: 'cell-read', 'aria-live': 'polite' });
-  const slider = h('input', { type: 'range', min: '0', max: '100', value: String(dist), 'aria-label': 'Distance from the tower', on: { input: () => { dist = +slider.value; } } });
+  const slider = h('input', { type: 'range', min: '0', max: '100', value: String(dist), 'aria-label': 'Distance from the tower', on: { input: () => { dist = +slider.value; ctx?.touched?.(); } } });
   const quality = (v) => (v > -80 ? ['Excellent', '#12b76a'] : v > -90 ? ['Good', '#7bbf2a'] : v > -100 ? ['Fair', '#f5a000'] : ['Poor', '#e5484d']);
   const tick = (t) => {
     raf = requestAnimationFrame(tick);
+    if (ctx && !ctx.active()) return; // paused while off screen
     if (t - last > 250) { last = t; n++; const v = -72 - dist * 0.46 + Math.sin(n * 0.35) * 2.2 + (r() - 0.5) * 3.5; samples.push(v); if (samples.length > 64) samples.shift();
       const [q, col] = quality(v); read.replaceChildren(h('b', { style: `color:${col}` }, `${v.toFixed(0)} dBm`), ` RSRP, ${q}`, h('small', {}, ` · ${n} samples sent`));
       g.clearRect(0, 0, 640, 260); g.font = '11px monospace'; g.fillStyle = 'rgba(120,120,140,.9)';
@@ -242,28 +259,5 @@ function cellDemo(root) {
   return () => cancelAnimationFrame(raf);
 }
 
-/* ───────────────────────── the panel ───────────────────────── */
-const DEMOS = {
-  loopguard: { title: 'LoopGuard, catching an agent loop', kind: 'Interactive sample · runs in your browser', run: loopguardDemo },
-  derm: { title: 'DermSense, inside the pipeline', kind: 'Illustration · generated images', run: dermDemo },
-  oulad: { title: 'OULAD, what the model found', kind: 'Real figures from the repository', run: ouladDemo },
-  market: { title: 'Supermarket graph, explore the baskets', kind: 'Real aggregates from the dataset', run: marketDemo },
-  cell: { title: 'Cell Analyzer, signal on the move', kind: 'Simulated telemetry', run: cellDemo },
-};
-
-export function initLab() {
-  const dlg = document.getElementById('lab'); if (!dlg) return;
-  const title = document.getElementById('labTitle'); const kind = document.getElementById('labKind'); const body = document.getElementById('labBody');
-  let dispose = null; let opener = null;
-  const close = () => { dlg.close(); };
-  dlg.addEventListener('close', () => { dispose?.(); dispose = null; body.replaceChildren(); document.documentElement.classList.remove('lab-open'); opener?.focus(); });
-  document.getElementById('labClose').addEventListener('click', close);
-  dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
-  document.addEventListener('click', async (e) => {
-    const b = e.target.closest('[data-lab]'); if (!b) return;
-    const d = DEMOS[b.dataset.lab]; if (!d) return;
-    opener = b; title.textContent = d.title; kind.textContent = d.kind; body.replaceChildren();
-    document.documentElement.classList.add('lab-open'); dlg.showModal();
-    try { dispose = (await d.run(body)) || null; } catch (err) { console.warn('[lab]', err); body.append(h('p', {}, 'This sample could not load. The repository link has the full project.')); }
-  });
-}
+/* ───────────────────────── registry (mounted inline by samples.js) ───────────────────────── */
+export const DEMOS = { loopguard: loopguardDemo, derm: dermDemo, oulad: ouladDemo, market: marketDemo, cell: cellDemo };

@@ -494,3 +494,17 @@ Measured with `tests/scroll-frames.spec.js` (scripted scroll of the whole page i
 - **Governor:** hand-over to the pre-rendered scenes now happens under about 15 fps twice in a row (was 11 fps). The old CPU-throttle test no longer produces an unplayable page because live 3D got cheaper, so the hand-over is tested with `?slow=1` (a QA hook that makes the governor see 120 ms frames).
 - **HUD cost:** idle main thread 93% idle with or without the HUD (profile, 6 s idle, desktop).
 - **Size:** the 661 MB came from about 584 MB of untracked QA scratch (screenshots, traces, poster captures). Removed, and `npm run clean` / `npm run pack` added. Shipped `public/` is 4.9 MB (models 1.4 MB Draco, posters 2.9 MB, résumé 0.5 MB, grain 16 KB); tracked project 24 MB; `dist/` 6.4 MB. 3D models were already Draco-compressed and the posters are lossy WebP at high quality; nothing visible was given up.
+
+
+---
+
+# Addendum 7: samples, split text and what they cost (2026-11-02)
+
+Measured with `tests/scroll-frames.spec.js` and `tests/scroll-profile.spec.js` (390x844 at 3x, whole-page scripted scroll, real GPU), CPU throttling as a stand-in for a weaker phone. Absolute numbers drift between sessions (the same commit measured 24 ms one day and 70 ms another under the same 4x throttle), so every comparison below was run side by side in one session.
+
+- **Inactive pinned steps skip layout** (`content-visibility: hidden` on every step that is not showing): at 3x throttle a phone scroll went from 140 ms to 68 ms per frame. This helps every device and was the largest single win; it also removed a cost that was already there before the samples.
+- **Split-text headings:** permanent per-word clipped boxes cost about 35 ms per frame at 4x. Words are now split only while a heading plays its reveal (about 1.5 s), then it goes back to plain text.
+- **Samples:** about 2 ms per frame at normal speed (the page stays more than 50% idle). Demos mount lazily, animate only while their chapter is the active step, and the "click me" outline uses transform and opacity only.
+- **Result:** unthrottled phone scroll: 516 frames, average 17.4 ms, p95 16.8 ms, 8 slow frames. Under 4x throttle the page is still slow (about 120 ms per frame), as it is without the samples (70 ms): that throttle also slows compositing, so it is a harsh stand-in. **Not measured on a real phone.**
+- **Bug fixed on the way:** `compileAsync` (the shader precompile added in the smoothness pass) could throw inside three.js's own timer under reduced motion; replaced by the synchronous `compile`, which starts the same parallel shader build without polling.
+- **QA switches:** `?samples=0` and `?split=0` turn those features off for A/B measurements; `?view=object` starts with the 3D objects instead of the samples (the older tests use it).

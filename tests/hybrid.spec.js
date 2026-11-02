@@ -38,7 +38,7 @@ test.describe('phones: pre-rendered, looping, sharp', () => {
   });
 
   test('scrolling a phone: posters cross-fade and scrub, the progress bar fills', async ({ page }) => {
-    await page.goto('/?intro=0', { waitUntil: 'domcontentloaded' });
+    await page.goto('/?intro=0&view=object', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#loader', { state: 'detached', timeout: 60_000 });
     await page.waitForTimeout(1200);
     await page.evaluate(() => scrollTo(0, window.__kfY(document.querySelector('[data-kf="cap2"]'))));
@@ -95,18 +95,21 @@ test.describe('desktop polish: blue scrollbar, kinetic type, pointer ring, smoot
     const r = await page.evaluate(() => ({
       bar: getComputedStyle(document.documentElement, '::-webkit-scrollbar').width,
       thumb: getComputedStyle(document.documentElement, '::-webkit-scrollbar-thumb').borderRadius,
-      words: document.querySelectorAll('.is-split .sw').length,
+      pending: document.querySelectorAll('.sw-pre').length,
       ring: !!document.querySelector('.cursor-ring'),
       magnet: document.querySelectorAll('.is-magnet').length,
     }));
     expect(r.bar).toBe('14px');
-    expect(r.words, 'split words').toBeGreaterThan(20);
+    expect(r.pending, 'headings waiting for their reveal').toBeGreaterThan(10);
     expect(r.ring).toBe(true);
     expect(r.magnet).toBeGreaterThan(3);
     // a heading reveals when it scrolls into view
     await page.evaluate(() => scrollTo(0, window.__kfY(document.querySelector('[data-kf="contact"]'))));
     await page.waitForTimeout(1600);
-    expect(await page.evaluate(() => document.querySelectorAll('.is-split.sw-in').length)).toBeGreaterThan(0);
+    // it played, and then went back to plain text: no permanent clipped word boxes (they slowed every scroll frame)
+    await page.waitForTimeout(2200);
+    const done = await page.evaluate(() => { const h = document.querySelector('.contact .display'); return { pre: h.classList.contains('sw-pre'), words: h.querySelectorAll('.sw').length, opacity: getComputedStyle(h).opacity }; });
+    expect(done).toEqual({ pre: false, words: 0, opacity: '1' });
   });
 
   test('wheel scrolling is smoothed (Lenis): one wheel notch glides instead of jumping', async ({ page }) => {

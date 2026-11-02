@@ -82,7 +82,7 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
   loadAgent(`${import.meta.env.BASE_URL}models/agent.glb`).then((a) => { agent = a; scene.add(a.rig); }).catch((e) => console.warn('[agent] not loaded', e));
 
   // a prop's shaders compile in parallel as soon as it loads (a few chapters before it appears), so showing it never stalls a frame
-  const props = createProps(scene, import.meta.env.BASE_URL, (wrap) => { if (!disposed) renderer.compileAsync(wrap, camera, scene).catch(() => {}); });
+  const props = createProps(scene, import.meta.env.BASE_URL, (wrap) => { if (!disposed) { try { renderer.compile(wrap, camera, scene); } catch { /* the first real frame compiles it instead */ } } });
   const propW = new Map(); // damped assembly weight per prop
   let blend = { a: null, b: null, t: 0, upcoming: [] };
 
@@ -145,7 +145,10 @@ export function createWorld(canvas, { quality = 'high', reducedMotion = false, g
     for (const k of keys) tgt[k] = lerp(A[k], B[k], t);
     band.mark = t > 0.5 ? b : a;
     formTarget = (t > 0.5 ? B : A).form; // the swarm glides to the nearer chapter's formation
-    blend = { a: A.prop || null, b: B.prop || null, t, upcoming: [marks[i + 2], marks[i + 3]].filter(Boolean).map((mk) => KF[mk.name].prop) };
+    // in "sample" view the chapters that show an interactive sample let their 3D object step aside (the switch in the sample brings it back)
+    const sampled = (n) => document.documentElement.dataset.view !== 'object' && window.__sampleKf?.has(n);
+    const propOf = (n) => (sampled(n) ? null : KF[n].prop || null);
+    blend = { a: propOf(a.name), b: propOf(b.name), t, upcoming: [marks[i + 2], marks[i + 3]].filter(Boolean).map((mk) => propOf(mk.name)) };
   }
 
   let lastW = 0; let lastH = 0;

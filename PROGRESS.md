@@ -104,3 +104,12 @@ Profiled a scripted full-page scroll and fixed what the profile showed: page-wid
 - Data: `python tools/make-lab-data.py` (public repos via `gh`). New small chunk `lab` (10 KB gzip) loads when the browser is idle; Lenis is a separate 4 KB chunk loaded only on desktop mice.
 - Tests: 112 GPU (1 skipped by design), 24 core software-GL, build OK. New: `tests/lab.spec.js` (all five panels, phone layout), polish tests in `tests/hybrid.spec.js`.
 - Open: no real-phone measurement yet (ask for `?perf=1` numbers); Commerce Microservices and GREAT samples not built; real DermSense predictions need the trained weights; OULAD README says 23 features but the figure says 32.
+
+## Round 9: a sample in every chapter
+- **One interactive sample per chapter, visible while you scroll** (profile, Pip, orchestration, retrieval, tools and MCP, evaluation, reliability, GREAT, LoopGuard, DermSense, OULAD, microservices, Cell Analyzer, supermarket), placed opposite the text card, labelled "Interactive sample · simulated data", with a pulsing outline and a hint until touched. Details and data sources: `docs/SAMPLES_AND_TECHNIQUES.md`.
+- **DermSense now has a clickable simulated prediction** (pre-saved probabilities for an even, an irregular and a pearly generated lesion; SVM+HOG against EfficientNet-B0), clearly labelled simulated and not a diagnosis.
+- **Pip is a small agent** you can give a task to (scripted think, tool, result, answer).
+- **Sample or 3D object:** a switch in each window trades it for the chapter's Blender object. Pip, a character, stays either way.
+- **Performance, found and fixed during the work** (see `docs/PERFORMANCE.md` Addendum 7): inactive pinned steps now skip layout (about half the frame time on a phone scroll), split-text is no longer permanent, `compileAsync` replaced by `compile`.
+- Tests: 113 GPU (1 skipped by design), 24 core software-GL, build OK. New: samples spec for every chapter on desktop and phone, layout checks that no sample overlaps its text card.
+- Open: not measured on a real phone; real DermSense predictions need the trained weights; GREAT only has the call-scoring sample (architecture and outcomes steps keep the 3D object).

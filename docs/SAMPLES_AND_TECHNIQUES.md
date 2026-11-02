@@ -1,23 +1,33 @@
 # Project samples, and which techniques were used
 
-## 1. "Try a sample" panels: feasibility and what shipped
+## 1. Interactive samples: one per chapter, always visible
 
-Verdict: **feasible and worth doing, as pre-computed or locally-run samples (no live machine learning).** Honesty rule used throughout: each panel says what is real and what is an illustration, and nothing is invented to look like a result.
+Every chapter below shows its own interactive sample **in the scene while you scroll**, opposite its text card. No button to find: the window is there, labelled "Interactive sample · simulated data", with a pulsing outline and a "tap here" hint until you touch it. A switch in each window ("See the 3D object" / "Show the sample") trades the sample for that chapter's Blender object and back. On phones the sample fills the space above the card.
 
-| Project | Shipped | What is real | What is an illustration | Why |
-|---|---|---|---|---|
-| LoopGuard | Interactive: feed an agent trace step by step, three example traces or your own steps | The detection computation runs for real in the browser (tokenise, TF-IDF cosine, state mapping at 0.75, cycle detection) | The example traces are written for the demo; it is a small JavaScript re-implementation of the idea (the library is Python, MIT) | Fully self-contained, no data issues, shows exactly why exact-match guards miss rephrased loops |
-| DermSense | "Inside the pipeline": input, features (real HOG and colour histogram computed on the picture), the two models, an explain step | Hyper-parameters (HOG 9 orientations, 16 px cells, 32-bin histograms, C = 10, EfficientNet-B0 two-phase training), the seven HAM10000 classes | The lesion pictures are generated, the heat overlay is an edge/darkness saliency, not a trained Grad-CAM. **No prediction is shown.** | The repository has no trained weights or exported predictions (and its own web dashboard is a simulation), so any "prediction" would be invented. |
-| OULAD | The three real result figures (feature importance, RFECV curve, confusion matrix) with plain explanations | Your own figures, re-encoded as WebP; the numbers quoted come from the figures (best cross-validated recall 0.9499 at 32 features) | Nothing | Real outputs already exist; dataset is CC BY 4.0 (attribution shown) |
-| Supermarket graph | Explorable graph of the 14 most-bought items; click an item to see co-purchase ranking (hand-written quicksort) and breadth-first reach; a slider filters links | Aggregates computed from the repository's CSV: 38,765 purchases, 14,963 baskets (one customer on one day), 3,898 customers; no raw rows shipped | The 14-item subset (to keep it readable) | Real data, tiny file (1.4 KB), mirrors the project's graph + quicksort + BFS design |
-| Cell Analyzer | Simulated signal strength reacting to distance from a tower | The RSRP quality bands are the common LTE ranges | The readings are simulated (clearly labelled) | The repository has no recorded telemetry to replay |
+**Everything is simulated and says so.** The data is scripted or pre-saved; nothing is a live model, nothing is uploaded, nothing calls a server.
 
-Not done yet (feasible): Commerce Microservices (a round-robin and health-check simulation of the HAProxy setup) and GREAT (a scoring-rubric walkthrough on **synthetic** conversations; real customer calls must never be used).
+| Chapter | The sample | Where the data comes from |
+|---|---|---|
+| Profile | "From notebook to production": five clickable stages and a "Ship it" run | Scripted |
+| Meet Pip | Pip as a small agent: pick a task, watch think, tool call, result, answer (Pip waves at the end) | Scripted agent steps |
+| Orchestration | Five agents pass messages along a diagram for three tasks (trip, pull-request review, ticket) | Scripted conversations |
+| Retrieval | Same question, same documents, re-ranker off or on: top-3 precision and cited answer change | Pre-saved scores |
+| Tool calling and MCP | The server lists three tools; pick one to see the JSON-RPC call, the result and the answer typed out | Pre-saved calls (MCP-style messages) |
+| Evaluation | A judge scores four answers on a four-part rubric; run a 24-case regression for prompt v1 against v2 | Pre-saved scores |
+| Reliability | A dashboard with a live-looking latency line; inject a timeout, prompt injection or malformed output and watch it handled | Simulated incidents |
+| GREAT | Pick a call (billing, upset customer, sales): rubric bars fill, flagged for review or not | Made-up conversations; no real customer data |
+| LoopGuard | Feed an agent trace step by step, or type your own | The detection runs for real in the browser (TF-IDF cosine, state mapping, cycle detection); example traces are written for the demo |
+| DermSense | Input, features (real HOG and colour histogram of the picture), models, **a clickable simulated prediction** (SVM+HOG against EfficientNet-B0, seven classes), explain | Generated images; the probabilities are pre-saved and simulated, labelled as such. Not a diagnosis |
+| OULAD | The three real result figures | Your own figures from the repository (CC BY 4.0 dataset) |
+| Commerce Microservices | Round-robin load balancer across three replicas: send requests, take a replica down | Simulated traffic and counters |
+| Cell Analyzer | Signal strength line that reacts to distance from a tower | Simulated telemetry (common LTE RSRP bands) |
+| Supermarket graph | Explorable graph of the 14 most-bought items with quicksort ranking and breadth-first reach | Real aggregates computed from your dataset (14,963 baskets, 3,898 customers), no raw rows |
 
-Things worth knowing:
-- **Real lesion photos:** possible, but HAM10000 is CC BY-NC-SA 4.0 (non-commercial, share-alike, attribution), which sits awkwardly with a portfolio you use to get paid work. Safer options: your own generated images (as now), or CC0 ISIC images. **Real predictions** need your trained model: if you give me the weights or an `outputs/` folder, I can pre-compute real examples (probabilities and genuine Grad-CAM) and add them.
+Notes:
+- **Real lesion photos:** possible, but HAM10000 is CC BY-NC-SA 4.0 (non-commercial, share-alike), which sits awkwardly with a portfolio you use to get paid work. Real predictions would need your trained weights; if you provide them, real examples can replace the simulated probabilities.
 - **OULAD README vs figure:** the README says RFECV picked 23 features, the figure says 32. The site uses the figure. Worth fixing in the repo.
-- Data for these panels is rebuilt with `python tools/make-lab-data.py` (needs the `gh` CLI).
+- Data is rebuilt with `python tools/make-lab-data.py` (needs the `gh` CLI).
+- Code: `src/samples.js` (placement, switch, lazy mount), `src/samples/agents.js` (new samples), `src/lab.js` (earlier samples and shared helpers), `src/lab/loopguard.js` (the detection method).
 
 ## 2. The 124-item list: what was used, skipped, and why
 

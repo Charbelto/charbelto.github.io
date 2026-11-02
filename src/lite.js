@@ -27,8 +27,10 @@ export function createLite({ baseUrl, reducedMotion }) {
 
   const portrait = () => innerWidth / innerHeight < 1.1;
   const url = (n) => `${baseUrl}posters/${portrait() ? 'p' : 'l'}-${n}.webp`;
+  // chapters that show an interactive sample show no poster in "sample" view (the switch in the sample brings it back)
+  const sampled = (n) => document.documentElement.dataset.view !== 'object' && window.__sampleKf?.has(n);
   const asked = new Set();
-  const preload = (n) => { if (!n) return; const u = url(n); if (asked.has(u)) return; asked.add(u); const im = new Image(); im.src = u; };
+  const preload = (n) => { if (!n || sampled(n)) return; const u = url(n); if (asked.has(u)) return; asked.add(u); const im = new Image(); im.src = u; };
 
   let marks = [];
   let raf = 0;
@@ -65,7 +67,7 @@ export function createLite({ baseUrl, reducedMotion }) {
       if (Math.abs(d) > 0.0008) { cur[k] += d * (reducedMotion ? 1 : 0.2); moving = true; } else cur[k] = tgt[k];
     }
     publish(cur);
-    const want = target.a === target.b ? [target.a, null] : [target.a, target.b];
+    const want = (target.a === target.b ? [target.a, null] : [target.a, target.b]).map((n) => (n && sampled(n) ? null : n));
     want.forEach((n, i) => {
       if (n !== names[i]) { names[i] = n; if (n) imgs[i].src = url(n); }
       imgs[i].style.opacity = n ? String(i === 0 ? (target.a === target.b ? 1 : 1 - target.t) : target.t) : '0';
@@ -80,6 +82,7 @@ export function createLite({ baseUrl, reducedMotion }) {
   const onResize = () => { names = [null, null]; measure(); schedule(); };
 
   addEventListener('scroll', schedule, { passive: true });
+  addEventListener('viewchange', () => { names = [null, null]; schedule(); });
   addEventListener('resize', onResize, { passive: true });
   measure();
   Object.assign(cur, (solve(), tgt));

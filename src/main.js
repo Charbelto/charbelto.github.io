@@ -165,13 +165,13 @@ function setupPip() {
 }
 
 /* ───────── kinetic type: headings reveal word by word, each word rising out of its own mask ─────────
-   Transform-only (compositor), so it is as cheap on a phone as on a desktop. Stepper chapters replay it every time
-   a step becomes active; everything else plays once as it scrolls into view. */
+   The words are split only while a heading plays its reveal (about 1.5 s), then it goes back to plain text: hundreds of
+   permanent clipped boxes were measurably slowing every scroll frame. Transform-only, so cheap on a phone as well.
+   Stepper chapters replay it each time a step becomes active; everything else plays once as it scrolls into view. */
 function setupSplit() {
-  if (reducedMotion) return;
+  if (reducedMotion || params.get('split') === '0') return; // ?split=0: QA switch
   const targets = $$('.display, .xp h3, .panel h3').filter((h) => !h.closest('.hero'));
-  const once = [];
-  targets.forEach((h) => {
+  const splitWords = (h) => {
     let n = 0;
     const walk = (node) => {
       for (const c of [...node.childNodes]) {
@@ -188,13 +188,25 @@ function setupSplit() {
         } else if (c.nodeType === 1 && !c.classList.contains('sw')) walk(c);
       }
     };
-    walk(h); h.classList.add('is-split');
-    if (!h.closest('.stepper')) once.push(h);
-  });
+    walk(h);
+  };
+  const play = (h) => {
+    if (h.__busy) return;
+    h.__busy = true; h.__html ??= h.innerHTML;
+    splitWords(h); h.classList.add('is-split');
+    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('sw-in')));
+    setTimeout(() => { h.innerHTML = h.__html; h.classList.remove('is-split', 'sw-in', 'sw-pre'); h.__busy = false; }, 1500);
+  };
+  const once = [];
+  targets.forEach((h) => { h.__html = h.innerHTML; h.classList.add('sw-pre'); if (!h.closest('.stepper')) once.push(h); }); // hidden until its reveal starts
   const io = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('sw-in'); io.unobserve(e.target); }
+    for (const e of entries) if (e.isIntersecting) { play(e.target); io.unobserve(e.target); }
   }, { rootMargin: '0px 0px -8% 0px' });
   once.forEach((h) => io.observe(h));
+  // pinned steps: replay when a step becomes active
+  window.addEventListener('stepchange', (e) => e.detail.querySelectorAll('.display, .xp h3, .panel h3').forEach((h) => { if (!h.closest('.hero')) { h.classList.add('sw-pre'); play(h); } }));
+  // the first step of each group is already active when the group scrolls in: reveal its headings once the step shows
+  $$('.stepper .chapter.is-active').forEach((c) => c.querySelectorAll('.display, .xp h3, .panel h3').forEach(play));
 }
 
 /* ───────── desktop pointer polish: magnetic buttons and a cursor ring (fine pointers only) ───────── */
@@ -333,6 +345,7 @@ function setupSteppers() {
         o.steps.forEach((s, i) => s.classList.toggle('is-active', i === idx));
         o.buttons.forEach((b, i) => b.setAttribute('aria-current', String(i === idx)));
         o.count.textContent = `${idx + 1} / ${o.steps.length}  ${o.steps[idx].dataset.label || ''}`;
+        window.dispatchEvent(new CustomEvent('stepchange', { detail: o.steps[idx] }));
       }
       // the pips belong to the pinned stage only: fade them as the group scrolls in or out
       o.pips.classList.toggle('is-away', scrollY < top - 40 || scrollY > top + h - innerHeight + 40);
@@ -643,7 +656,7 @@ async function boot() {
   setupPip();
   setupPointerPolish();
   setupSmoothScroll();
-  (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(() => import('./lab.js').then((m) => m.initLab())); // the sample panels: a small separate chunk
+  if (params.get('samples') !== '0') import('./samples.js').then((m) => m.initSamples()); // ?samples=0: QA switch; // the interactive samples: a separate chunk, mounted as each chapter nears
   const remeasure = () => { fitHero(); layoutSteppers(); world?.remeasure(); lite?.remeasure(); };
   remeasure();
   addEventListener('load', () => remeasure());
