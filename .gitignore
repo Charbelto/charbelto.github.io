@@ -62,3 +62,4 @@ qa/step/
 qa/name-*.png
 
 *.zip
+qa/phone/

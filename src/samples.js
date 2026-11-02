@@ -25,6 +25,18 @@ const REG = {
   w6: { run: OLD.market, title: 'Explore the baskets', hint: 'Click an item' },
 };
 
+function setToggle(b, v) {
+  const long = v === 'sample' ? 'See the 3D object' : 'Show the sample'; const short = v === 'sample' ? '3D object' : 'Sample';
+  b.replaceChildren(h('span', { class: 'long' }, long), h('span', { class: 'short' }, short));
+  b.setAttribute('aria-label', long); b.setAttribute('aria-pressed', String(v === 'object'));
+}
+
+function setDetails(chapter, panel, btn, open) {
+  panel.classList.toggle('is-open', open); chapter.classList.toggle('is-details', open);
+  btn.setAttribute('aria-expanded', String(open)); btn.textContent = open ? 'Back to the sample' : 'More details';
+  if (open) panel.scrollTop = 0;
+}
+
 export function initSamples() {
   const root = document.documentElement;
   const wanted = new URLSearchParams(location.search).get('view') === 'object' ? 'object' : 'sample';
@@ -34,7 +46,7 @@ export function initSamples() {
 
   const setView = (v) => {
     root.dataset.view = v;
-    document.querySelectorAll('.sample-toggle').forEach((b) => { b.textContent = v === 'sample' ? 'See the 3D object' : 'Show the sample'; b.setAttribute('aria-pressed', String(v === 'object')); });
+    document.querySelectorAll('.sample-toggle').forEach((b) => { setToggle(b, v); });
     window.dispatchEvent(new Event('viewchange'));
   };
 
@@ -45,11 +57,16 @@ export function initSamples() {
     const state = { vis: false, mounted: false, touched: false };
     const hint = h('p', { class: 'sample-hint' }, h('i', { 'aria-hidden': 'true' }, '👆'), ` ${spec.hint}`);
     const body = h('div', { class: 'sample-body' });
-    const toggle = spec.pip ? null : h('button', { class: 'sample-toggle', type: 'button', 'aria-pressed': String(wanted === 'object'), on: { click: () => setView(root.dataset.view === 'sample' ? 'object' : 'sample') } }, wanted === 'sample' ? 'See the 3D object' : 'Show the sample');
+    const toggle = spec.pip ? null : h('button', { class: 'sample-toggle', type: 'button', 'aria-pressed': String(wanted === 'object'), on: { click: () => setView(root.dataset.view === 'sample' ? 'object' : 'sample') } });
+    if (toggle) setToggle(toggle, wanted);
     const win = h('aside', { class: `sample sample--${side}${spec.pip ? ' sample--pip' : ''}`, 'data-demo': kf, 'aria-label': `Interactive sample: ${spec.title}` },
-      h('div', { class: 'sample-head' }, h('span', { class: 'sample-badge' }, h('i', { 'aria-hidden': 'true' }), 'Interactive sample', h('small', {}, ' · simulated data')), toggle),
+      h('div', { class: 'sample-head' }, h('span', { class: 'sample-badge' }, h('i', { 'aria-hidden': 'true' }), h('span', { class: 'b-long' }, 'Interactive sample'), h('span', { class: 'b-short' }, 'Try it'), h('small', {}, h('span', { class: 'sl' }, ' · simulated data'), h('span', { class: 'ss' }, ' · simulated'))), toggle),
       h('h3', { class: 'sample-title' }, spec.title), body, hint);
     chapter.append(win);
+    chapter.classList.add('has-sample');
+    // phones: the card shows a short version; "Details" opens the rest (and tucks the sample away), "Back to the sample" returns
+    const more = h('button', { class: 'panel-more', type: 'button', 'aria-expanded': 'false', on: { click: () => setDetails(chapter, panel, more, !panel.classList.contains('is-open')) } }, 'More details');
+    panel.append(more);
 
     const ctx = {
       active: () => state.vis && (chapter.classList.contains('is-active') || !chapter.closest('.stepper')),
@@ -61,5 +78,7 @@ export function initSamples() {
     // on phones the sample fills the band above the card: it needs the card's height
     new ResizeObserver(() => chapter.style.setProperty('--ph', `${panel.offsetHeight}px`)).observe(panel);
   }
+  // a new step starts compact again
+  window.addEventListener('stepchange', () => document.querySelectorAll('.panel.is-open').forEach((p) => { const c = p.closest('.chapter'); setDetails(c, p, p.querySelector('.panel-more'), false); }));
   setView(wanted);
 }

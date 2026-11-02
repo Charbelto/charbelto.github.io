@@ -870,3 +870,117 @@ html[data-view='object'] .sample::before { display: none; }
 .sample .btn--solid:hover { background: #0b0b14; border-color: #0b0b14; }
 .sample .btn--ghost { color: #0b0b14; border-color: #0b0b14; }
 @media (max-width: 1100px) and (orientation: portrait), (max-width: 720px) { .great .panel .stages li { margin: 0 14px 0 0; } }
+
+/* ═════════ PHONE PASS ═════════
+   Phones (portrait, under 720 px wide, or landscape under 560 px tall): a compact text card so the sample gets the screen,
+   a readable type floor (12 px for labels, 15 px for body), and tap targets of about 44 px. */
+.panel-more { display: none; }
+@media (max-width: 1100px) and (orientation: portrait), (max-width: 720px), (max-height: 560px) and (orientation: landscape) {
+  /* compact card: heading, the first paragraph after it (clamped), the buttons */
+  .chapter.has-sample .panel:not(.is-open) > :not(.idx):not(.display):not(.display + p):not(.actions):not(.btn):not(.panel-more) { display: none; }
+  .chapter.has-sample .panel:not(.is-open) > .display + p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+  .chapter.has-sample .panel { padding: 14px 16px 12px; }
+  .chapter.has-sample .panel .display { font-size: clamp(1.35rem, 6.2vw, 1.75rem); margin-bottom: 6px; }
+  .chapter.has-sample .panel .idx { margin-bottom: 6px; }
+  .chapter.has-sample .panel .actions { gap: 8px; margin-top: 4px; }
+  .chapter.has-sample .panel .btn { min-height: 44px; padding: 10px 16px; font-size: 0.85rem; }
+  .panel-more { display: inline-flex; align-items: center; min-height: 44px; margin: 4px 0 -4px; padding: 0 2px; border: 0; background: none; color: var(--ink); font: 600 0.8rem var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+  .panel-more::after { content: ' ▾'; text-decoration: none; display: inline-block; } .panel-more[aria-expanded='true']::after { content: ' ▴'; }
+  /* details open: the card shows everything and the sample steps aside */
+  .chapter.has-sample .panel.is-open { max-height: calc(100svh - 150px); overflow-y: auto; overscroll-behavior: contain; }
+  .chapter.is-details .sample { display: none; }
+  .chapter.has-sample .panel.is-open > .display + p { display: block; -webkit-line-clamp: unset; }
+}
+
+@media (max-width: 720px), (max-height: 560px) and (orientation: landscape) {
+  /* type floor */
+  .eyebrow, .idx, .xp-meta, .badge, .hero-stats dt, .tags li, .chip, .mono-note, .contact .eyebrow, .foot, .scroll-cue { font-size: max(0.78rem, 12px); }
+  .panel p, .xp ul, .lead-list span, .faq-list details p, .modal p, .contact-meta, .arc-list li { font-size: 0.96rem; line-height: 1.5; }
+  .xp ul { font-size: 0.92rem; }
+  .tags li { padding: 6px 11px; }
+  .head-cta { padding: 12px 16px !important; font-size: max(0.75rem, 12px) !important; min-height: 44px; display: inline-flex; align-items: center; }
+  .brand { min-height: 44px; padding: 0 4px 0 0; }
+  .menu-btn { width: 44px !important; height: 44px !important; }
+  /* step pills: bigger hit areas, readable label */
+  .step-pips { padding: 4px 16px; gap: 12px; } .step-pips button { width: 13px; height: 13px; } .step-pips button::after { inset: -16px -8px; }
+  .step-count { font-size: max(0.72rem, 11.5px); }
+  /* sample windows */
+  .sample-badge { font-size: max(0.7rem, 11px); } .sample-toggle { min-height: 40px; padding: 8px 14px; font-size: max(0.72rem, 12px); }
+  .sample .lab-tab, .sample .sx-chip { min-height: 40px; padding: 8px 14px; font-size: max(0.8rem, 13px); }
+  .sample .btn { min-height: 44px; padding: 10px 16px; font-size: 0.85rem; }
+  .sample-hint { font-size: max(0.72rem, 12px); }
+  .sample .lab-fine, .sample .sx-fine { font-size: max(0.74rem, 12px); }
+  .sample .lab-slider { font-size: max(0.76rem, 12.5px); } .sample .lab-slider input[type='range'] { height: 36px; }
+  .sample .sx-ans, .sample .sx-chunk, .sample .sx-line, .sample .sx-transcript li { font-size: max(0.82rem, 13px); }
+  .sample .sx-rb, .sample .derm-bar { font-size: max(0.72rem, 12px); }
+  .sample .sx-term, .sample .sx-json { font-size: max(0.72rem, 12px); }
+  .sample .derm-chip { font-size: max(0.76rem, 12px); }
+  .mail { min-height: 44px; display: inline-flex; align-items: center; }
+  .chip { min-height: 40px; padding: 8px 14px; }
+}
+
+/* phones: more room for the sample (the card is compact now), and a taller sample in the plain-flow chapters */
+@media (max-width: 1100px) and (orientation: portrait), (max-width: 720px) {
+  .sample, html[data-view='sample'] .sample { bottom: calc(var(--ph, 190px) + 82px); }
+  .chapter.profile .sample, .chapter.meet .sample, html[data-view] .chapter.profile .sample, html[data-view] .chapter.meet .sample { height: clamp(320px, 56svh, 480px); }
+}
+
+/* landscape phones: card and sample side by side, both scrolling inside the short screen */
+@media (max-height: 560px) and (orientation: landscape) {
+  .sample, html[data-view='sample'] .sample { top: 64px; bottom: 14px; height: auto; transform: none; width: min(48vw, 520px); }
+  .chapter.has-sample .panel { max-height: calc(100svh - 84px); overflow-y: auto; }
+  .chapter.has-sample .panel .display { font-size: clamp(1.2rem, 4.4vh, 1.6rem); }
+  .step-pips { bottom: 8px; }
+  .chapter { padding-top: 70px; padding-bottom: 54px; }
+}
+
+/* sample window chrome: short labels and no repeated title on phones */
+.sample-toggle .short, .sample-badge .b-short { display: none; }
+@media (max-width: 1100px) and (orientation: portrait), (max-width: 720px), (max-height: 560px) and (orientation: landscape) {
+  .sample-toggle .long, .sample-badge .b-long { display: none; } .sample-toggle .short, .sample-badge .b-short { display: inline; }
+  .sample-badge small { display: inline; font-size: max(0.7rem, 11px); } .sample-badge { gap: 6px; }
+  .sample-title { display: none; }
+  .sample-head { padding: 7px 10px; } .sample-body { padding-top: 10px; }
+  .sample, html[data-view='sample'] .sample { top: 74px; }
+}
+@media (max-height: 700px) and (orientation: portrait) {
+  .chapter.has-sample .panel:not(.is-open) > .display + p { -webkit-line-clamp: 1; }
+}
+
+/* phone menu: links are real tap targets, and the list scrolls on short screens */
+@media (max-width: 720px), (max-height: 560px) and (orientation: landscape) {
+  .menu li a { min-height: 46px; padding: 5px 0; align-items: center; }
+  .menu { padding-top: 84px; }
+  .menu-foot { gap: 4px 22px; } .menu-foot a { min-height: 40px; display: inline-flex; align-items: center; }
+}
+/* landscape phones: two equal columns */
+@media (max-height: 560px) and (orientation: landscape) {
+  .chapter.has-sample .panel, .chapter.has-sample .panel--left, .chapter.has-sample .panel--right { width: calc(50vw - var(--pad) - 14px); }
+  .sample, html[data-view='sample'] .sample { width: calc(50vw - var(--pad) - 14px); }
+  .menu li a { font-size: clamp(1.2rem, 6vh, 1.8rem); min-height: 40px; }
+}
+
+/* short phones (about 640 px tall and under): a leaner card and smaller diagrams so the sample keeps its room */
+@media (max-height: 660px) and (orientation: portrait) {
+  .chapter.has-sample .panel:not(.is-open) .idx { display: none; }
+  .chapter.has-sample .panel { padding: 11px 14px 8px; }
+  .chapter.has-sample .panel .display { font-size: clamp(1.2rem, 5.4vw, 1.5rem); margin-bottom: 4px; }
+  .chapter.has-sample .panel .btn { min-height: 40px; padding: 8px 14px; }
+  .panel-more { min-height: 40px; margin-bottom: -6px; }
+  .sx-svg { height: clamp(86px, 14vh, 130px) !important; }
+  .sample, html[data-view='sample'] .sample { top: 70px; bottom: calc(var(--ph, 150px) + 76px); }
+  .stepper.is-live .chapter { padding-bottom: 60px; }
+}
+
+/* type floor, part two: the small print inside samples and lists, diagram text, and inline links as tap targets */
+.sx-node text { font-size: 11.5px; } .sx-lbt { font-size: 13px; } .sx-cap { font-size: 10.5px; }
+@media (max-width: 720px), (max-height: 560px) and (orientation: landscape) {
+  .sample small, .sample em, .sample .sx-line b, .sample .sx-chunk b, .sample .sx-chunk i, .sample .sx-reg b, .sample .sx-transcript b, .sample .sx-transcript em, .sample .sx-tiles small, .sample .sx-flow span, .sample .sx-rb, .sample .lg-act, .sample .lg-state { font-size: max(0.75rem, 12px); }
+  .sample-badge, .sample-badge .b-short, .sample-badge small { font-size: max(0.75rem, 12px); }
+  .great .panel .metrics dt { font-size: max(0.72rem, 11.5px); }
+  .arc-list i, .arc-list em, .arc-list li small { font-size: max(0.75rem, 12px); }
+  .contact-links a, .foot a, .contact-meta a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; }
+  .brand { padding-right: 10px; }
+}
+.sample-badge { white-space: nowrap; } .sample-badge .ss { display: none; }
+@media (max-width: 345px) { .sample-badge .sl { display: none; } .sample-badge .ss { display: inline; } .sample-head { gap: 6px; } .sample-toggle { padding: 8px 10px; } }

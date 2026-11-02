@@ -118,3 +118,14 @@ Profiled a scripted full-page scroll and fixed what the profile showed: page-wid
 - Added the two missing GREAT steps: a runnable **pipeline** (Judge, Ground, Score, Report across three channels) and an **outcomes** panel (the published results as tiles plus an hours calculator; the −90% is the published figure, the call volume and minutes per review are stated assumptions). All 16 sample windows are now in; tests cover them all on desktop and phone.
 - Sample windows now keep their own light surface and dark ink on every colour world (the dark GREAT colours made the labels hard to read), buttons restyled for contrast, and GREAT's cards are compacted on phones so the sample above has room.
 - Known: `tests/refine.spec.js` "animated menu" samples an animation at a fixed 120 ms and can flake when the machine is busy (passes alone).
+
+## Round 10: phone pass
+Audited with real phone emulation (touch, 3x screens) at 320x568, 360x640, 360x780, 375x667, 390x844, 412x915, 430x932 and landscape 844x390 (`tests/phone-audit.spec.js` measures and screenshots; `tests/phone-flows.spec.js` taps through everything).
+Found and fixed:
+- **Samples were squeezed to a header strip on small phones** (120 to 200 px tall at 360x640; their tabs could not be reached). The text card is now compact on phones (title, one short paragraph, buttons) with a "More details" toggle that opens the full text and tucks the sample away ("Back to the sample" returns). Sample windows are now 308 px (320x568), 380 px (360x640), 479 px (390x844) tall.
+- **Window chrome trimmed on phones:** short labels ("Try it · simulated data", "3D object"), no repeated title, controls first in every sample.
+- **Type floor:** nothing under 12 px for labels and 15 px for body on phones (it was 9.6 to 11 px in many places, including text inside diagrams).
+- **Tap targets of about 44 px:** menu links (were 31 px), header button, brand, burger, sample tabs and buttons, archive chips, contact and footer links; bigger step-pip hit areas.
+- **Landscape phones:** card and sample side by side (they overlapped at 844 px wide); menu list scrolls.
+- **Short phones (about 640 px and under):** leaner card, smaller diagrams.
+Tests: 28 phone and sample tests pass at five sizes; desktop suites unchanged (106 GPU, 24 software). Not measured on a real phone: please try it and tell me the model.

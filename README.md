@@ -81,3 +81,6 @@ The tracked project is about 24 MB; everything else on disk is regenerable. `npm
 
 ## Samples and techniques
 See `docs/SAMPLES_AND_TECHNIQUES.md` for the "Try a sample" panels (what is real, what is an illustration, feasibility and licensing notes) and for which visual and motion techniques were used or skipped. Rebuild the sample data with `python tools/make-lab-data.py`.
+
+## Phone QA
+`npx playwright test tests/phone-audit.spec.js` (writes screenshots and a JSON report to `qa/phone/`; `SIZES=360x640,390x844` to narrow) and `tests/phone-flows.spec.js` (touch tests at five sizes). Both use the default flow, with no URL flags, so they see what a phone sees.

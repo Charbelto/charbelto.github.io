@@ -216,7 +216,7 @@ async function marketDemo(root, ctx) {
     items.forEach((it, i) => {
       const g = el('g', { tabindex: '0', role: 'button', 'aria-label': `${it.n}, bought in ${it.c} baskets`, class: 'mk-node' });
       g.append(el('circle', { cx: pos[i][0], cy: pos[i][1], r: (9 + Math.sqrt(it.c / maxC) * 15).toFixed(1), fill: depth[i] >= 0 ? fill[Math.min(depth[i], 2)] : 'currentColor', 'fill-opacity': depth[i] >= 0 ? 0.95 : 0.18, stroke: i === sel ? '#0b0b14' : 'none', 'stroke-width': 2.5 }));
-      const lab = el('text', { x: pos[i][0], y: pos[i][1] + (pos[i][1] > 210 ? 36 : -30), 'text-anchor': 'middle', 'font-size': 11, fill: 'currentColor' }); lab.textContent = it.n; g.append(lab);
+      const lab = el('text', { x: pos[i][0], y: pos[i][1] + (pos[i][1] > 210 ? 36 : -30), 'text-anchor': 'middle', 'font-size': 13, fill: 'currentColor' }); lab.textContent = it.n; g.append(lab);
       const go = () => { sel = i; render(); ctx?.touched?.(); }; g.addEventListener('click', go); g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
       svg.append(g);
     });

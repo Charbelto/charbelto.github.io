@@ -58,7 +58,7 @@ export function pipDemo(root, ctx) {
 /* ───────── multi-agent orchestration ───────── */
 export function orchestraDemo(root, ctx) {
   const L = life();
-  const N = { planner: [180, 34, 'Planner'], research: [56, 118, 'Researcher'], coder: [180, 118, 'Builder'], critic: [304, 118, 'Critic'], writer: [180, 206, 'Writer'] };
+  const N = { planner: [180, 34, 'Planner'], research: [56, 118, 'Research'], coder: [180, 118, 'Builder'], critic: [304, 118, 'Critic'], writer: [180, 206, 'Writer'] };
   const TASKS = {
     trip: ['Plan a trip', [['planner', 'research', 'Find flights Beirut to Paris, under 400 EUR', 1], ['research', 'planner', '3 options found'], ['planner', 'coder', 'Build the itinerary table'], ['coder', 'critic', 'Draft v1'], ['critic', 'coder', 'Day 2 clashes with check-out. Fix it.'], ['coder', 'critic', 'Draft v2'], ['critic', 'writer', 'Approved'], ['writer', 'planner', 'Final answer ready']]],
     pr: ['Review a pull request', [['planner', 'research', 'Fetch the diff and the related issue', 1], ['research', 'planner', '12 files changed, issue #482'], ['planner', 'critic', 'Review for bugs and style'], ['critic', 'coder', 'Missing null check in parser.py'], ['coder', 'critic', 'Patched, tests added', 1], ['critic', 'writer', 'Approved with one comment'], ['writer', 'planner', 'Review summary posted']]],
@@ -205,7 +205,7 @@ export function microDemo(root, ctx) {
   const fly = (to) => new Promise((res) => { const t0 = performance.now(); const f = (t) => { const p = Math.min(1, (t - t0) / 380); const y = p < 0.5 ? 70 + (p / 0.5) * 0 : 70 + ((p - 0.5) / 0.5) * 80; dot.setAttribute('cx', 180 + (X[to] - 180) * p); dot.setAttribute('cy', 70 + 80 * p); if (p < 1 && !L.dead) requestAnimationFrame(f); else res(); void y; }; dot.setAttribute('opacity', 1); requestAnimationFrame(f); });
   const send = async (n) => { const id = L.next(); ctx.touched(); for (let k = 0; k < n; k++) { if (!L.ok(id)) return; if (!up.some(Boolean)) { log.textContent = 'All replicas are down: HAProxy returns 503.'; return; } do { rr = (rr + 1) % 3; } while (!up[rr]); await fly(rr); counts[rr]++; draw(); } dot.setAttribute('opacity', 0); log.textContent = 'Round-robin across healthy replicas only.'; };
   const toggles = up.map((_, i) => h('button', { class: 'btn btn--ghost', type: 'button', on: { click: () => { ctx.touched(); up[i] = !up[i]; log.textContent = up[i] ? `orders-${i + 1} passed its health check and is back in rotation.` : `orders-${i + 1} failed its health check: removed from rotation.`; draw(); } } }, `Toggle orders-${i + 1}`));
-  root.append(svg, h('div', { class: 'sx-row' }, h('button', { class: 'btn btn--solid', type: 'button', on: { click: () => send(9) } }, 'Send 9 requests'), ...toggles), log, prom, h('p', { class: 'sx-fine' }, 'Simulated traffic and counters, pre-saved logic. The real project runs this with HAProxy and Prometheus in Docker.'));
+  root.append(h('div', { class: 'sx-row' }, h('button', { class: 'btn btn--solid', type: 'button', on: { click: () => send(9) } }, 'Send 9 requests'), ...toggles), svg, log, prom, h('p', { class: 'sx-fine' }, 'Simulated traffic and counters, pre-saved logic. The real project runs this with HAProxy and Prometheus in Docker.'));
   draw();
   return () => { L.dead = true; };
 }
