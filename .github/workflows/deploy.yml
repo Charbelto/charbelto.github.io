@@ -1,6 +1,7 @@
 name: Deploy to GitHub Pages
 
-# Dormant until this branch is merged and Pages source is set to "GitHub Actions".
+# The live site is the static site at the repository root (npm run build copies it into dist).
+# The 3D redesign is kept in new-website/ and is not deployed; new-website/deploy-new-site.yml.example is the workflow for it.
 on:
   push:
     branches: [main]
@@ -23,8 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

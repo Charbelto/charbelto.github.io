@@ -42,24 +42,3 @@ obj/
 
 # Local tooling
 .claude/
-
-# Playwright
-test-results/
-playwright-report/
-
-# regenerable QA screenshots (final curated set lives in docs/screenshots)
-qa/screenshots/
-qa/results.json
-
-qa/review*/
-qa/test-output/
-dist-*/
-
-qa/menu/
-
-qa/posters-raw/
-qa/step/
-qa/name-*.png
-
-*.zip
-qa/phone/

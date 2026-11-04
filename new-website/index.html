@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Charbel Toumieh | AI Engineer | Agentic Systems &amp; RAG Architect</title>
+<meta name="description" content="Charbel Toumieh, AI Engineer specialising in production-grade LLM applications, agentic AI systems, RAG architectures and AI product engineering. Guaranteed response in &lt;24 hours."/>
+<meta name="author" content="Charbel Toumieh"/>
+<link rel="canonical" href="https://charbelto.github.io/"/>
+<meta property="og:title" content="Charbel Toumieh | AI Engineer | Agentic Systems &amp; RAG Architect"/>
+<meta property="og:description" content="Agentic systems, RAG architectures and AI product engineering: production-grade intelligent systems. Guaranteed response within 24 hours."/>
+<meta property="og:image" content="https://charbelto.github.io/profile.jpg"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://charbelto.github.io/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Charbel Toumieh | AI Engineer"/>
+<meta name="twitter:description" content="Agentic systems, RAG architectures and AI product engineering: production-grade intelligent systems."/>
+<meta name="twitter:image" content="https://charbelto.github.io/profile.jpg"/>
+<meta name="theme-color" content="#d4ff1f"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23d4ff1f'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%230b0b14' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='12' fill='%232433ff'/%3E%3C/svg%3E"/>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://charbelto.github.io/#person",
+      "name": "Charbel Toumieh",
+      "jobTitle": "AI Engineer",
+      "email": "mailto:charbeltoumieh1@gmail.com",
+      "url": "https://charbelto.github.io/",
+      "image": "https://charbelto.github.io/profile.jpg",
+      "sameAs": ["https://github.com/Charbelto", "https://www.linkedin.com/in/charbeltoumieh/"],
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "American University of Beirut" },
+        { "@type": "CollegeOrUniversity", "name": "University of Warwick" }
+      ],
+      "knowsAbout": ["Agentic AI Systems", "Large Language Models", "Retrieval-Augmented Generation", "MCP Servers", "LLM Evaluation", "Machine Learning", "Computer Vision"]
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://charbelto.github.io/#service",
+      "name": "Charbel Toumieh | AI Engineering Consultancy",
+      "url": "https://charbelto.github.io/",
+      "logo": "https://charbelto.github.io/profile.jpg",
+      "image": "https://charbelto.github.io/profile.jpg",
+      "description": "Production-grade AI agent engineering, RAG architecture, LLM evaluation, and intelligent product development.",
+      "priceRange": "$$$",
+      "address": { "@type": "PostalAddress", "addressLocality": "Coventry", "addressCountry": "GB" },
+      "areaServed": ["Worldwide", "United States", "European Union", "United Kingdom"],
+      "contactPoint": { "@type": "ContactPoint", "email": "charbeltoumieh1@gmail.com", "contactType": "customer service", "availableLanguage": ["English", "Arabic", "French"] }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://charbelto.github.io/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "What type of AI engineering projects do you specialize in?", "acceptedAnswer": { "@type": "Answer", "text": "I specialize in production-grade LLM applications: multi-agent autonomous systems, Retrieval-Augmented Generation (RAG) pipelines, LLM evaluation frameworks (like GREAT), MCP server integrations, and AI product engineering." } },
+        { "@type": "Question", "name": "Are you available for full-time roles, contract work, or advisory?", "acceptedAnswer": { "@type": "Answer", "text": "Yes! I am open to full-time AI engineering positions, contract consultations, and high-impact advisory projects across US, UK, and EU time zones." } },
+        { "@type": "Question", "name": "How do you ensure AI system reliability and prevent hallucinations in production?", "acceptedAnswer": { "@type": "Answer", "text": "I implement rigorous multi-agent evaluation benchmarks, deterministic fallback guardrails (such as LoopGuard circuit-breakers), vector-search grounding, and automated regression testing prior to deployment." } },
+        { "@type": "Question", "name": "What is your guaranteed response time for inquiries?", "acceptedAnswer": { "@type": "Answer", "text": "I guarantee a response within 24 hours for all professional inquiries sent via email or LinkedIn (typically responding in less than 4 hours)." } },
+        { "@type": "Question", "name": "How do you handle data privacy and security compliance?", "acceptedAnswer": { "@type": "Answer", "text": "All AI solutions adhere to strict data privacy principles (GDPR compliance, zero data retention policies on sensitive APIs, private VPC vector stores, and robust access controls)." } }
+      ]
+    }
+  ]
+}
+</script>
+<script type="module" src="/src/main.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- fixed atmosphere (behind the 3D) -->
+<div class="atmos" aria-hidden="true"></div>
+<div class="hud" aria-hidden="true">
+  <i class="hud-guide hud-guide--l"></i><i class="hud-guide hud-guide--r"></i><i class="hud-guide hud-guide--t"></i><i class="hud-guide hud-guide--b"></i>
+  <svg class="hud-ring hud-ring--a" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="97" stroke-width="0.5"/><circle cx="100" cy="100" r="88" stroke-width="0.9" stroke-dasharray="1.5 7"/><path stroke-width="1.4" d="M100 1v13M100 186v13M1 100h13M186 100h13"/><path stroke-width="1" d="M31 31l7 7M162 162l7 7M169 31l-7 7M38 162l-7 7"/></svg><svg class="hud-ring hud-ring--b" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="97" stroke-width="0.6" stroke-dasharray="9 13"/><circle cx="100" cy="100" r="74" stroke-width="0.5"/><path stroke-width="1.6" d="M100 26v9M100 165v9"/></svg>
+  <span class="hud-plus hud-plus--tl">+</span><span class="hud-plus hud-plus--tr">+</span><span class="hud-plus hud-plus--bl">+</span><span class="hud-plus hud-plus--br">+</span>
+  <i class="hud-halftone"></i>
+  <span class="hud-coord" id="hudCoord">Y 00000 / 000%</span>
+</div>
+<div class="hud-grain" aria-hidden="true"></div>
+<div class="hud-progress" aria-hidden="true"><i id="hudBar"></i></div>
+
+<!-- the name lives BEHIND the machine: the 3D canvas is transparent and occludes it -->
+<div class="back-title">
+  <h1 class="bt-name" aria-label="Charbel Toumieh"><span class="bt-line" data-line>CHARBEL</span><span class="bt-line" data-line>TOUMIEH</span></h1>
+</div>
+
+<canvas id="world" aria-hidden="true"></canvas>
+
+<!-- loader -->
+<div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="loader-inner">
+    <span class="loader-mark" aria-hidden="true"></span>
+    <span class="loader-text">Loading the swarm <b id="loaderPct">0</b>%</span>
+  </div>
+</div>
+
+<!-- header -->
+<header class="head" id="head">
+  <a class="brand" href="#top" aria-label="Charbel Toumieh, home">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">Charbel Toumieh</span>
+  </a>
+  <div class="head-right">
+    <nav class="head-nav" aria-label="Primary">
+      <a href="#capabilities">Systems</a>
+      <a href="#great">GREAT</a>
+      <a href="#works">Works</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact" class="head-cta">Contact</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Site menu" data-lenis-prevent inert>
+  <span class="menu-wipe menu-wipe--a" aria-hidden="true"></span>
+  <span class="menu-wipe menu-wipe--b" aria-hidden="true"></span>
+  <ol>
+    <li><a href="#profile"><i>01</i>Profile</a></li>
+    <li><a href="#capabilities"><i>02</i>Intelligent systems</a></li>
+    <li><a href="#great"><i>03</i>GREAT: flagship</a></li>
+    <li><a href="#works"><i>04</i>Selected works</a></li>
+    <li><a href="#experience"><i>05</i>Experience</a></li>
+    <li><a href="#education"><i>06</i>Education</a></li>
+    <li><a href="#faq"><i>07</i>FAQ</a></li>
+    <li><a href="#contact"><i>08</i>Contact</a></li>
+  </ol>
+  <div class="menu-foot">
+    <a href="mailto:charbeltoumieh1@gmail.com">Email ↗</a>
+    <a href="Charbel_Toumieh_Resume.pdf" download>Résumé ↓</a>
+    <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+  </div>
+</nav>
+
+<!-- chapter progress rail -->
+<aside class="rail" id="rail" aria-hidden="true"><i id="railFill"></i><span id="railLabel">Intro</span></aside>
+
+<nav class="dots" id="dots" aria-label="Jump to a section">
+  <a href="#top" aria-label="Intro"><span>Intro</span></a>
+  <a href="#capabilities" aria-label="Systems"><span>Systems</span></a>
+  <a href="#great" aria-label="GREAT"><span>GREAT</span></a>
+  <a href="#works" aria-label="Works"><span>Works</span></a>
+  <a href="#experience" aria-label="Experience"><span>Experience</span></a>
+  <a href="#contact" aria-label="Contact"><span>Contact</span></a>
+</nav>
+
+<main id="main">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="chapter hero" id="top" data-kf="hero" data-label="Intro">
+  <div class="hero-top">
+    <p class="eyebrow" data-intro><span class="dot"></span> AI Engineer · agentic systems · RAG · LLM evaluation</p>
+    <p class="hero-statement" data-intro>I build intelligence that survives <em>production</em>.</p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-cta" data-intro>
+      <a class="btn btn--solid" href="#contact">Start a project / hire me</a>
+      <a class="btn btn--ghost" href="#works">Explore works</a>
+      <a class="btn btn--ghost" href="Charbel_Toumieh_Resume.pdf" download>Résumé <span aria-hidden="true">↓</span></a>
+    </div>
+    <dl class="hero-stats" data-intro>
+      <div><dt>QA effort automated</dt><dd>−90%</dd></div>
+      <div><dt>Agents scored by GREAT</dt><dd>34+</dd></div>
+      <div><dt>Public projects</dt><dd>24</dd></div>
+    </dl>
+    <p class="scroll-cue" data-intro aria-hidden="true">Scroll, the camera moves with you</p>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Agents</span><span><i>✦</i></span><span>RAG</span><span><i>✦</i></span><span>Evals</span><span><i>✦</i></span><span>MCP</span><span><i>✦</i></span><span>LLM systems</span><span>Agents</span><span><i>✦</i></span><span>RAG</span><span><i>✦</i></span><span>Evals</span><span><i>✦</i></span><span>MCP</span><span><i>✦</i></span><span>LLM systems</span></div></div>
+
+<!-- ═══════════ PROFILE ═══════════ -->
+<section class="chapter profile" id="profile" data-kf="profile" data-label="Profile">
+  <div class="panel panel--left">
+    <p class="idx"><b>01</b> Profile</p>
+    <h2 class="display">Agents, retrieval and evaluation that <em>leave the notebook.</em></h2>
+    <p class="lede">I build production-grade LLM systems: agents, RAG pipelines and evaluation frameworks that survive real users.</p>
+    <p>I hold an MSc in Applied Artificial Intelligence from the University of Warwick and work as AI &amp; LLM Engineer at Gabriel &amp; Co. in New York, where I designed <strong>GREAT</strong>, an AI quality-assurance platform that replaced manual call review across 34+ agents and three channels.</p>
+    <p>My work covers the full arc of an AI product: discovery, prompt and agent architecture, MCP servers and tool integration, evaluation and A/B testing, and the dashboards that make it legible to the business. Before that, data products serving 100K+ users at CMA CGM, and Meta-funded multimodal research on paediatric ECG models.</p>
+    <div class="profile-id">
+      <img src="profile.jpg" alt="Portrait of Charbel Toumieh" width="72" height="76" loading="lazy" decoding="async"/>
+      <ul class="readout">
+        <li><span>now</span> AI &amp; LLM Engineer @ Gabriel &amp; Co.</li>
+        <li><span>education</span> MSc Applied AI · University of Warwick</li>
+        <li><span>timezone</span> UK-based · overlaps US &amp; EU hours</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MEET PIP ═══════════ -->
+<section class="chapter meet" id="meet" data-kf="meet" data-label="Meet Pip">
+  <div class="panel panel--left">
+    <p class="idx"><b>↳</b> Say hello</p>
+    <h2 class="display">Meet <em>Pip</em>, a very small agent.</h2>
+    <p class="lede">Pip runs the loop every agent I build runs: it <strong>perceives</strong> (it watches your cursor), <strong>decides</strong> (it turns to look at you) and <strong>acts</strong> (click it and it waves).</p>
+    <p>Same loop, bigger stakes: tools, retrieval, evaluation and guardrails around it. That’s the work.</p>
+    <div class="actions"><button class="btn btn--solid" id="pipBtn" type="button">Make Pip wave</button></div>
+  </div>
+</section>
+
+<!-- ═══════════ DIVE ═══════════ -->
+<section class="chapter dive" data-kf="dive" data-label="Inside">
+  <div class="dive-copy">
+    <p class="eyebrow"><span class="dot"></span> Scroll to enter</p>
+    <h2 class="display display--xl">Step inside<br/><em>the system.</em></h2>
+    <p class="lede">Five layers, one system. This is how the intelligent systems I build are structured: orchestration, retrieval, tools, evaluation, reliability.</p>
+  </div>
+</section>
+
+<!-- ═══════════ CAPABILITIES (5 rings) ═══════════ -->
+<div id="capabilities" class="stepper" data-step="0.3">
+  <section class="chapter cap" data-kf="cap1" data-label="Orchestration">
+    <div class="panel panel--right">
+      <p class="idx"><b>01</b> Orchestration · a conductor and its agents</p>
+      <h2 class="display">Multi-agent orchestration</h2>
+      <p>Agents that plan, delegate and hand off, coordinated as a system, not a prompt. Agent architecture, multi-agent workflows and the glue that keeps them accountable.</p>
+      <ul class="tags"><li>AI Agents</li><li>Multi-Agent Systems</li><li>Agent Orchestration</li><li>LangGraph</li><li>LangChain</li><li>LlamaIndex</li><li>n8n</li></ul>
+    </div>
+  </section>
+  <section class="chapter cap" data-kf="cap2" data-label="Retrieval">
+    <div class="panel panel--left">
+      <p class="idx"><b>02</b> Retrieval · a library, a funnel and a lens</p>
+      <h2 class="display">Retrieval &amp; knowledge systems</h2>
+      <p>RAG pipelines that ground answers in the right context: chunking, vector search and structured outputs. The right pages, found and handed to the model.</p>
+      <ul class="tags"><li>RAG</li><li>Vector Databases</li><li>Semantic Search</li><li>Prompt Engineering</li><li>Structured Outputs</li></ul>
+    </div>
+  </section>
+  <section class="chapter cap" data-kf="cap3" data-label="Tools & MCP">
+    <div class="panel panel--right">
+      <p class="idx"><b>03</b> Tooling · a plug finding its socket</p>
+      <h2 class="display">Tool calling &amp; MCP</h2>
+      <p>MCP servers and function calling that connect models to real systems: internal tools, AWS data sources, dashboards. 24+ tools integrated behind one agent surface at Gabriel &amp; Co.</p>
+      <ul class="tags"><li>MCP</li><li>Tool / Function Calling</li><li>REST APIs</li><li>Python</li><li>Node.js</li><li>PHP</li><li>Flask</li></ul>
+    </div>
+  </section>
+  <section class="chapter cap" data-kf="cap4" data-label="Evaluation">
+    <div class="panel panel--left">
+      <p class="idx"><b>04</b> Evaluation · the scorecard</p>
+      <h2 class="display">Evaluation you can trust</h2>
+      <p>Evaluation frameworks, scoring methodologies and A/B prompt testing, judged against benchmarks, not vibes. The layer that decides whether a system ships. <strong>+65% evaluation quality</strong> on GREAT.</p>
+      <ul class="tags"><li>LLM Evaluation</li><li>A/B Prompt Testing</li><li>Benchmarking</li><li>Hallucination Reduction</li><li>Self-Verification</li></ul>
+    </div>
+  </section>
+  <section class="chapter cap" data-kf="cap5" data-label="Reliability">
+    <div class="panel panel--right">
+      <p class="idx"><b>05</b> Reliability · a shield and a breaker</p>
+      <h2 class="display">Reliable in production</h2>
+      <p>Guardrails, circuit breakers and regression benchmarks so agents fail safely, plus the cloud, data and dashboards that make a system observable to the business.</p>
+      <ul class="tags"><li>Guardrails (LoopGuard)</li><li>AWS</li><li>Azure</li><li>KPI Definition</li><li>Experimentation</li></ul>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ PLAYGROUND ═══════════ -->
+<section class="chapter playground" id="playground" data-kf="play" data-label="Playground">
+  <div class="play-copy">
+    <p class="eyebrow"><span class="dot"></span> Interactive · try it</p>
+    <h2 class="display display--xxl">Play with <em>the swarm.</em></h2>
+    <p class="lede">Move your cursor to push it around. Click anywhere to burst it open.</p>
+    <button class="btn btn--solid" id="playBtn" type="button">Re-colour everything ✦</button>
+  </div>
+</section>
+
+<!-- ═══════════ GREAT ═══════════ -->
+<div id="great" class="stepper" data-step="0.32">
+  <section class="chapter great" data-kf="great1" data-label="GREAT">
+    <div class="panel panel--left">
+      <p class="idx"><b>Flagship</b> Case study · 2024 to present</p>
+      <h2 class="display display--xl">GREAT</h2>
+      <p class="lede">An AI quality-assurance platform that replaced manual call review across 34+ agents and three channels (inbound, outbound, email).</p>
+      <p>Every customer interaction is judged against a rubric by an automated pipeline and scored, so manual call review stops being the bottleneck. Designed and led end-to-end at Gabriel &amp; Co., New York.</p>
+    </div>
+  </section>
+  <section class="chapter great" data-kf="great2" data-label="Architecture">
+    <div class="panel panel--right">
+      <p class="idx"><b>Architecture</b> How it works</p>
+      <h2 class="display">An automated multi-agent evaluation pipeline</h2>
+      <ol class="stages">
+        <li><b>Judge</b> Custom LLM-judge prompts score every interaction against a rubric.</li>
+        <li><b>Ground</b> RAG context validation checks claims against source knowledge.</li>
+        <li><b>Score</b> Structured outputs and A/B prompt testing keep scoring consistent.</li>
+        <li><b>Report</b> Integrated with telephony and CRM; 24+ internal tools, AWS data and dashboards.</li>
+      </ol>
+      <p class="mono-note">agents · MCP servers · RAG pipelines · evaluation frameworks · n8n · Node.js · PHP</p>
+    </div>
+  </section>
+  <section class="chapter great" data-kf="great3" data-label="Outcomes">
+    <div class="panel panel--left">
+      <p class="idx"><b>Outcomes</b> Verified results</p>
+      <h2 class="display">Less manual review. Better scores.</h2>
+      <dl class="metrics">
+        <div><dd>−90%</dd><dt>QA effort</dt></div>
+        <div><dd>+65%</dd><dt>evaluation quality<br/><small>structured outputs &amp; A/B prompt testing</small></dt></div>
+        <div><dd>80s→90s</dd><dt>rep quality scores</dt></div>
+        <div><dd>34+</dd><dt>agents · 3 channels</dt></div>
+      </dl>
+      <button class="btn btn--solid" data-modal="great">Read the case breakdown ↗</button>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ WORKS (gallery) ═══════════ -->
+<div id="works">
+  <div class="stepper" data-step="0.3">
+  <section class="chapter work" data-kf="w1" data-label="01 LoopGuard">
+    <div class="panel panel--left work-panel">
+      <p class="idx"><b>01</b> flagship · Python library</p>
+      <h2 class="display">LoopGuard</h2>
+      <p class="sub">AI-agent reliability framework</p>
+      <p>Framework-agnostic, zero-dependency loop detector for AI agents: semantic similarity, cycle detection and declarative guardrails for LangChain, LangGraph, CrewAI, Autogen and RAG pipelines.</p>
+      <p class="mono-note">python · semantic-similarity · guardrails</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/loopguard" target="_blank" rel="noopener noreferrer">Open repo ↗</a><button class="btn btn--ghost" data-modal="loopguard">Case breakdown</button></div>
+    </div>
+  </section>
+  <section class="chapter work" data-kf="w2" data-label="02 DermSense">
+    <div class="panel panel--right work-panel">
+      <p class="idx"><b>02</b> Explainable computer vision</p>
+      <h2 class="display">DermSense</h2>
+      <p class="sub">Skin-disease classifier with Grad-CAM</p>
+      <p>Medical vision pipeline contrasting an SVM/HOG baseline with a PyTorch EfficientNet-B0 transfer model, plus Grad-CAM heatmaps for diagnostic transparency, served via a responsive web UI.</p>
+      <p class="mono-note">pytorch · efficientnet-b0 · grad-cam</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/DermSense-Skin-Disease-Classifier" target="_blank" rel="noopener noreferrer">Open repo ↗</a></div>
+    </div>
+  </section>
+  <section class="chapter work" data-kf="w3" data-label="03 OULAD">
+    <div class="panel panel--left work-panel">
+      <p class="idx"><b>03</b> ML pipeline</p>
+      <h2 class="display">OULAD Analytics</h2>
+      <p class="sub">Student-retention forecasting, CRISP-DM</p>
+      <p>Retention analysis and success forecasting: XGBoost with RFECV feature selection, classifiers, regressors and unsupervised clustering (DBSCAN, GMM) behind a Python CLI.</p>
+      <p class="mono-note">xgboost · dbscan · gmm</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/OULAD-Learning-Analytics" target="_blank" rel="noopener noreferrer">Open repo ↗</a></div>
+    </div>
+  </section>
+  <section class="chapter work" data-kf="w4" data-label="04 Microservices">
+    <div class="panel panel--right work-panel">
+      <p class="idx"><b>04</b> Systems</p>
+      <h2 class="display">Commerce Microservices</h2>
+      <p class="sub">Containerised FastAPI platform</p>
+      <p>E-commerce backend split into segregated customer and order services: HAProxy load-balancing, Prometheus scraping and Docker orchestration.</p>
+      <p class="mono-note">fastapi · docker · haproxy · prometheus</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/ecommerce_Charbel_Toumieh" target="_blank" rel="noopener noreferrer">Open repo ↗</a></div>
+    </div>
+  </section>
+  <section class="chapter work" data-kf="w5" data-label="05 Cell Analyzer">
+    <div class="panel panel--left work-panel">
+      <p class="idx"><b>05</b> Full-stack</p>
+      <h2 class="display">Network Cell Analyzer</h2>
+      <p class="sub">Android telemetry → live dashboard</p>
+      <p>Native Android diagnostics client capturing LTE/5G/Wi-Fi parameters, streaming telemetry through Flask APIs into a live server-side statistics dashboard.</p>
+      <p class="mono-note">android-sdk · flask · sqlite</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/Network-Cell-Analyzer" target="_blank" rel="noopener noreferrer">Open repo ↗</a></div>
+    </div>
+  </section>
+  <section class="chapter work" data-kf="w6" data-label="06 Graph Analysis">
+    <div class="panel panel--right work-panel">
+      <p class="idx"><b>06</b> Algorithms</p>
+      <h2 class="display">Supermarket Graph Analysis</h2>
+      <p class="sub">Market-basket &amp; path-finding engine</p>
+      <p>Logistics simulator modelling store layouts as weighted graphs: custom quicksort, DFS/BFS routing and association-rule analytics producing recommendations.</p>
+      <p class="mono-note">graph-theory · algorithms · testing</p>
+      <div class="actions"><a class="btn btn--solid" href="https://github.com/Charbelto/DSA-Supermarket-Analysis" target="_blank" rel="noopener noreferrer">Open repo ↗</a></div>
+    </div>
+  </section>
+
+  </div>
+
+  <section class="chapter archive" data-label="Archive">
+    <span class="kf-anchor" data-kf="arc" aria-hidden="true"></span>
+    <div class="wide wide--col">
+      <div class="arc-head">
+        <h3 class="display display--s">Full archive <span>18 more</span></h3>
+        <div class="arc-filters" role="group" aria-label="Filter archive">
+          <button class="chip is-on" data-filter="all">all</button>
+          <button class="chip" data-filter="ai">ai · ml</button>
+          <button class="chip" data-filter="data">data</button>
+          <button class="chip" data-filter="systems">systems</button>
+          <button class="chip" data-filter="apps">apps</button>
+          <button class="chip" data-filter="web">web</button>
+        </div>
+      </div>
+      <ol class="arc-list" id="arcList">
+        <li data-cat="data"><a href="https://github.com/Charbelto/Signal-Processing-Matlab" target="_blank" rel="noopener noreferrer"><i>07</i><b>Signal Processing Studies</b><span>MATLAB · DFT · BPSK/QPSK</span><em>data</em></a></li>
+        <li data-cat="data"><a href="https://github.com/Charbelto/public-health-data-dashboard" target="_blank" rel="noopener noreferrer"><i>08</i><b>Public Health Dashboard</b><span>Python · Pandas · data viz</span><em>data</em></a></li>
+        <li data-cat="ai"><a href="https://github.com/Charbelto/CDC-Diabetes" target="_blank" rel="noopener noreferrer"><i>09</i><b>CDC Clinical Classifier</b><span>scikit-learn · clustering</span><em>ai · ml</em></a></li>
+        <li data-cat="ai"><a href="https://github.com/Charbelto/Student_Wellbeing_Insights" target="_blank" rel="noopener noreferrer"><i>10</i><b>Student Wellbeing Insights</b><span>Flask · SQL analytics</span><em>ai · ml</em></a></li>
+        <li data-cat="apps"><a href="https://github.com/Charbelto/MauiApp1" target="_blank" rel="noopener noreferrer"><i>11</i><b>Cross-Platform MAUI App</b><span>C# · .NET MAUI · SQLite</span><em>apps</em></a></li>
+        <li data-cat="web"><a href="https://github.com/Charbelto/Cipher-Web" target="_blank" rel="noopener noreferrer"><i>12</i><b>Cipher Web</b><span>Flask · classical cryptography · Azure</span><em>web</em></a></li>
+        <li data-cat="web"><a href="https://github.com/Charbelto/Careology" target="_blank" rel="noopener noreferrer"><i>13</i><b>Careology Marketplace</b><span>Flask · OpenAI chatbot</span><em>web</em></a></li>
+        <li data-cat="data"><a href="https://github.com/Charbelto/Interactive-Chart-Generator" target="_blank" rel="noopener noreferrer"><i>14</i><b>Interactive Chart Generator</b><span>Matplotlib · Seaborn</span><em>data</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/jenkins_project" target="_blank" rel="noopener noreferrer"><i>15</i><b>Jenkins Automation Pipeline</b><span>CI/CD · coverage assertions</span><em>systems</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/Server-Client" target="_blank" rel="noopener noreferrer"><i>16</i><b>TCP Proxy Server–Client</b><span>sockets · forwarding · caching</span><em>systems</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/Delay-Multiplayer-Game" target="_blank" rel="noopener noreferrer"><i>17</i><b>Delay Multiplayer Game</b><span>TCP sockets · real-time scoring</span><em>systems</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/Weighted-Graph-Manipulation" target="_blank" rel="noopener noreferrer"><i>18</i><b>Weighted Graph Manipulation</b><span>C++ · Dijkstra · MST</span><em>systems</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/8bit-ALU" target="_blank" rel="noopener noreferrer"><i>19</i><b>8-bit Arithmetic Logic Unit</b><span>VHDL · digital logic · testbench</span><em>systems</em></a></li>
+        <li data-cat="apps"><a href="https://github.com/Charbelto/Mini-Library-Management-System-Challenge" target="_blank" rel="noopener noreferrer"><i>20</i><b>Mini Library System</b><span>Flask · cataloguing · search indices</span><em>apps</em></a></li>
+        <li data-cat="web"><a href="https://github.com/Charbelto/Employee-Management-Software" target="_blank" rel="noopener noreferrer"><i>21</i><b>Employee Registry</b><span>Flask · SQLite · scheduling</span><em>web</em></a></li>
+        <li data-cat="apps"><a href="https://github.com/Charbelto/ContactList" target="_blank" rel="noopener noreferrer"><i>22</i><b>Contact List Manager</b><span>Django · CRUD · search</span><em>apps</em></a></li>
+        <li data-cat="apps"><a href="https://github.com/Charbelto/Lab4-charbeltoumieh-PyQt" target="_blank" rel="noopener noreferrer"><i>23</i><b>PyQt Desktop Client</b><span>Python · PyQt · desktop forms</span><em>apps</em></a></li>
+        <li data-cat="systems"><a href="https://github.com/Charbelto/lab5-charbeltoumieh" target="_blank" rel="noopener noreferrer"><i>24</i><b>Flask User Registry API</b><span>Flask · CORS · REST</span><em>systems</em></a></li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ EXPERIENCE ═══════════ -->
+<section class="experience stepper" id="experience" data-step="0.3">
+  <div class="chapter xp-intro" data-kf="xp0" data-label="Experience">
+    <div class="panel panel--right">
+      <p class="idx"><b>05</b> Experience · 2023 to present</p>
+      <h2 class="display">Where the work happened</h2>
+      <p class="lede">Seven roles across AI engineering, research and data. Each role has its own object on stage, built from what the work was actually about.</p>
+    </div>
+  </div>
+  <div class="chapter xp-step" data-kf="xp1" data-label="Gabriel & Co.">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Jun 2024 to Present</span><span>New York, US · remote</span></div>
+        <div class="xp-body">
+          <h3>AI &amp; LLM Engineer <i>Gabriel &amp; Co.</i></h3>
+          <ul>
+            <li><b>−90% QA effort.</b> Led the development and evolution of GREAT: automated scoring across 34+ agents and three channels, lifting rep quality scores from the 80s into the 90s.</li>
+            <li><b>+65% evaluation quality.</b> Designed evaluation frameworks, scoring methodologies and prompt architectures assessing customer interactions at scale.</li>
+            <li><b>24+ tools integrated.</b> Architected AI agents, MCP servers, RAG pipelines and workflow automation across internal tools, AWS data sources and dashboards.</li>
+            <li>Shipped AI for recommendations, retailer-brand monitoring, content generation and operational analytics.</li>
+          </ul>
+          <p class="mono-note">llm-evaluation · prompt-architecture · mcp · rag · node.js · php · n8n</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp2" data-label="Chehab Lab">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Jan 2026 to Jun 2026</span><span>Remote</span></div>
+        <div class="xp-body">
+          <h3>Artificial Intelligence Researcher <i>Chehab Lab</i></h3>
+          <ul>
+            <li><b>6+ encoders benchmarked.</b> Researched Semantic Slice Selection for 3D medical imaging: BioMedCLIP, DINOv3, DenseNet, ResNet, MedVAE, RAD-DINO.</li>
+            <li>Designed experiments with cosine similarity, L2 distance, semantic-preservation and compression metrics to quantify representation collapse in medical AI models.</li>
+          </ul>
+          <p class="mono-note">medical-imaging · vision-encoders · representation-learning</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp3" data-label="CMA CGM">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Jan 2025 to Oct 2025</span><span>Marseille, FR · remote</span></div>
+        <div class="xp-body">
+          <h3>Data Strategy &amp; Engineering <i>CMA CGM</i></h3>
+          <ul>
+            <li><b>+33% targeting accuracy.</b> Enhanced clustering models for customer segmentation and route analysis.</li>
+            <li><b>100K+ users served.</b> Owned roadmap and delivery of two core data products across 100+ shipping routes and financial datasets.</li>
+            <li><b>−40% reporting time.</b> Engineered ETL pipelines and automated dashboards covering 50+ KPIs.</li>
+          </ul>
+          <p class="mono-note">data-products · clustering · etl · kpi-dashboards</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp4" data-label="Meta-Funded Research Collaboration">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Jan 2024 to Jan 2025</span><span>California, US · remote</span></div>
+        <div class="xp-body">
+          <h3>AI &amp; LLM Researcher <i>Meta-Funded Research Collaboration</i></h3>
+          <ul>
+            <li>Advanced a multimodal ECG model in a 7-researcher Meta-funded project: high-accuracy reconstruction and atrial-fibrillation prediction for paediatric care.</li>
+            <li><b>+20% reading accuracy.</b> Improved AI-assisted ECG interpretation via evaluation, behavioural analysis, multimodal prompt experimentation and benchmarking.</li>
+          </ul>
+          <p class="mono-note">multimodal-ai · healthcare · benchmarking</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp5" data-label="BMB Group × PepsiCo">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Nov 2023 to Feb 2024</span><span>Baabda, LB</span></div>
+        <div class="xp-body">
+          <h3>Software Engineering Intern <i>BMB Group × PepsiCo</i></h3>
+          <ul><li><b>−30% package size.</b> Built a .NET MAUI Blazor app with PepsiCo, adding offline Android SQLite support for stronger reliability and security.</li></ul>
+          <p class="mono-note">.net-maui · blazor · sqlite · android</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp6" data-label="Intalio">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Jul 2023 to Oct 2023</span><span>Naqqache, LB</span></div>
+        <div class="xp-body">
+          <h3>AI Engineering Intern <i>Intalio</i></h3>
+          <ul><li><b>97% extraction accuracy.</b> Engineered a Flask OCR API handling 100+ daily requests with YOLOv8, OpenCV and Tesseract, with efficiency +35% via pipeline optimisation.</li></ul>
+          <p class="mono-note">yolov8 · opencv · tesseract · flask</p>
+        </div>
+      </article>
+  </div>
+  <div class="chapter xp-step" data-kf="xp7" data-label="eMcREY">
+    <article class="xp panel panel--right">
+        <div class="xp-meta"><span>Mar 2023 to Jun 2023</span><span>Dbayeh, LB</span></div>
+        <div class="xp-body">
+          <h3>Software Engineering Intern <i>eMcREY</i></h3>
+          <ul><li><b>−40% processing time.</b> Created XML, Java and MySQL applications on Oracle platforms in a 4-person team, automating three core business processes.</li></ul>
+          <p class="mono-note">java · mysql · oracle · xml</p>
+        </div>
+      </article>
+  </div>
+</section>
+
+<!-- ═══════════ EDUCATION / FAQ / ENDORSEMENTS ═══════════ -->
+<section class="chapter edu" id="education" data-kf="edu" data-label="Education">
+  <div class="wide wide--col">
+    <p class="idx"><b>06</b> Education &amp; leadership</p>
+    <div class="edu-grid">
+      <article><span class="badge">conferred</span><h3>MSc Applied Artificial Intelligence</h3><p>University of Warwick · Coventry, UK</p></article>
+      <article><span class="badge">conferred</span><h3>B.E. Computer &amp; Communications Engineering</h3><p>American University of Beirut · Beirut, Lebanon</p></article>
+    </div>
+    <ul class="lead-list">
+      <li><b>AIcademy</b><span>AI lecturer &amp; curriculum developer, AUB</span><i>2024 to 2025</i></li>
+      <li><b>IEEE</b><span>Volunteer: activities &amp; professional development</span><i>2022 to 2023</i></li>
+      <li><b>PythonDojo</b><span>Lead: daily coding sessions &amp; codebase contributions</span><i>2021 to 2022</i></li>
+    </ul>
+
+    <div class="split">
+      <div id="faq">
+        <p class="idx"><b>07</b> FAQ</p>
+        <div class="faq-list">
+          <details><summary>What type of AI engineering projects do you specialize in?</summary><p>I specialize in production-grade LLM applications: multi-agent autonomous systems, Retrieval-Augmented Generation (RAG) architectures, automated LLM evaluation frameworks (like GREAT), MCP server integrations, and full-stack AI product development.</p></details>
+          <details><summary>Are you available for full-time roles, contract work, or advisory?</summary><p>Yes! I am open to full-time AI engineering positions, targeted contract engagements, and high-impact advisory projects across US, UK, and EU time zones.</p></details>
+          <details><summary>How do you prevent AI hallucinations and ensure reliability in production?</summary><p>I implement multi-layered safeguards: structured output schemas, vector grounding, state-cycle circuit breakers (such as LoopGuard), and automated LLM-as-a-judge regression benchmarks before any deployment.</p></details>
+          <details><summary>What is your guaranteed response time for inquiries?</summary><p>I guarantee a response within 24 hours for all professional inquiries submitted via email or LinkedIn (typically responding in less than 4 hours during business hours).</p></details>
+          <details><summary>How do you handle data privacy and security compliance?</summary><p>All AI architectures strictly comply with GDPR and privacy standards. Client data is handled with zero-data-retention APIs, isolated VPC vector stores, and robust encryption.</p></details>
+        </div>
+      </div>
+      <!-- HIDDEN until provenance/attribution of these two quotes is verified (owner decision). Do not publish unverified quotes. -->
+      <div id="endorsements" hidden>
+        <p class="idx"><b>08</b> Endorsements</p>
+        <blockquote><p>“Charbel's architecture of the GREAT platform transformed our customer operations. Automating 90% of our QA review while maintaining rigorous scoring accuracy saved our team hundreds of hours each month.”</p><footer>Engineering Operations, Gabriel &amp; Co., New York</footer></blockquote>
+        <blockquote><p>“Charbel demonstrates extraordinary clarity in building agentic systems and RAG architectures. His lectures at AIcademy and technical contributions set a benchmark for practical AI engineering.”</p><footer>Faculty Collaborator, American University of Beirut</footer></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Let’s build</span><span><i>✦</i></span><span>something</span><span><i>✦</i></span><span>that ships</span><span>Let’s build</span><span><i>✦</i></span><span>something</span><span><i>✦</i></span><span>that ships</span></div></div>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section class="chapter contact" id="contact" data-kf="contact" data-label="Contact">
+  <div class="contact-inner">
+    <p class="eyebrow"><span class="dot"></span> Open to opportunities · response guaranteed under 24h</p>
+    <h2 class="display display--xxl">Let's ship something <em>to production.</em></h2>
+    <a class="mail" href="mailto:charbeltoumieh1@gmail.com">charbeltoumieh1@gmail.com</a>
+    <div class="actions">
+      <a class="btn btn--solid" href="mailto:charbeltoumieh1@gmail.com">Write to me</a>
+      <button class="btn btn--ghost" id="copyMail" data-mail="charbeltoumieh1@gmail.com">Copy address</button>
+      <a class="btn btn--ghost" href="Charbel_Toumieh_Resume.pdf" download>Résumé ↓</a>
+    </div>
+    <p class="contact-meta">Coventry, UK · Beirut, LB · US &amp; EU time zones</p>
+    <p class="contact-links">
+      <a href="https://github.com/Charbelto" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/charbeltoumieh/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p>© <span id="year">2026</span> Charbel Toumieh · hand-built, 3D scenes · <a href="#top">back to top ↑</a></p>
+</footer>
+
+<!-- case modal -->
+<div class="modal" id="caseModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <button class="modal-close" aria-label="Close">✕</button>
+    <h3 id="modalTitle"></h3>
+    <p class="modal-sub" id="modalSub"></p>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- fallback shown when WebGL is unavailable -->
+<div class="no-webgl" id="noWebgl" hidden><span>Interactive 3D unavailable on this device. The full portfolio is below.</span></div>
+
+<noscript><style>.loader{display:none}.chapter{opacity:1!important}</style></noscript>
+</body>
+</html>
