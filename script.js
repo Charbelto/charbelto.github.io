@@ -1,8 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
-   CHARBEL TOUMIEH — PORTFOLIO v3 · charbel.os
-   Vanilla interaction engine. One rAF scroll pipeline, IO reveals,
-   canvas particle net, pinned horizontal gallery, scroll zoom,
-   3D tilt, spotlight, exploding core. No dependencies.
+   CHARBEL TOUMIEH — PORTFOLIO v4
+   Vanilla interactions: reveals, counters, scroll-lit statement,
+   project carousel, archive filter, search palette. No dependencies.
    ═══════════════════════════════════════════════════════════════ */
 
 document.documentElement.classList.add('js');
@@ -12,112 +11,30 @@ if (new URLSearchParams(location.search).has('flat')) {
 }
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const FLAT = document.documentElement.classList.contains('debug-flat');
+const MAIL = 'charbeltoumieh1@gmail.com';
+const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
 
 document.addEventListener('DOMContentLoaded', () => {
-  splitChars();
-  // cards that "open" with a wipe instead of the default rise
-  document.querySelectorAll('.xp-body, .profile-card, .edu-card, .case-terminal')
-    .forEach(el => el.setAttribute('data-reveal', 'wipe'));
-  initBoot();
-  initClock();
-  initVeil();
+  initMenu();
   initReveals();
   initCounters();
-  initWorksPin();
-  initScrollPipeline();
-  initCore();
+  initScroll();
+  initNavSpy();
+  initCarousel();
   initArchive();
   initCopyMail();
   initFAQ();
   initModal();
   initStickyMobileCTA();
   initCookieConsent();
-  if (FINE && !REDUCED && !FLAT) {
-    initNet();
-    initCursor();
-    initMagnetic();
-    initTilt();
-    initSpot();
-    initArchiveHover();
-  }
+  initPalette();
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 });
-/* ── Split headings into chars for immersive reveals ─────────── */
-function splitChars() {
-  document.querySelectorAll('[data-split]').forEach((el, elIndex) => {
-    const text = el.textContent;
-    el.textContent = '';
-    const cd = el.classList.contains('hn-line') ? (0.25 + elIndex * 0.18) : 0;
-    [...text].forEach((chr, i) => {
-      const s = document.createElement('span');
-      s.className = 'ch';
-      s.textContent = chr;
-      s.style.setProperty('--ci', i);
-      if (cd) s.style.setProperty('--cd', cd + 's');
-      el.appendChild(s);
-    });
-  });
-}
 
-/* ── Boot sequence (vertical column exit) ────────────────────── */
-function initBoot() {
-  const boot = document.getElementById('boot');
-  if (!boot) return;
-  const seen = sessionStorage.getItem('ct-boot');
-  if (seen || REDUCED || FLAT) {
-    document.body.classList.add('boot-skip', 'is-loaded');
-    boot.remove();
-    return;
-  }
-  try { sessionStorage.setItem('ct-boot', '1'); } catch (e) { /* private mode */ }
-
-  const log = document.getElementById('bootLog');
-  const bar = document.getElementById('bootBar');
-  const lines = [
-    '> loading vector index ... <b>OK</b>',
-    '> spawning agents ... <b>24 tools connected</b>',
-    '> attaching eval harness ... <b>OK</b>',
-    '> render portfolio'
-  ];
-  let i = 0;
-  const step = () => {
-    if (i < lines.length) {
-      log.innerHTML += '\n' + lines[i];
-      i += 1;
-      bar.style.transform = 'scaleX(' + (i / lines.length) + ')';
-      setTimeout(step, 150);
-    } else {
-      requestAnimationFrame(() => document.body.classList.add('is-loaded'));
-      setTimeout(() => boot.isConnected && boot.remove(), 1600);
-    }
-  };
-  setTimeout(step, 220);
-  // Hard cap — never hold the page hostage.
-  setTimeout(() => {
-    if (!document.body.classList.contains('is-loaded')) {
-      document.body.classList.add('is-loaded');
-      setTimeout(() => boot.isConnected && boot.remove(), 1600);
-    }
-  }, 2200);
-}
-
-/* ── Header clock (UK time) ──────────────────────────────────── */
-function initClock() {
-  const el = document.getElementById('headClock');
-  if (!el) return;
-  const fmt = new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London'
-  });
-  const tick = () => { el.textContent = 'UK ' + fmt.format(new Date()); };
-  tick();
-  setInterval(tick, 30000);
-}
-
-/* ── Menu veil ───────────────────────────────────────────────── */
-function initVeil() {
+/* ── Phone menu ──────────────────────────────────────────────── */
+function initMenu() {
   const btn = document.getElementById('menuBtn');
   const veil = document.getElementById('veil');
   if (!btn || !veil) return;
@@ -125,7 +42,9 @@ function initVeil() {
     document.body.classList.toggle('veil-open', open);
     btn.setAttribute('aria-expanded', String(open));
     veil.setAttribute('aria-hidden', String(!open));
+    veil.inert = !open;
   };
+  veil.inert = true;
   btn.addEventListener('click', () => setOpen(!document.body.classList.contains('veil-open')));
   veil.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
   document.addEventListener('keydown', (e) => {
@@ -134,9 +53,11 @@ function initVeil() {
       btn.focus();
     }
   });
+  // leaving phone width closes it
+  window.matchMedia('(min-width: 861px)').addEventListener('change', (m) => { if (m.matches) setOpen(false); });
 }
 
-/* ── Reveal-on-scroll with soft stagger ──────────────────────── */
+/* ── Reveal on scroll, softly staggered ──────────────────────── */
 function initReveals() {
   const els = document.querySelectorAll('[data-reveal]');
   if (!('IntersectionObserver' in window) || REDUCED || FLAT) {
@@ -155,11 +76,11 @@ function initReveals() {
     }
     clearTimeout(batchReset);
     batchReset = setTimeout(() => { batch = 0; }, 220);
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
   els.forEach(el => io.observe(el));
 }
 
-/* ── HUD counters ────────────────────────────────────────────── */
+/* ── Number counters ─────────────────────────────────────────── */
 function initCounters() {
   const nums = document.querySelectorAll('.stat-num');
   if (!nums.length) return;
@@ -176,7 +97,7 @@ function initCounters() {
       const el = entry.target;
       const target = parseInt(el.dataset.count, 10);
       const t0 = performance.now();
-      const dur = 1300;
+      const dur = 1500;
       const step = (t) => {
         const p = Math.min((t - t0) / dur, 1);
         const eased = 1 - Math.pow(1 - p, 4);
@@ -190,105 +111,50 @@ function initCounters() {
   nums.forEach(el => io.observe(el));
 }
 
-/* ── Pinned horizontal gallery sizing ────────────────────────── */
-const worksState = { section: null, track: null, dist: 0, active: false };
-function initWorksPin() {
-  worksState.section = document.getElementById('works');
-  worksState.track = document.getElementById('worksTrack');
-  if (!worksState.section || !worksState.track) return;
-  const media = window.matchMedia('(min-width: 901px)');
-  const measure = () => {
-    const on = media.matches && !REDUCED && !FLAT;
-    worksState.active = on;
-    if (!on) {
-      worksState.section.style.height = '';
-      worksState.track.style.transform = '';
-      return;
-    }
-    worksState.track.style.transform = '';
-    worksState.dist = Math.max(worksState.track.scrollWidth - window.innerWidth, 0);
-    worksState.section.style.height = (worksState.dist + window.innerHeight * 1.35) + 'px';
-  };
-  measure();
-  window.addEventListener('resize', measure, { passive: true });
-  media.addEventListener ? media.addEventListener('change', measure) : media.addListener(measure);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-}
-
-/* ── One rAF scroll pipeline ─────────────────────────────────── */
-function initScrollPipeline() {
-  const progress = document.getElementById('scrollProgress');
+/* ── One rAF scroll pipeline: nav edge, hero recede, lit statement ── */
+function initScroll() {
+  const head = document.getElementById('siteHead');
   const heroInner = document.getElementById('heroInner');
-  const streamA = document.getElementById('streamA');
-  const streamB = document.getElementById('streamB');
-  const casefile = document.getElementById('casefile');
-  const xpList = document.getElementById('xpList');
-  const xpBar = document.getElementById('xpProgress');
-  const ghosts = [...document.querySelectorAll('.xp-ghost')];
-  const worksCount = document.getElementById('worksCount');
-  const panels = worksState.track ? worksState.track.children.length : 0;
-  const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+  const statement = document.getElementById('statement');
+  let words = [];
+  let lit = -1;
+
+  if (statement && !REDUCED && !FLAT) {
+    const parts = statement.textContent.trim().split(/\s+/);
+    statement.textContent = '';
+    parts.forEach((word, i) => {
+      const s = document.createElement('span');
+      s.className = 'w';
+      s.textContent = word;
+      statement.appendChild(s);
+      if (i < parts.length - 1) statement.appendChild(document.createTextNode(' '));
+      words.push(s);
+    });
+    statement.classList.add('is-scrub');
+  }
 
   let ticking = false;
   const update = () => {
     ticking = false;
     const vh = window.innerHeight;
     const y = window.scrollY;
-
-    if (progress) {
-      const max = Math.max(document.documentElement.scrollHeight - vh, 1);
-      progress.style.transform = 'scaleX(' + clamp01(y / max).toFixed(4) + ')';
-    }
+    if (head) head.classList.toggle('is-scrolled', y > 8);
     if (REDUCED || FLAT) return;
 
-    // Layer transformation: hero sinks + fades as content slides over
-    if (heroInner) {
-      heroInner.style.setProperty('--hp', clamp01(y / (vh * 0.9)).toFixed(4));
+    if (heroInner && y < vh * 1.2) {
+      heroInner.style.setProperty('--hp', clamp01(y / (vh * 0.75)).toFixed(4));
     }
 
-    // Counter-parallax capability streams
-    if (streamA) {
-      const r = streamA.getBoundingClientRect();
-      if (r.bottom > -40 && r.top < vh + 40) {
-        const off = (r.top + r.height / 2 - vh / 2) * 0.16;
-        streamA.style.setProperty('--sx', off.toFixed(1) + 'px');
-        if (streamB) streamB.style.setProperty('--sx', (-off).toFixed(1) + 'px');
-      }
-    }
-
-    // Immersive zoom: GREAT terminal
-    if (casefile) {
-      const r = casefile.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < vh) {
-        const p = clamp01(-r.top / Math.max(r.height - vh, 1));
-        casefile.style.setProperty('--cp', p.toFixed(4));
-      }
-    }
-
-    // Experience rail + ghost-number parallax
-    if (xpList && xpBar) {
-      const r = xpList.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < vh) {
-        const done = clamp01((vh * 0.7 - r.top) / Math.max(r.height - vh * 0.4, 1));
-        xpBar.style.transform = 'scaleY(' + done.toFixed(4) + ')';
-      }
-    }
-    for (const g of ghosts) {
-      const r = g.parentElement.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < vh) {
-        const depth = parseFloat(g.dataset.depth || '0.12');
-        g.style.setProperty('--gy', ((r.top + r.height / 2 - vh / 2) * -depth).toFixed(1));
-      }
-    }
-
-    // Horizontal gallery drive
-    if (worksState.active && worksState.section) {
-      const r = worksState.section.getBoundingClientRect();
-      const p = clamp01(-r.top / Math.max(r.height - vh, 1));
-      worksState.track.style.transform = 'translateX(' + (-p * worksState.dist).toFixed(1) + 'px)';
-      if (worksCount && panels) {
-        const idx = Math.min(panels, Math.max(1, Math.round(p * (panels - 1)) + 1));
-        worksCount.textContent = '// scroll ⟷ drive · 0' + idx + ' / 0' + panels;
+    // words light up as the statement travels up the screen
+    if (words.length) {
+      const r = statement.getBoundingClientRect();
+      if (r.bottom > -vh && r.top < vh * 2) {
+        const p = clamp01((vh * 0.88 - r.top) / (vh * 0.5 + r.height));
+        const n = Math.round(p * words.length);
+        if (n !== lit) {
+          lit = n;
+          for (let i = 0; i < words.length; i++) words[i].classList.toggle('on', i < n);
+        }
       }
     }
   };
@@ -300,212 +166,56 @@ function initScrollPipeline() {
   update();
 }
 
-/* ── Hero particle network (explodes away from the cursor) ───── */
-function initNet() {
-  const canvas = document.getElementById('heroNet');
-  const hero = canvas && canvas.parentElement;
-  if (!canvas || !hero) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-  let w = 0, h = 0, nodes = [], raf = null, inView = true;
-  const mouse = { x: -9999, y: -9999 };
-
-  const size = () => {
-    const r = hero.getBoundingClientRect();
-    w = r.width; h = r.height;
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.min(88, Math.round((w * h) / 16000));
-    nodes = Array.from({ length: n }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
-      r: 1 + Math.random() * 1.4,
-      c: Math.random() < 0.22 ? '86,225,233' : '124,108,255'
-    }));
-  };
-
-  const frame = () => {
-    raf = null;
-    ctx.clearRect(0, 0, w, h);
-    const LINK = 130;
-    for (const p of nodes) {
-      // cursor repulsion — the "explode away" field
-      const dx = p.x - mouse.x, dy = p.y - mouse.y;
-      const d2 = dx * dx + dy * dy;
-      if (d2 < 22500 && d2 > 1) {
-        const d = Math.sqrt(d2);
-        const f = (150 - d) / 150 * 0.9;
-        p.vx += (dx / d) * f;
-        p.vy += (dy / d) * f;
-      }
-      p.vx *= 0.96; p.vy *= 0.96;
-      const sp = Math.hypot(p.vx, p.vy);
-      if (sp < 0.12) { p.vx += (Math.random() - 0.5) * 0.06; p.vy += (Math.random() - 0.5) * 0.06; }
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      p.x = Math.min(Math.max(p.x, 0), w);
-      p.y = Math.min(Math.max(p.y, 0), h);
-    }
-    ctx.lineWidth = 1;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < LINK * LINK) {
-          const alpha = (1 - Math.sqrt(d2) / LINK) * 0.32;
-          ctx.strokeStyle = 'rgba(124,108,255,' + alpha.toFixed(3) + ')';
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-        }
-      }
-    }
-    for (const p of nodes) {
-      ctx.fillStyle = 'rgba(' + p.c + ',0.85)';
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
-    }
-    if (inView && !document.hidden) raf = requestAnimationFrame(frame);
-  };
-  const kick = () => { if (!raf && inView && !document.hidden) raf = requestAnimationFrame(frame); };
-
-  size();
-  kick();
-  window.addEventListener('resize', () => { size(); kick(); }, { passive: true });
-  hero.addEventListener('pointermove', (e) => {
-    const r = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - r.left;
-    mouse.y = e.clientY - r.top;
-  }, { passive: true });
-  hero.addEventListener('pointerleave', () => { mouse.x = -9999; mouse.y = -9999; }, { passive: true });
-  new IntersectionObserver((entries) => {
-    inView = entries[0].isIntersecting;
-    kick();
-  }).observe(hero);
-  document.addEventListener('visibilitychange', kick);
-}
-
-/* ── Custom cursor: dot + ring + context tag ─────────────────── */
-function initCursor() {
-  const cursor = document.getElementById('cursor');
-  const tag = document.getElementById('cursorTag');
-  if (!cursor) return;
-  let x = -100, y = -100, cx = -100, cy = -100, raf = null;
-  const loop = () => {
-    cx += (x - cx) * 0.24;
-    cy += (y - cy) * 0.24;
-    cursor.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
-    raf = (Math.abs(x - cx) > 0.1 || Math.abs(y - cy) > 0.1) ? requestAnimationFrame(loop) : null;
-  };
-  window.addEventListener('mousemove', (e) => {
-    x = e.clientX; y = e.clientY;
-    if (!document.body.classList.contains('cursor-on')) {
-      cx = x; cy = y;
-      document.body.classList.add('cursor-on');
-    }
-    if (!raf) raf = requestAnimationFrame(loop);
-  }, { passive: true });
-  document.addEventListener('mouseleave', () => document.body.classList.remove('cursor-on'));
-  document.addEventListener('mouseover', (e) => {
-    const view = e.target.closest('[data-cursor="view"]');
-    const link = e.target.closest('a, button');
-    cursor.classList.toggle('is-view', Boolean(view));
-    cursor.classList.toggle('is-link', Boolean(link) && !view);
-    if (view && tag) tag.textContent = 'view';
-  }, { passive: true });
-}
-
-/* ── Magnetic buttons ────────────────────────────────────────── */
-function initMagnetic() {
-  document.querySelectorAll('.magnetic').forEach(el => {
-    let raf = null;
-    el.addEventListener('mousemove', (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        const r = el.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2);
-        const dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = 'translate(' + (dx * 0.22).toFixed(1) + 'px,' + (dy * 0.3).toFixed(1) + 'px)';
-      });
+/* ── Nav: mark the section in view ───────────────────────────── */
+function initNavSpy() {
+  const links = [...document.querySelectorAll('#navLinks a')];
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      links.forEach(a => a.classList.remove('is-active'));
+      const a = byId.get(entry.target.id);
+      if (a) a.classList.add('is-active');
     });
-    el.addEventListener('mouseleave', () => {
-      if (raf) { cancelAnimationFrame(raf); raf = null; }
-      el.style.transform = '';
-    });
-  });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('main > section[id]').forEach(s => io.observe(s));
 }
 
-/* ── 3D tilt cards ───────────────────────────────────────────── */
-function initTilt() {
-  document.querySelectorAll('.tilt').forEach(el => {
-    let raf = null;
-    el.addEventListener('pointermove', (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        const r = el.getBoundingClientRect();
-        const nx = (e.clientX - r.left) / r.width;
-        const ny = (e.clientY - r.top) / r.height;
-        el.style.setProperty('--rx', ((0.5 - ny) * 7).toFixed(2) + 'deg');
-        el.style.setProperty('--ry', ((nx - 0.5) * 9).toFixed(2) + 'deg');
-      });
-    });
-    el.addEventListener('pointerleave', () => {
-      if (raf) { cancelAnimationFrame(raf); raf = null; }
-      el.style.setProperty('--rx', '0deg');
-      el.style.setProperty('--ry', '0deg');
-    });
-  });
-}
-
-/* ── Spotlight hover (light follows the pointer) ─────────────── */
-function initSpot() {
-  document.querySelectorAll('.spot').forEach(el => {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(2) + '%');
-      el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(2) + '%');
-    }, { passive: true });
-  });
-}
-
-/* ── Exploding capability core ───────────────────────────────── */
-function initCore() {
-  const core = document.getElementById('core');
-  const hint = document.getElementById('coreHint');
-  if (!core) return;
-  const set = (on) => {
-    core.classList.toggle('is-x', on);
-    if (hint) hint.textContent = on ? 'capability map — decomposed' : 'hover / tap the core to decompose';
+/* ── Project carousel: native scroll + paddles ───────────────── */
+function initCarousel() {
+  const track = document.getElementById('worksTrack');
+  const prev = document.getElementById('worksPrev');
+  const next = document.getElementById('worksNext');
+  if (!track || !prev || !next) return;
+  const step = () => {
+    const card = track.querySelector('.work-panel');
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return card ? card.getBoundingClientRect().width + gap : track.clientWidth * 0.8;
   };
-  if (FINE) {
-    core.addEventListener('pointerenter', () => set(true));
-    core.addEventListener('pointerleave', () => set(false));
-  } else if ('IntersectionObserver' in window && !FLAT) {
-    // touch devices: auto-decompose when the core is in view
-    new IntersectionObserver((entries) => {
-      entries.forEach(e => set(e.intersectionRatio > 0.55));
-    }, { threshold: [0, 0.55, 1] }).observe(core);
-  }
-  core.addEventListener('click', () => set(!core.classList.contains('is-x')));
-  core.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      set(!core.classList.contains('is-x'));
-    }
-  });
+  const go = (dir) => track.scrollBy({ left: dir * step(), behavior: REDUCED ? 'auto' : 'smooth' });
+  const sync = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = track.scrollLeft >= max - 2;
+  };
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  track.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync, { passive: true });
+  sync();
 }
 
-/* ── Archive: filters + floating hover chip ──────────────────── */
+/* ── Archive filter ──────────────────────────────────────────── */
 function initArchive() {
   const chips = document.querySelectorAll('.arc-filters .chip');
   const rows = document.querySelectorAll('.arc-row');
   const empty = document.getElementById('arcEmpty');
   if (!chips.length) return;
   chips.forEach(chip => chip.addEventListener('click', () => {
-    chips.forEach(c => c.classList.remove('is-on'));
+    chips.forEach(c => { c.classList.remove('is-on'); c.setAttribute('aria-pressed', 'false'); });
     chip.classList.add('is-on');
+    chip.setAttribute('aria-pressed', 'true');
     const f = chip.dataset.filter;
     let shown = 0;
     rows.forEach(row => {
@@ -515,23 +225,6 @@ function initArchive() {
     });
     if (empty) empty.hidden = shown > 0;
   }));
-}
-function initArchiveHover() {
-  const chipEl = document.getElementById('arcHover');
-  const list = document.getElementById('arcList');
-  if (!chipEl || !list) return;
-  list.addEventListener('pointerover', (e) => {
-    const a = e.target.closest('a[data-info]');
-    if (a) {
-      chipEl.textContent = a.dataset.info;
-      chipEl.classList.add('is-on');
-    }
-  });
-  list.addEventListener('pointermove', (e) => {
-    chipEl.style.left = e.clientX + 'px';
-    chipEl.style.top = e.clientY + 'px';
-  }, { passive: true });
-  list.addEventListener('pointerleave', () => chipEl.classList.remove('is-on'));
 }
 
 /* ── Copy e-mail ─────────────────────────────────────────────── */
@@ -555,12 +248,12 @@ function initCopyMail() {
       try { ok = document.execCommand('copy'); } catch (e2) { /* ignore */ }
       ta.remove();
     }
-    btn.textContent = ok ? 'copied ✓' : mail;
+    btn.textContent = ok ? 'Copied ✓' : mail;
     setTimeout(() => { btn.textContent = original; }, 2000);
   });
 }
 
-/* ── FAQ Accordion ───────────────────────────────────────────── */
+/* ── Questions accordion ─────────────────────────────────────── */
 function initFAQ() {
   const items = document.querySelectorAll('.faq-item');
   items.forEach(item => {
@@ -568,13 +261,19 @@ function initFAQ() {
     if (!q) return;
     q.addEventListener('click', () => {
       const isOpen = item.classList.contains('is-open');
-      items.forEach(i => i.classList.remove('is-open'));
-      if (!isOpen) item.classList.add('is-open');
+      items.forEach(i => {
+        i.classList.remove('is-open');
+        i.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('is-open');
+        q.setAttribute('aria-expanded', 'true');
+      }
     });
   });
 }
 
-/* ── Case Study Modal ────────────────────────────────────────── */
+/* ── Project breakdown dialog ────────────────────────────────── */
 function initModal() {
   const overlay = document.getElementById('caseModal');
   if (!overlay) return;
@@ -583,54 +282,60 @@ function initModal() {
   const modalSub = document.getElementById('modalSub');
   const modalBody = document.getElementById('modalBody');
 
+  let lastFocus = null;
   const openModal = (data) => {
-    if (modalTitle) modalTitle.textContent = data.title || 'Case Study Deep-Dive';
-    if (modalSub) modalSub.textContent = data.sub || 'Architecture & Implementation';
-    if (modalBody) modalBody.innerHTML = data.body || '<p>Detailed case breakdown loading...</p>';
+    lastFocus = document.activeElement;
+    if (modalTitle) modalTitle.textContent = data.title;
+    if (modalSub) modalSub.textContent = data.sub;
+    if (modalBody) modalBody.innerHTML = data.body;
     overlay.classList.add('is-active');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (closeBtn) closeBtn.focus();
   };
 
   const closeModal = () => {
+    if (!overlay.classList.contains('is-active')) return;
     overlay.classList.remove('is-active');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+
+  const CASES = {
+    loopguard: {
+      title: 'LoopGuard',
+      sub: 'Agentic circuit breaker and safety harness · Open source · 2025',
+      body: `
+        <h4>The challenge</h4>
+        <p>Autonomous LLM agents can easily enter infinite execution loops, consuming tokens rapidly and performing unintended actions.</p>
+        <h4>Architecture and solution</h4>
+        <p>Designed a lightweight Python circuit-breaker decorator that tracks execution graphs, detects state cycles via graph hashing, and halts rogue agents automatically.</p>
+        <h4>Key outcomes</h4>
+        <p><strong>Zero token runaway.</strong> Halts infinite recursion within 3 state iterations.</p>
+        <p><strong>Zero-dependency core.</strong> Drop-in compatibility for LangChain, AutoGen, and custom loopers.</p>
+        <p><a class="btn" href="https://github.com/Charbelto/loopguard" target="_blank" rel="noopener noreferrer">Open the repository ↗</a></p>
+      `
+    }
   };
 
   document.querySelectorAll('[data-modal]').forEach(trigger => {
     trigger.addEventListener('click', (e) => {
+      const data = CASES[trigger.dataset.modal];
+      if (!data) return;
       e.preventDefault();
-      const mId = trigger.dataset.modal;
-      if (mId === 'great') {
-        openModal({
-          title: 'GREAT — Multi-Agent Evaluation & Analytics Platform',
-          sub: 'Gabriel & Co. · New York, NY (Remote) · 2024 — Present',
-          body: `
-            <h4>The Challenge</h4>
-            <p>Evaluating customer interactions across 34+ agents and 3 communication channels manually was slow, inconsistent, and unscalable.</p>
-            <h4>Architecture & Solution</h4>
-            <p>Architected an automated multi-agent evaluation pipeline using custom LLM judge prompts, RAG context validation, and automated scoring metrics. Integrated with company telephony and CRM systems.</p>
-            <h4>Key Outcomes</h4>
-            <p>• <strong>-90% Reduction in Manual QA Effort</strong>: Automated 100% of routine call reviews.<br/>
-            • <strong>34+ Agents Monitored</strong>: Real-time scoring and sentiment analytics.<br/>
-            • <strong>Actionable Insights</strong>: Instant compliance flagging and coaching recommendations.</p>
-          `
-        });
-      } else if (mId === 'loopguard') {
-        openModal({
-          title: 'LoopGuard — Agentic Circuit Breaker & Safety Harness',
-          sub: 'Open Source AI Safety Framework · 2025',
-          body: `
-            <h4>The Challenge</h4>
-            <p>Autonomous LLM agents can easily enter infinite execution loops, consuming tokens rapidly and performing unintended actions.</p>
-            <h4>Architecture & Solution</h4>
-            <p>Designed a lightweight Python circuit-breaker decorator that tracks execution graphs, detects state cycles via graph hashing, and halts rogue agents automatically.</p>
-            <h4>Key Outcomes</h4>
-            <p>• <strong>Zero Token Runaway</strong>: Halts infinite recursion within 3 state iterations.<br/>
-            • <strong>Zero Dependency Core</strong>: Drop-in compatibility for LangChain, AutoGen, and custom loopers.</p>
-          `
-        });
-      }
+      openModal(data);
     });
+  });
+
+  // keep Tab inside the dialog while it is open
+  overlay.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = overlay.querySelectorAll('a[href], button');
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
@@ -638,30 +343,31 @@ function initModal() {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 }
 
-/* ── Sticky Mobile CTA Controller ────────────────────────────── */
+/* ── Phone action bar: after the hero, out of the way at contact ── */
 function initStickyMobileCTA() {
   const cta = document.getElementById('stickyMobileCTA');
   if (!cta) return;
-  let lastScroll = 0;
+  const contact = document.getElementById('contact');
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const past = window.scrollY > 400;
+    const atContact = contact ? contact.getBoundingClientRect().top < window.innerHeight * 0.6 : false;
+    cta.classList.toggle('is-on', past && !atContact);
+  };
   window.addEventListener('scroll', () => {
-    const st = window.scrollY;
-    if (st > 400) {
-      cta.style.transform = 'translateY(0)';
-      cta.style.opacity = '1';
-    } else {
-      cta.style.transform = 'translateY(100%)';
-      cta.style.opacity = '0';
-    }
-    lastScroll = st;
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
+  update();
 }
 
-/* ── Cookie Consent Banner ────────────────────────────────────── */
+/* ── Cookie consent (only once a real analytics ID exists) ───── */
+const GA_ID = 'G-XXXXXXXXXX'; // replace with real GA4 Measurement ID when available
+const GA_READY = !GA_ID.includes('XXXX'); // placeholder — no analytics, so no consent banner
+
 function loadAnalytics() {
-  if (window.__gaLoaded) return;
+  if (window.__gaLoaded || !GA_READY) return;
   window.__gaLoaded = true;
-  const GA_ID = 'G-XXXXXXXXXX'; // replace with real GA4 Measurement ID when available
-  if (GA_ID.includes('XXXX')) return; // placeholder — skip until a real ID is set
   const s = document.createElement('script');
   s.async = true;
   s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
@@ -674,22 +380,136 @@ function loadAnalytics() {
 
 function initCookieConsent() {
   const banner = document.getElementById('cookieBanner');
-  if (!banner) return;
+  if (!banner || !GA_READY) return;
   const KEY = 'cookie-consent';
-  const consent = localStorage.getItem(KEY);
+  let consent = null;
+  try { consent = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
   if (consent === 'accepted') { loadAnalytics(); return; }
   if (consent === 'declined') return;
   banner.hidden = false;
   const accept = document.getElementById('cookieAccept');
   const decline = document.getElementById('cookieDecline');
   accept?.addEventListener('click', () => {
-    localStorage.setItem(KEY, 'accepted');
+    try { localStorage.setItem(KEY, 'accepted'); } catch (e) { /* private mode */ }
     banner.hidden = true;
     loadAnalytics();
   });
   decline?.addEventListener('click', () => {
-    localStorage.setItem(KEY, 'declined');
+    try { localStorage.setItem(KEY, 'declined'); } catch (e) { /* private mode */ }
     banner.hidden = true;
   });
 }
 
+/* ── Search palette (Ctrl/⌘ + K, or "/") ──────────────────────── */
+function initPalette() {
+  const root = document.getElementById('cmdk');
+  const input = document.getElementById('cmdkInput');
+  const list = document.getElementById('cmdkList');
+  const btn = document.getElementById('cmdkBtn');
+  if (!root || !input || !list) return;
+
+  // instant jump, then re-align once late-rendered sections have settled
+  const go = (hash) => () => {
+    const el = document.querySelector(hash);
+    if (!el) return;
+    history.replaceState(null, '', hash);
+    el.scrollIntoView({ behavior: 'instant', block: 'start' });
+    setTimeout(() => el.scrollIntoView({ behavior: 'instant', block: 'start' }), 120);
+  };
+  const open = (url) => () => window.open(url, '_blank', 'noopener');
+  const items = [...document.querySelectorAll('.veil-list .veil-link')].map(a => ({
+    label: a.querySelector('span').textContent,
+    hint: 'section',
+    run: go(a.getAttribute('href'))
+  }));
+  items.push(
+    { label: 'Project archive', hint: 'section', run: go('#archive') },
+    { label: 'Copy email address', hint: 'action', run: () => navigator.clipboard && navigator.clipboard.writeText(MAIL) },
+    { label: 'Write an email', hint: 'action', run: () => { location.href = 'mailto:' + MAIL; } },
+    { label: 'Download résumé', hint: 'action', run: () => {
+      const a = document.createElement('a');
+      a.href = 'Charbel_Toumieh_Resume.pdf'; a.download = '';
+      document.body.appendChild(a); a.click(); a.remove();
+    } },
+    { label: 'Open GitHub', hint: 'link', run: open('https://github.com/Charbelto') },
+    { label: 'Open LinkedIn', hint: 'link', run: open('https://www.linkedin.com/in/charbeltoumieh/') },
+    { label: 'Back to top', hint: 'section', run: () => window.scrollTo({ top: 0 }) }
+  );
+
+  let shown = [], sel = 0, lastFocus = null;
+  const render = () => {
+    const q = input.value.trim().toLowerCase();
+    shown = items.filter(it => !q || it.label.toLowerCase().includes(q) || it.hint.includes(q));
+    sel = Math.min(sel, Math.max(shown.length - 1, 0));
+    list.textContent = '';
+    if (!shown.length) {
+      const li = document.createElement('li');
+      li.className = 'cmdk-empty';
+      li.textContent = 'No results';
+      list.appendChild(li);
+      return;
+    }
+    shown.forEach((it, i) => {
+      const li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(i === sel));
+      li.dataset.i = i;
+      const name = document.createElement('span');
+      name.textContent = it.label;
+      const hint = document.createElement('small');
+      hint.textContent = it.hint;
+      li.append(name, hint);
+      list.appendChild(li);
+    });
+    const cur = list.querySelector('[aria-selected="true"]');
+    if (cur) cur.scrollIntoView({ block: 'nearest' });
+  };
+  const isOpen = () => !root.hidden;
+  const show = () => {
+    if (isOpen()) return;
+    lastFocus = document.activeElement;
+    root.hidden = false;
+    input.value = '';
+    sel = 0;
+    render();
+    input.focus();
+  };
+  const hide = (restore) => {
+    if (!isOpen()) return;
+    root.hidden = true;
+    if (restore && lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+  const run = (i) => {
+    const it = shown[i];
+    if (!it) return;
+    hide(false);
+    it.run();
+  };
+
+  if (btn) btn.addEventListener('click', show);
+  input.addEventListener('input', () => { sel = 0; render(); });
+  root.addEventListener('click', (e) => {
+    const li = e.target.closest('li[data-i]');
+    if (li) run(Number(li.dataset.i));
+    else if (e.target === root) hide(true);
+  });
+  list.addEventListener('pointermove', (e) => {
+    const li = e.target.closest('li[data-i]');
+    if (li && Number(li.dataset.i) !== sel) { sel = Number(li.dataset.i); render(); }
+  });
+  document.addEventListener('keydown', (e) => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable;
+    if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      isOpen() ? hide(true) : show();
+      return;
+    }
+    if (e.key === '/' && !typing && !isOpen()) { e.preventDefault(); show(); return; }
+    if (!isOpen()) return;
+    if (e.key === 'Escape') { e.stopPropagation(); hide(true); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); sel = (sel + 1) % Math.max(shown.length, 1); render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); sel = (sel - 1 + shown.length) % Math.max(shown.length, 1); render(); }
+    else if (e.key === 'Enter') { e.preventDefault(); run(sel); }
+    else if (e.key === 'Tab') { e.preventDefault(); }
+  }, true);
+}
