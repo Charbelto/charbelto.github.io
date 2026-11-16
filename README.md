@@ -1,39 +1,31 @@
-# Charbel Toumieh — Portfolio · charbel.os
+# Charbel Toumieh — Portfolio
 
-Dark AI-lab portfolio: void black, electric violet/cyan, HUD chrome and terminal motifs.
-Built to make a hiring manager stop scrolling.
+Clean product-page portfolio: black and light-grey sections, large tight type, rounded bento tiles,
+a frosted nav bar and pill buttons. Built to make a hiring manager stop scrolling.
 
 **Live:** [charbelto.github.io](https://charbelto.github.io)
 
 ---
 
-## Signature interactions (all vanilla JS/CSS — zero libraries)
+## Interactions (all vanilla JS/CSS, zero libraries)
 
-- **Interactive particle network** — hero constellation that scatters away from the cursor
-- **Boot screen** — terminal log + vertical-columns reveal (once per session)
-- **Immersive char reveals** — headings rise letter-by-letter from blur
-- **Scroll-zoom case study** — the GREAT platform terminal scales up as you scroll
-- **Pinned horizontal gallery** — vertical scroll drives the Selected Works track sideways
-  (native swipe + snap on mobile)
-- **Exploding capability core** — orbital node map that decomposes on hover/tap
-- **3D tilt + spotlight** — cards tilt in perspective and light up around the pointer
-- **Parallax storytelling** — experience rail draws itself; ghost numerals drift at depth
-- **Counter-parallax streams**, magnetic buttons, custom cursor with context tag,
-  reading-progress bar, fullscreen column-slide menu
+- **Scroll-lit statement**: the opening sentence lights up word by word as it travels up the screen
+- **GREAT bento**: outcome tiles with counting numbers and an animated four-stage pipeline
+- **Project carousel**: native horizontal scroll with snap and paddle buttons; each card is one link
+- **Search palette**: `Ctrl/⌘ + K` (or `/`) jumps to any section, copies the email, opens the résumé
+- **Archive filter**, accordion questions, receding hero, frosted nav that tracks the section in view
 
 ## Performance & robustness
 
-- Zero frameworks, zero build step. Two font families; all art is CSS/SVG/canvas.
-- Single rAF scroll pipeline; IntersectionObserver reveals; canvas pauses off-screen,
-  DPR-capped, and disabled on touch/reduced-motion.
-- `content-visibility: auto` below the fold. Full `prefers-reduced-motion` fallbacks —
-  pins, tilt, particles and boot all degrade to static.
-- Content is complete without JavaScript. `?flat` renders a static page for QA tooling.
+- Zero frameworks, zero build step. One font family (system San Francisco on Apple devices, Inter elsewhere).
+- Single rAF scroll handler; IntersectionObserver reveals; transform and opacity motion only.
+- Full `prefers-reduced-motion` fallbacks. Content is complete without JavaScript.
+  `?flat` renders a static page for QA tooling.
 
 ## Sections
 
-`01 Profile` · `02 Case: GREAT` · `03 Experience` · `04 The Stack` ·
-`05 Selected Works` + full 24-project archive · `06 Education` · `07 Contact`
+`About` · `GREAT` · `Experience` · `Skills` · `Projects` + full 24-project archive ·
+`Education` · `Questions` · `Endorsements` · `Contact`
 
 ## Local development
 
